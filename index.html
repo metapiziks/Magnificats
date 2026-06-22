@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Whisker Board — A Cat Corkboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#2B2420;
+    --cream:#F7F1E5;
+    --cream-2:#EFE6D3;
+    --paper:#FFFCF5;
+    --marmalade:#D97E3F;
+    --marmalade-dark:#B8632B;
+    --sage:#7C8A6E;
+    --sage-dark:#5E6A52;
+    --black:#1A1614;
+    --pin-red:#C1432E;
+    --line: rgba(43,36,32,0.14);
+    --shadow: 0 1px 0 rgba(43,36,32,0.04), 0 8px 20px -10px rgba(43,36,32,0.25);
+    --radius: 14px;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(43,36,32,0.05) 1px, transparent 1px) 0 0/22px 22px,
+      var(--cream);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  :focus-visible{
+    outline:3px solid var(--marmalade-dark);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+
+  /* header */
+  .site-head{
+    position:relative;
+    padding:54px 24px 70px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .site-head::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(135deg, rgba(43,36,32,0.035) 0 2px, transparent 2px 14px);
+    pointer-events:none;
+  }
+  .brand-mark{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.4rem, 5vw, 3.6rem);
+    letter-spacing:-0.01em;
+    color:var(--black);
+    position:relative;
+  }
+  .tagline{
+    font-size:1.02rem;
+    color:var(--sage-dark);
+    font-weight:500;
+    margin-top:10px;
+    letter-spacing:0.01em;
+  }
+  .tagline em{
+    font-style:italic;
+    font-family:var(--font-display);
+    color:var(--marmalade-dark);
+  }
+  .paw-divider{
+    margin:22px auto 0;
+    display:flex; gap:14px; justify-content:center; opacity:0.55;
+  }
+  .paw-divider svg{width:18px;height:18px;fill:var(--marmalade-dark);}
+
+  /* board layout */
+  .board{
+    max-width:1240px;
+    margin:0 auto;
+    padding:0 20px 80px;
+    display:grid;
+    grid-template-columns:repeat(12, 1fr);
+    gap:22px;
+  }
+
+  .box{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px 22px 24px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .box{ transform:rotate(var(--tilt, 0deg)); }
+  .box:nth-of-type(3n+1){ --tilt:-0.35deg; }
+  .box:nth-of-type(3n+2){ --tilt:0.3deg; }
+  .box:nth-of-type(3n){ --tilt:-0.15deg; }
+
+  .pin{
+    position:absolute;
+    top:-9px; left:50%;
+    transform:translateX(-50%);
+    width:16px;height:16px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #e8745a, var(--pin-red) 65%);
+    box-shadow:0 2px 3px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index:2;
+  }
+
+  .box-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+    padding-bottom:12px;
+    border-bottom:1px dashed var(--line);
+  }
+  .box-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.28rem;
+    color:var(--black);
+    display:flex; align-items:center; gap:8px;
+  }
+  .box-eyebrow{
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--sage-dark);
+    font-weight:700;
+    white-space:nowrap;
+  }
+
+  /* grid placement - BENTO LAYOUT */
+  .box-care{ grid-column:span 4; }
+  .box-featured{ grid-column:span 4; grid-row:span 2; }
+  .box-writeup{ grid-column:span 4; }
+  .box-trivia{ grid-column:span 4; }
+  .box-video{ grid-column:span 4; }
+  .box-stories{ grid-column:span 8; }
+  .box-directory{ grid-column:span 6; }
+  .box-topic{ grid-column:span 6; }
+
+  @media (max-width:980px){
+    .board{grid-template-columns:1fr;}
+    .box-care,.box-featured,.box-writeup,.box-trivia,.box-video,.box-stories,.box-directory,.box-topic{
+      grid-column:1; grid-row:auto;
+    }
+  }
+
+  /* buttons */
+  button{
+    font-family:var(--font-body);
+    cursor:pointer;
+    border:none;
+  }
+  .btn{
+    background:var(--marmalade);
+    color:#fff;
+    font-weight:600;
+    font-size:0.86rem;
+    padding:9px 16px;
+    border-radius:9px;
+    transition:background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover{background:var(--marmalade-dark);}
+  .btn:active{transform:scale(0.97);}
+  .btn-ghost{
+    background:transparent;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+    font-weight:600;
+    font-size:0.82rem;
+    padding:7px 13px;
+    border-radius:9px;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .btn-ghost:hover{border-color:var(--sage-dark); background:rgba(124,138,110,0.08);}
+  .btn-sm{padding:6px 11px; font-size:0.78rem;}
+
+  .btn-admin{
+    background:var(--black);
+    color:#fff;
+    font-weight:600;
+    font-size:0.72rem;
+    padding:4px 10px;
+    border-radius:16px;
+    transition:background 0.15s ease;
+  }
+  .btn-admin:hover{background:var(--marmalade-dark);}
+  .btn-admin.danger{background:var(--pin-red);}
+  .btn-admin.danger:hover{background:#a8321f;}
+
+  /* admin toolbar */
+  .admin-toolbar{
+    display:none;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+  .admin-toolbar.visible{display:flex;}
+
+  /* forms */
+  textarea, input[type="text"], input[type="tel"], select{
+    width:100%;
+    font-family:var(--font-body);
+    font-size:0.92rem;
+    padding:9px 11px;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    background:var(--cream);
+    color:var(--ink);
+    resize:vertical;
+  }
+  textarea:focus, input:focus{
+    border-color:var(--marmalade);
+    background:var(--paper);
+  }
+  label{
+    font-size:0.74rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--sage-dark);
+    display:block;
+    margin-bottom:4px;
+  }
+  .field{margin-bottom:11px;}
+
+  /* drag & drop upload */
+  .drop-zone{
+    border:2px dashed var(--line);
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:var(--cream);
+    transition:all 0.2s;
+    cursor:pointer;
+    min-height:100px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .drop-zone:hover, .drop-zone.drag-over{
+    border-color:var(--marmalade);
+    background:var(--paper);
+  }
+  .drop-zone .icon{
+    font-size:2rem;
+  }
+  .drop-zone .hint{
+    font-size:0.85rem;
+    color:var(--sage-dark);
+  }
+  .drop-zone .preview-grid{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    width:100%;
+  }
+  .drop-zone .preview-grid img{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:8px;
+    border:2px solid var(--line);
+  }
+  .drop-zone .preview-grid .remove-btn{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    background:var(--pin-red);
+    color:#fff;
+    border-radius:50%;
+    width:20px;
+    height:20px;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    border:none;
+  }
+  .drop-zone .preview-item{
+    position:relative;
+  }
+
+  /* care */
+  .care-list{
+    display:flex; flex-direction:column; gap:12px;
+    overflow-y:auto; max-height:280px; padding-right:4px;
+    margin-bottom:14px;
+  }
+  .care-note{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 13px;
+  }
+  .care-note .who{
+    font-weight:700; font-size:0.82rem; color:var(--marmalade-dark);
+    display:flex; justify-content:space-between;
+  }
+  .care-note .who span:last-child{font-weight:500; color:var(--sage-dark); font-size:0.72rem;}
+  .care-note p{margin:5px 0 0; font-size:0.88rem;}
+
+  /* featured */
+  .box-featured{background:var(--black); color:var(--cream);}
+  .box-featured .box-eyebrow{color:#E8B98C;}
+  .box-featured .box-title{color:var(--cream);}
+  .box-featured .box-head{border-bottom-color:rgba(247,241,229,0.18);}
+  .box-featured input, .box-featured textarea, .box-featured .drop-zone{
+    background:rgba(247,241,229,0.08);
+    border-color:rgba(247,241,229,0.25);
+    color:var(--cream);
+  }
+  .box-featured label{color:#E8B98C;}
+  .box-featured .btn-ghost{border-color:rgba(247,241,229,0.3); color:var(--cream);}
+  .box-featured .admin-toolbar{border-top-color:rgba(247,241,229,0.18);}
+  .box-featured .drop-zone:hover, .box-featured .drop-zone.drag-over{
+    border-color:#E8B98C;
+    background:rgba(247,241,229,0.15);
+  }
+
+  .featured-hero{
+    position:relative;
+    border-radius:10px;
+    overflow:hidden;
+    aspect-ratio:4/3;
+    background:#000;
+    margin-bottom:12px;
+    border:1px solid rgba(247,241,229,0.18);
+  }
+  .featured-hero img{width:100%;height:100%;object-fit:cover;display:block;}
+  .featured-name-tag{
+    position:absolute; left:10px; bottom:10px;
+    background:rgba(26,22,20,0.78);
+    backdrop-filter:blur(2px);
+    padding:6px 11px;
+    border-radius:7px;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1rem;
+    border:1px solid rgba(247,241,229,0.25);
+  }
+  .gallery-strip{
+    display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px;
+  }
+  .gallery-strip img{
+    width:60px;height:60px;object-fit:cover;border-radius:7px;
+    border:2px solid transparent; cursor:pointer; flex-shrink:0;
+    opacity:0.65; transition:opacity 0.15s, border-color 0.15s;
+  }
+  .gallery-strip img:hover{opacity:0.9;}
+  .gallery-strip img.active{opacity:1; border-color:var(--marmalade);}
+
+  /* writeup */
+  .writeup-name{font-family:var(--font-display); font-weight:700; font-size:1.15rem; margin:0 0 4px;}
+  .writeup-byline{font-size:0.76rem; color:var(--sage-dark); font-weight:600; margin-bottom:10px;}
+  .writeup-body{font-size:0.92rem;}
+
+  /* trivia */
+  .trivia-today{
+    background:linear-gradient(135deg, var(--marmalade), var(--marmalade-dark));
+    color:#fff;
+    border-radius:10px;
+    padding:16px 16px 14px;
+    margin-bottom:12px;
+    position:relative;
+  }
+  .trivia-today .label{
+    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; opacity:0.9;
+  }
+  .trivia-today p{margin:8px 0 0; font-family:var(--font-display); font-size:1.08rem; line-height:1.4;}
+  .trivia-meta{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .trivia-meta .count{font-size:0.74rem; color:var(--sage-dark); font-weight:600;}
+  .trivia-item{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 12px;
+    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:0.9rem;
+  }
+
+  /* video */
+  .video-frame-wrap{
+    border-radius:10px; overflow:hidden; border:1px solid var(--line);
+    aspect-ratio:16/9; background:#000; margin-bottom:10px;
+  }
+  .video-frame-wrap iframe{width:100%; height:100%; border:0; display:block;}
+  .video-caption{font-size:0.85rem; color:var(--sage-dark); font-style:italic;}
+
+  /* stories */
+  .stories-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:16px; margin-bottom:14px;
+  }
+  .story-card{
+    background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:13px;
+  }
+  .story-photos{display:flex; gap:5px; margin-bottom:9px; flex-wrap:wrap;}
+  .story-photos img{
+    width:60px; height:60px; object-fit:cover; border-radius:6px;
+  }
+  .story-title{font-family:var(--font-display); font-weight:700; font-size:1.02rem; margin:0 0 3px;}
+  .story-by{font-size:0.72rem; color:var(--sage-dark); font-weight:600; margin-bottom:6px;}
+  .story-text{font-size:0.86rem;}
+
+  /* directory */
+  .directory-tabs{display:flex; gap:8px; margin-bottom:12px;}
+  .dtab{
+    font-size:0.78rem; font-weight:700; padding:6px 13px; border-radius:20px;
+    background:var(--cream); border:1px solid var(--line); color:var(--ink);
+  }
+  .dtab.active{background:var(--sage); color:#fff; border-color:var(--sage);}
+  .directory-list{display:flex; flex-direction:column; gap:9px; max-height:230px; overflow-y:auto; margin-bottom:14px;}
+  .dir-entry{
+    background:var(--cream); border:1px solid var(--line); border-radius:9px; padding:10px 12px;
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .dir-entry .biz-name{font-weight:700; font-size:0.9rem;}
+  .dir-entry .biz-meta{font-size:0.76rem; color:var(--sage-dark);}
+  .dir-entry .biz-tag{
+    font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em; font-weight:700;
+    background:var(--marmalade); color:#fff; padding:2px 7px; border-radius:5px; flex-shrink:0;
+  }
+  .dir-entry .biz-tag.product{background:var(--sage);}
+
+  /* topic */
+  .topic-of-day{
+    background:var(--cream-2); border-radius:10px; padding:14px 16px; margin-bottom:14px;
+    border-left:4px solid var(--marmalade);
+  }
+  .topic-of-day .label{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; color:var(--marmalade-dark);}
+  .topic-of-day p{margin:6px 0 0; font-family:var(--font-display); font-size:1.05rem;}
+
+  /* comments */
+  .comment-section{
+    margin-top:14px;
+    border-top:1px dashed var(--line);
+    padding-top:12px;
+  }
+  .comments-list{
+    display:flex; flex-direction:column; gap:8px;
+    max-height:150px; overflow-y:auto; margin-bottom:8px;
+  }
+  .comment{
+    background:var(--cream); border:1px solid var(--line); border-radius:9px; padding:9px 12px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .comment .who{font-weight:700; font-size:0.8rem; color:var(--marmalade-dark);}
+  .comment p{margin:0; font-size:0.86rem;}
+  .comment .cmt-del{
+    background:none; border:none; color:var(--pin-red); font-weight:700; cursor:pointer;
+    font-size:0.8rem; padding:2px 6px;
+  }
+  .inline-form{
+    display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .inline-form input, .inline-form textarea{
+    flex:1; min-width:100px;
+    padding:8px 12px; border:1.5px solid var(--line); border-radius:9px;
+    background:var(--cream); font-size:0.85rem;
+  }
+  .inline-form textarea{min-height:38px;}
+
+  .empty-state{
+    font-size:0.85rem; color:var(--sage-dark); font-style:italic; padding:10px 0;
+  }
+
+  footer{
+    text-align:center; padding:30px 20px 50px; color:var(--sage-dark); font-size:0.8rem;
+  }
+  footer .paw-divider{margin-bottom:14px;}
+
+  ::-webkit-scrollbar{width:7px; height:7px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:10px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--sage);}
+
+  /* admin toggle */
+  .admin-toggle{
+    position:absolute;
+    top:18px; right:22px;
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    color:var(--ink);
+    font-weight:700;
+    font-size:0.78rem;
+    padding:7px 14px;
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    z-index:5;
+  }
+  .admin-toggle:hover{border-color:var(--marmalade-dark);}
+  .admin-toggle.is-on{background:var(--sage); color:#fff; border-color:var(--sage-dark);}
+
+  .submit-note{
+    font-size:0.84rem;
+    color:var(--sage-dark);
+    background:var(--cream);
+    border:1px dashed var(--line);
+    border-radius:9px;
+    padding:11px 13px;
+    margin-bottom:13px;
+    line-height:1.5;
+  }
+  .submit-note strong{color:var(--ink);}
+
+  .admin-panel{
+    max-width:1240px;
+    margin:0 auto 26px;
+    padding:0 20px;
+  }
+  .admin-panel-inner{
+    background:var(--black);
+    color:var(--cream);
+    border-radius:var(--radius);
+    padding:20px 24px 24px;
+    box-shadow:var(--shadow);
+  }
+  .admin-panel-head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:6px;
+  }
+  .admin-panel-head h2{
+    font-family:var(--font-display); font-weight:700; font-size:1.3rem; margin:0;
+    color:var(--cream);
+  }
+  .admin-sub{font-size:0.82rem; color:#cfc6b4; margin:0 0 16px;}
+  .admin-tabs{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .admin-tab{
+    font-size:0.78rem; font-weight:700; padding:7px 14px; border-radius:20px;
+    background:rgba(247,241,229,0.08); border:1px solid rgba(247,241,229,0.25); color:var(--cream);
+  }
+  .admin-tab.active{background:var(--marmalade); border-color:var(--marmalade); color:#fff;}
+  .admin-queue{display:flex; flex-direction:column; gap:12px;}
+  .queue-card{
+    background:rgba(247,241,229,0.06);
+    border:1px solid rgba(247,241,229,0.18);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .queue-card-head{display:flex; justify-content:space-between; gap:10px; margin-bottom:6px;}
+  .queue-card-title{font-family:var(--font-display); font-weight:700; font-size:1.02rem;}
+  .queue-card-meta{font-size:0.72rem; color:#cfc6b4;}
+  .queue-card-body{font-size:0.86rem; color:#ece4d2; margin-bottom:10px;}
+  .queue-photos{display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap;}
+  .queue-photos img{width:54px; height:54px; object-fit:cover; border-radius:6px; border:1px solid rgba(247,241,229,0.2);}
+  .queue-actions{display:flex; gap:8px;}
+  .btn-approve{background:var(--sage); color:#fff; font-weight:700; font-size:0.8rem; padding:7px 14px; border-radius:8px;}
+  .btn-approve:hover{background:var(--sage-dark);}
+  .btn-reject{background:rgba(193,67,46,0.85); color:#fff; font-weight:700; font-size:0.8rem; padding:7px 14px; border-radius:8px;}
+  .btn-reject:hover{background:var(--pin-red);}
+
+  .admin-mode .admin-toolbar{display:flex !important;}
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <button class="admin-toggle" id="adminToggleBtn" onclick="toggleAdmin()">🔑 Admin</button>
+  <div class="brand-mark">🐾 The Whisker Board</div>
+  <div class="tagline">a community corkboard for everyone owned by a <em>cat</em></div>
+  <div class="paw-divider">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="6"/><circle cx="4" cy="7" r="2.4"/><circle cx="20" cy="7" r="2.4"/><circle cx="8" cy="3" r="2.2"/><circle cx="16" cy="3" r="2.2"/></svg>
+  </div>
+</header>
+
+<div class="admin-panel" id="adminPanel" style="display:none;" aria-label="Admin review panel">
+  <div class="admin-panel-inner">
+    <div class="admin-panel-head">
+      <h2>🗂️ Submission Review</h2>
+      <button class="btn-ghost btn-sm" style="border-color:rgba(247,241,229,0.3); color:var(--cream);" onclick="closeAdminPanel()">Close</button>
+    </div>
+    <p class="admin-sub">Approve or reject submissions before they appear on the board.</p>
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="qTabFeatured" onclick="setQueueTab('featured')">Featured Cats</button>
+      <button class="admin-tab" id="qTabTrivia" onclick="setQueueTab('trivia')">Trivia</button>
+      <button class="admin-tab" id="qTabStories" onclick="setQueueTab('stories')">Stories</button>
+    </div>
+    <div class="admin-queue" id="adminQueue"></div>
+  </div>
+</div>
+
+<main class="board" id="boardContainer">
+  <!-- Rendered by JavaScript -->
+</main>
+
+<footer>
+  <div class="paw-divider">
+    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><circle cx="12" cy="14" r="6"/><circle cx="4" cy="7" r="2.4"/><circle cx="20" cy="7" r="2.4"/><circle cx="8" cy="3" r="2.2"/><circle cx="16" cy="3" r="2.2"/></svg>
+  </div>
+  The Whisker Board — built by cat people, for cat people. Stored right here in your browser.
+</footer>
+
+<script>
+/* ============ ADMIN PASSWORD ============ */
+const ADMIN_PASSWORD = 'whiskers123';
+let isAdmin = false;
+let activeQueueTab = 'featured';
+
+/* ============ STORAGE ============ */
+const DB_KEY = 'whiskerboard_data_v6';
+
+function uid(){ return Math.random().toString(36).slice(2,9); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function esc(str){ const d=document.createElement('div'); d.textContent=str==null?'':str; return d.innerHTML; }
+
+function defaultDB(){
+  return {
+    care: [
+      {id:uid(), who:'Lani', when:'Jun 14', text:'Brush short-haired cats once a week, long-haired ones every other day. Cuts down on hairballs a LOT.'},
+      {id:uid(), who:'Doc Reyes', when:'Jun 10', text:'Annual dental check matters even if breath smells fine — tartar builds up quietly under the gumline.'},
+      {id:uid(), who:'Pao', when:'Jun 2', text:'Switching food? Mix old and new over 7-10 days. Sudden switches = upset tummy, learned this the messy way.'}
+    ],
+    featured: {
+      name:'Biscuit',
+      by:'Submitted by the Santos family',
+      writeup:'Biscuit showed up on our doorstep during a typhoon three years ago, soaked and skinny. Now he runs the household — claims the laundry basket as his throne and supervises every meal from the counter. He has never once caught a mouse but is, by his own estimation, an excellent guard cat.',
+      date: todayStr(),
+      photos:[
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23D97E3F" width="400" height="300"/%3E%3Ctext x="50" y="150" fill="white" font-family="sans-serif" font-size="24"%3ECat Photo 1%3C/text%3E%3C/svg%3E',
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%237C8A6E" width="400" height="300"/%3E%3Ctext x="50" y="150" fill="white" font-family="sans-serif" font-size="24"%3ECat Photo 2%3C/text%3E%3C/svg%3E',
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23B8632B" width="400" height="300"/%3E%3Ctext x="50" y="150" fill="white" font-family="sans-serif" font-size="24"%3ECat Photo 3%3C/text%3E%3C/svg%3E'
+      ]
+    },
+    trivia: [
+      {id:uid(), text:'A group of cats is called a "clowder."'},
+      {id:uid(), text:"Cats can't taste sweetness — they're missing the taste receptor for it entirely."},
+      {id:uid(), text:'A cat\'s whiskers are roughly as wide as its body, helping it judge if it can fit through a gap.'},
+      {id:uid(), text:'The oldest known pet cat was found in a 9,500-year-old grave on Cyprus.'},
+      {id:uid(), text:'Cats spend around 70% of their lives asleep.'},
+      {id:uid(), text:'A cat\'s purr typically falls between 25–150 Hz, a range linked to bone and tissue healing.'},
+      {id:uid(), text:'Cats have a third eyelid called the haw, usually only visible when they\'re unwell or very relaxed.'},
+      {id:uid(), text:'Each cat\'s nose pad has a unique pattern, like a human fingerprint.'},
+      {id:uid(), text:'Cats walk like camels and giraffes, moving both right legs then both left legs.'},
+      {id:uid(), text:'A cat\'s back is so flexible because it has no functional collarbone holding it in place.'}
+    ],
+    triviaArchive: [],
+    video: {
+      url:'https://www.youtube.com/embed/J---aiyznGQ',
+      caption:'A keyboard cat classic, because some things never get old.'
+    },
+    stories: [
+      {
+        id:uid(), title:'The day she found her way home', by:'Inna C.',
+        photos:[
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23D97E3F" width="200" height="200"/%3E%3Ctext x="20" y="110" fill="white" font-family="sans-serif" font-size="18"%3EStory Photo%3C/text%3E%3C/svg%3E'
+        ],
+        text:'Mochi went missing for eleven days after a thunderstorm spooked her out an open window. We papered the whole subdivision with flyers. On day eleven, a neighbor three streets over heard scratching in her garage. Mochi walked out thinner but completely unbothered, like she\'d just stepped out for a bit.'
+      },
+      {
+        id:uid(), title:'Rescued from a drainage pipe', by:'Marco T.',
+        photos:[
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%237C8A6E" width="200" height="200"/%3E%3Ctext x="20" y="110" fill="white" font-family="sans-serif" font-size="18"%3EStory Photo%3C/text%3E%3C/svg%3E'
+        ],
+        text:'Heard tiny meows coming from a storm drain during the rainy season. Took two hours, a flashlight, and a lot of patience to coax out a kitten we now call Drainpipe. He\'s the most spoiled cat on the block now.'
+      }
+    ],
+    directory: [
+      {id:uid(), type:'vet', name:'Paws & Claws Clinic', area:'Las Piñas', contact:'0917 123 4567'},
+      {id:uid(), type:'vet', name:'VetCare Animal Hospital', area:'Parañaque', contact:'(02) 8123 4567'},
+      {id:uid(), type:'product', name:'Whisker Supply Co.', area:'Online / NCR-wide', contact:'0922 555 0199'}
+    ],
+    topic: 'What\'s the weirdest thing your cat treats as a toy?',
+    comments: {
+      care: [],
+      featured: [],
+      writeup: [],
+      trivia: [],
+      video: [],
+      stories: [],
+      directory: [],
+      topic: []
+    },
+    pendingFeatured: [],
+    pendingTrivia: [],
+    pendingStories: []
+  };
+}
+
+function loadDB(){
+  try{
+    const raw=localStorage.getItem(DB_KEY);
+    if(raw){
+      const data=JSON.parse(raw);
+      if(!data.comments) data.comments={};
+      ['care','featured','writeup','trivia','video','stories','directory','topic'].forEach(b=>{
+        if(!data.comments[b]) data.comments[b]=[];
+      });
+      return data;
+    }
+  }catch(e){}
+  return defaultDB();
+}
+
+let DB = loadDB();
+function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
+
+/* ============ IMAGE UPLOAD HELPERS ============ */
+function handleImageDrop(files, maxCount, onImages) {
+  const validFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if(validFiles.length === 0) return;
+  
+  const readers = validFiles.map(file => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.readAsDataURL(file);
+    });
+  });
+  
+  Promise.all(readers).then(dataUrls => {
+    const images = dataUrls.slice(0, maxCount);
+    onImages(images);
+  });
+}
+
+function createDropZone(elementId, maxCount, onImages, existingImages = []) {
+  const container = document.getElementById(elementId);
+  if(!container) return;
+  
+  const zone = document.createElement('div');
+  zone.className = 'drop-zone';
+  zone.innerHTML = `
+    <div class="icon">📸</div>
+    <div class="hint">Drop images here or click to browse</div>
+    <div class="preview-grid" id="preview_${elementId}"></div>
+  `;
+  
+  // Add existing images
+  const previewGrid = zone.querySelector('.preview-grid');
+  let imageData = [...existingImages];
+  
+  function renderPreviews() {
+    previewGrid.innerHTML = imageData.map((img, idx) => `
+      <div class="preview-item">
+        <img src="${img}" alt="Uploaded image ${idx+1}">
+        <button class="remove-btn" onclick="removeImage('${elementId}', ${idx})">✕</button>
+      </div>
+    `).join('');
+  }
+  
+  // Store data on the zone
+  zone._imageData = imageData;
+  zone._maxCount = maxCount;
+  zone._onImages = onImages;
+  zone._renderPreviews = renderPreviews;
+  
+  // Click to browse
+  zone.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = true;
+    input.onchange = () => {
+      handleImageDrop(input.files, maxCount - imageData.length, (newImages) => {
+        imageData.push(...newImages);
+        zone._imageData = imageData;
+        renderPreviews();
+        onImages(imageData);
+      });
+    };
+    input.click();
+  });
+  
+  // Drag and drop
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('drag-over');
+  });
+  
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    handleImageDrop(e.dataTransfer.files, maxCount - imageData.length, (newImages) => {
+      imageData.push(...newImages);
+      zone._imageData = imageData;
+      renderPreviews();
+      onImages(imageData);
+    });
+  });
+  
+  renderPreviews();
+  container.appendChild(zone);
+  
+  // Store reference for removal
+  window['removeImage_' + elementId] = (idx) => {
+    imageData.splice(idx, 1);
+    zone._imageData = imageData;
+    renderPreviews();
+    onImages(imageData);
+  };
+}
+
+window.removeImage = function(elementId, idx) {
+  const fn = window['removeImage_' + elementId];
+  if(fn) fn(idx);
+};
+
+/* ============ RENDER FUNCTIONS ============ */
+
+function renderBoard(){
+  const container = document.getElementById('boardContainer');
+  container.innerHTML = '';
+
+  // Create boxes in order with proper grid classes
+  const boxes = [
+    { id: 'care', title: '🩺 Cat Care Corner', eyebrow: 'From owners, for owners', render: renderCareContent, cls: 'box-care' },
+    { id: 'featured', title: '⭐ Featured Cat', eyebrow: '', render: renderFeaturedContent, cls: 'box-featured' },
+    { id: 'writeup', title: '📝 Their Story', eyebrow: 'About this week\'s star', render: renderWriteupContent, cls: 'box-writeup' },
+    { id: 'trivia', title: '🧠 Cat Trivia', eyebrow: 'One a day', render: renderTriviaContent, cls: 'box-trivia' },
+    { id: 'video', title: '🎬 Cat Clip of the Day', eyebrow: 'Sound on', render: renderVideoContent, cls: 'box-video' },
+    { id: 'stories', title: '📖 True Cat Stories', eyebrow: 'Real tales from real owners', render: renderStoriesContent, cls: 'box-stories' },
+    { id: 'directory', title: '📋 Cat Directory', eyebrow: 'Vets & suppliers', render: renderDirectoryContent, cls: 'box-directory' },
+    { id: 'topic', title: '💬 Topic of the Day', eyebrow: 'Talk amongst yourselves', render: renderTopicContent, cls: 'box-topic' }
+  ];
+
+  boxes.forEach(boxInfo => {
+    const box = document.createElement('section');
+    box.className = `box ${boxInfo.cls}`;
+    if(boxInfo.id === 'featured') box.classList.add('box-featured');
+
+    const pin = document.createElement('span');
+    pin.className = 'pin';
+    pin.setAttribute('aria-hidden','true');
+    box.appendChild(pin);
+
+    const head = document.createElement('div');
+    head.className = 'box-head';
+    head.innerHTML = `<h2 class="box-title">${boxInfo.title}</h2><span class="box-eyebrow">${boxInfo.eyebrow}</span>`;
+    box.appendChild(head);
+
+    const content = boxInfo.render();
+    box.appendChild(content);
+
+    // comments
+    const commentSection = document.createElement('div');
+    commentSection.className = 'comment-section';
+    commentSection.innerHTML = renderComments(boxInfo.id);
+    box.appendChild(commentSection);
+
+    container.appendChild(box);
+  });
+
+  if(isAdmin) document.body.classList.add('admin-mode');
+}
+
+/* ============ CONTENT RENDERERS ============ */
+
+function renderCareContent(){
+  const div = document.createElement('div');
+  const list = document.createElement('div');
+  list.className = 'care-list';
+  if(DB.care.length === 0){
+    list.innerHTML = '<p class="empty-state">No tips yet — be the first to share one.</p>';
+  } else {
+    DB.care.slice().reverse().forEach(n => {
+      const note = document.createElement('div');
+      note.className = 'care-note';
+      note.innerHTML = `
+        <div class="who"><span>${esc(n.who)}</span><span>${esc(n.when||'')}</span></div>
+        <p>${esc(n.text)}</p>
+      `;
+      list.appendChild(note);
+    });
+  }
+  div.appendChild(list);
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `<button class="btn-admin danger" onclick="deleteCareItem()">🗑 Delete all</button>`;
+  div.appendChild(toolbar);
+
+  const details = document.createElement('details');
+  details.innerHTML = `
+    <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ Share what worked for you</summary>
+    <div class="field" style="margin-top:10px;">
+      <label for="careName">Your name</label>
+      <input type="text" id="careName" placeholder="e.g. Mara from Tondo">
+    </div>
+    <div class="field">
+      <label for="careText">Your tip</label>
+      <textarea id="careText" rows="3" placeholder="What did you learn the hard way?"></textarea>
+    </div>
+    <button class="btn" onclick="addCareNote()">Post tip</button>
+  `;
+  div.appendChild(details);
+
+  return div;
+}
+
+function renderFeaturedContent(){
+  const div = document.createElement('div');
+  const f = DB.featured;
+
+  const hero = document.createElement('div');
+  hero.className = 'featured-hero';
+  hero.innerHTML = `<img id="featuredHeroImg" src="${esc(f.photos?.[0]||'')}" alt="Featured cat photo"><div class="featured-name-tag">${esc(f.name)}</div>`;
+  div.appendChild(hero);
+
+  const gallery = document.createElement('div');
+  gallery.className = 'gallery-strip';
+  (f.photos||[]).forEach((p,i) => {
+    const img = document.createElement('img');
+    img.src = p;
+    img.className = i===0?'active':'';
+    img.onclick = () => {
+      document.getElementById('featuredHeroImg').src = p;
+      gallery.querySelectorAll('img').forEach(el=>el.classList.remove('active'));
+      img.classList.add('active');
+    };
+    gallery.appendChild(img);
+  });
+  div.appendChild(gallery);
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `
+    <button class="btn-admin" onclick="editFeatured()">✎ Edit</button>
+    <button class="btn-admin danger" onclick="deleteFeatured()">🗑 Delete</button>
+  `;
+  div.appendChild(toolbar);
+
+  const details = document.createElement('details');
+  details.className = 'featured-admin';
+  details.innerHTML = `
+    <summary style="cursor:pointer;font-size:0.78rem;font-weight:700;color:#E8B98C;text-transform:uppercase;letter-spacing:0.06em;list-style:none;">⚙ Submit your cat to be featured</summary>
+    <div class="panel" style="margin-top:10px;">
+      <p class="submit-note" style="background:rgba(247,241,229,0.08);border-color:rgba(247,241,229,0.25);color:#ece4d2;">
+        <strong>Want your cat featured?</strong> Drag and drop photos below or click to upload.
+      </p>
+      <div class="field"><label for="newCatName">Cat's name</label><input type="text" id="newCatName" placeholder="e.g. Biscuit"></div>
+      <div class="field">
+        <label>Photos (up to 5)</label>
+        <div id="featuredDropZone"></div>
+      </div>
+      <div class="field"><label for="newCatWriteup">Their story</label><textarea id="newCatWriteup" rows="3"></textarea></div>
+      <div class="field"><label for="newCatBy">Submitted by</label><input type="text" id="newCatBy" placeholder="Owner's name"></div>
+      <button class="btn" onclick="submitFeaturedCat()">Send for review</button>
+    </div>
+  `;
+  div.appendChild(details);
+
+  // Setup drop zone after rendering
+  setTimeout(() => {
+    createDropZone('featuredDropZone', 5, (images) => {
+      window._featuredImages = images;
+    }, []);
+  }, 0);
+
+  return div;
+}
+
+function renderWriteupContent(){
+  const div = document.createElement('div');
+  const w = DB.featured;
+  div.innerHTML = `
+    <p class="writeup-name">${esc(w.name)}</p>
+    <p class="writeup-byline">${esc(w.by||'')}</p>
+    <p class="writeup-body">${esc(w.writeup||'')}</p>
+  `;
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `<button class="btn-admin" onclick="editWriteup()">✎ Edit</button>`;
+  div.appendChild(toolbar);
+  return div;
+}
+
+function renderTriviaContent(){
+  const div = document.createElement('div');
+
+  const today = DB.trivia[0] || {text:'No trivia yet'};
+  const todayDiv = document.createElement('div');
+  todayDiv.className = 'trivia-today';
+  todayDiv.innerHTML = `<div class="label">Today's trivia</div><p>${esc(today.text)}</p>`;
+  div.appendChild(todayDiv);
+
+  const list = document.createElement('div');
+  DB.trivia.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'trivia-item';
+    item.innerHTML = `<span>${esc(t.text)}</span>`;
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn-admin danger';
+    delBtn.textContent = '✕';
+    delBtn.style.padding = '2px 8px';
+    delBtn.onclick = () => deleteTrivia(t.id);
+    item.appendChild(delBtn);
+    list.appendChild(item);
+  });
+  div.appendChild(list);
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `<button class="btn-admin" onclick="addTriviaPrompt()">+ Add trivia</button>`;
+  div.appendChild(toolbar);
+
+  const details = document.createElement('details');
+  details.innerHTML = `
+    <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ Suggest a trivia fact</summary>
+    <div class="field" style="margin-top:10px;">
+      <label for="newTrivia">New trivia fact</label>
+      <textarea id="newTrivia" rows="2" placeholder="Did you know..."></textarea>
+    </div>
+    <button class="btn" onclick="submitTrivia()">Send for review</button>
+  `;
+  div.appendChild(details);
+
+  return div;
+}
+
+function renderVideoContent(){
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <div class="video-frame-wrap">
+      <iframe id="videoFrame" src="${esc(DB.video.url)}" title="Featured cat video" allowfullscreen></iframe>
+    </div>
+    <p class="video-caption">${esc(DB.video.caption)}</p>
+  `;
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `
+    <button class="btn-admin" onclick="editVideo()">✎ Edit</button>
+    <button class="btn-admin danger" onclick="deleteVideo()">🗑 Delete</button>
+  `;
+  div.appendChild(toolbar);
+
+  const details = document.createElement('details');
+  details.style.marginTop = '8px';
+  details.innerHTML = `
+    <summary class="btn-ghost btn-sm" style="display:inline-block; list-style:none;">+ Suggest a video</summary>
+    <div class="field" style="margin-top:10px;">
+      <label for="videoUrlInput">YouTube embed URL</label>
+      <input type="text" id="videoUrlInput" placeholder="https://www.youtube.com/embed/...">
+    </div>
+    <div class="field">
+      <label for="videoCapInput">Caption</label>
+      <input type="text" id="videoCapInput" placeholder="What makes this clip great?">
+    </div>
+    <button class="btn" onclick="setVideo()">Set video</button>
+  `;
+  div.appendChild(details);
+  return div;
+}
+
+function renderStoriesContent(){
+  const div = document.createElement('div');
+  const grid = document.createElement('div');
+  grid.className = 'stories-grid';
+
+  if(DB.stories.length === 0){
+    grid.innerHTML = '<p class="empty-state">No stories yet — share the first one.</p>';
+  } else {
+    DB.stories.slice().reverse().forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'story-card';
+      let photosHtml = '';
+      if(s.photos && s.photos.length){
+        photosHtml = `<div class="story-photos">${s.photos.map(p => `<img src="${esc(p)}">`).join('')}</div>`;
+      }
+      card.innerHTML = `
+        ${photosHtml}
+        <p class="story-title">${esc(s.title)}</p>
+        <p class="story-by">by ${esc(s.by)}</p>
+        <p class="story-text">${esc(s.text)}</p>
+      `;
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-admin danger';
+      delBtn.textContent = '✕ Delete';
+      delBtn.style.marginTop = '6px';
+      delBtn.onclick = () => deleteStory(s.id);
+      card.appendChild(delBtn);
+      grid.appendChild(card);
+    });
+  }
+  div.appendChild(grid);
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `<button class="btn-admin" onclick="addStoryPrompt()">+ Add story</button>`;
+  div.appendChild(toolbar);
+
+  const details = document.createElement('details');
+  details.innerHTML = `
+    <summary class="btn" style="display:inline-block; list-style:none; padding:9px 16px;">Send your cat story</summary>
+    <p class="submit-note" style="margin-top:12px;">Got a true story about your cat? Drag and drop photos or click to upload.</p>
+    <div class="field"><label for="storyTitle">Title</label><input type="text" id="storyTitle" placeholder="e.g. The day she found her way home"></div>
+    <div class="field">
+      <label>Photos (up to 3)</label>
+      <div id="storyDropZone"></div>
+    </div>
+    <div class="field"><label for="storyBy">Your name</label><input type="text" id="storyBy" placeholder="Who's telling the story?"></div>
+    <div class="field"><label for="storyText">The story</label><textarea id="storyText" rows="4" placeholder="Tell us what happened..."></textarea></div>
+    <button class="btn" onclick="submitStory()">Send for review</button>
+  `;
+  div.appendChild(details);
+
+  setTimeout(() => {
+    createDropZone('storyDropZone', 3, (images) => {
+      window._storyImages = images;
+    }, []);
+  }, 0);
+
+  return div;
+}
+
+function renderDirectoryContent(){
+  const div = document.createElement('div');
+  const tabs = document.createElement('div');
+  tabs.className = 'directory-tabs';
+  tabs.innerHTML = `
+    <button class="dtab active" onclick="filterDirectory('all')">All</button>
+    <button class="dtab" onclick="filterDirectory('vet')">Vets</button>
+    <button class="dtab" onclick="filterDirectory('product')">Products</button>
+  `;
+  div.appendChild(tabs);
+
+  const list = document.createElement('div');
+  list.className = 'directory-list';
+  list.id = 'directoryList';
+  div.appendChild(list);
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `<button class="btn-admin" onclick="addDirPrompt()">+ Add listing</button>`;
+  div.appendChild(toolbar);
+
+  const details = document.createElement('details');
+  details.innerHTML = `
+    <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ List your business</summary>
+    <div class="field" style="margin-top:10px;">
+      <label for="bizType">Type</label>
+      <select id="bizType" style="width:100%;padding:9px 11px;border-radius:9px;border:1.5px solid var(--line);background:var(--cream);font-family:var(--font-body);">
+        <option value="vet">Veterinary clinic</option>
+        <option value="product">Cat products / supplies</option>
+      </select>
+    </div>
+    <div class="field"><label for="bizName">Business name</label><input type="text" id="bizName" placeholder="e.g. Paws & Claws Clinic"></div>
+    <div class="field"><label for="bizArea">Area / city</label><input type="text" id="bizArea" placeholder="e.g. Las Piñas"></div>
+    <div class="field"><label for="bizContact">Contact number</label><input type="tel" id="bizContact" placeholder="e.g. 0917 123 4567"></div>
+    <button class="btn" onclick="addDirectoryEntry()">Add listing</button>
+  `;
+  div.appendChild(details);
+
+  renderDirectoryList();
+  return div;
+}
+
+function renderTopicContent(){
+  const div = document.createElement('div');
+  const topicDiv = document.createElement('div');
+  topicDiv.className = 'topic-of-day';
+  topicDiv.innerHTML = `<div class="label">Today we're talking about</div><p>${esc(DB.topic)}</p>`;
+  div.appendChild(topicDiv);
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-toolbar';
+  toolbar.innerHTML = `<button class="btn-admin" onclick="editTopic()">✎ Edit topic</button>`;
+  div.appendChild(toolbar);
+
+  return div;
+}
+
+/* ============ COMMENTS ============ */
+
+function renderComments(boxId){
+  const comments = DB.comments[boxId] || [];
+  let html = `<div class="comments-list">`;
+  if(comments.length === 0){
+    html += `<p class="empty-state">No comments yet.</p>`;
+  } else {
+    comments.slice().reverse().forEach(c => {
+      html += `<div class="comment"><span><span class="who">${esc(c.who)}</span> ${esc(c.text)}</span>
+        <button class="cmt-del" onclick="deleteComment('${boxId}','${c.id}')">✕</button></div>`;
+    });
+  }
+  html += `</div><div class="inline-form">
+    <input type="text" placeholder="Name" id="cmtName_${boxId}">
+    <textarea rows="1" placeholder="Add comment..." id="cmtText_${boxId}"></textarea>
+    <button class="btn btn-sm" onclick="addComment('${boxId}')">Post</button>
+  </div>`;
+  return html;
+}
+
+function addComment(boxId){
+  const nameEl = document.getElementById(`cmtName_${boxId}`);
+  const textEl = document.getElementById(`cmtText_${boxId}`);
+  const who = nameEl.value.trim() || 'Anonymous';
+  const text = textEl.value.trim();
+  if(!text) return;
+  if(!DB.comments[boxId]) DB.comments[boxId] = [];
+  DB.comments[boxId].push({id:uid(), who, text});
+  saveDB();
+  renderBoard();
+}
+
+function deleteComment(boxId, commentId){
+  if(!confirm('Delete this comment?')) return;
+  DB.comments[boxId] = DB.comments[boxId].filter(c => c.id !== commentId);
+  saveDB();
+  renderBoard();
+}
+
+/* ============ ADMIN ACTIONS ============ */
+
+function toggleAdmin(){
+  isAdmin = !isAdmin;
+  const btn = document.getElementById('adminToggleBtn');
+  btn.textContent = isAdmin ? '🔓 Admin (on)' : '🔑 Admin';
+  btn.classList.toggle('is-on', isAdmin);
+  document.body.classList.toggle('admin-mode', isAdmin);
+  if(isAdmin){
+    document.getElementById('adminPanel').style.display = 'block';
+    renderAdminQueue();
+  } else {
+    document.getElementById('adminPanel').style.display = 'none';
+  }
+}
+
+function closeAdminPanel(){
+  document.getElementById('adminPanel').style.display = 'none';
+}
+
+function setQueueTab(tab){
+  activeQueueTab = tab;
+  ['featured','trivia','stories'].forEach(t => {
+    document.getElementById(`qTab${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('active', t===tab);
+  });
+  renderAdminQueue();
+}
+
+function renderAdminQueue(){
+  const el = document.getElementById('adminQueue');
+  if(activeQueueTab === 'featured'){
+    if(DB.pendingFeatured.length === 0){
+      el.innerHTML = '<p class="admin-empty">No featured-cat submissions waiting.</p>';
+      return;
+    }
+    el.innerHTML = DB.pendingFeatured.map(s => `
+      <div class="queue-card">
+        <div class="queue-card-head"><span class="queue-card-title">${esc(s.name)}</span><span class="queue-card-meta">${esc(s.submittedOn||'')}</span></div>
+        <div class="queue-card-meta">${esc(s.by||'')}</div>
+        ${s.photos && s.photos.length ? `<div class="queue-photos">${s.photos.map(p=>`<img src="${esc(p)}">`).join('')}</div>` : ''}
+        <div class="queue-card-body">${esc(s.writeup||'')}</div>
+        <div class="queue-actions">
+          <button class="btn-approve" onclick="approveFeatured('${s.id}')">Approve</button>
+          <button class="btn-reject" onclick="rejectSubmission('pendingFeatured','${s.id}')">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  } else if(activeQueueTab === 'trivia'){
+    if(DB.pendingTrivia.length === 0){
+      el.innerHTML = '<p class="admin-empty">No trivia submissions waiting.</p>';
+      return;
+    }
+    el.innerHTML = DB.pendingTrivia.map(s => `
+      <div class="queue-card">
+        <div class="queue-card-head"><span class="queue-card-title">Trivia suggestion</span><span class="queue-card-meta">${esc(s.submittedOn||'')}</span></div>
+        <div class="queue-card-body">${esc(s.text)}</div>
+        <div class="queue-actions">
+          <button class="btn-approve" onclick="approveTrivia('${s.id}')">Approve</button>
+          <button class="btn-reject" onclick="rejectSubmission('pendingTrivia','${s.id}')">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  } else if(activeQueueTab === 'stories'){
+    if(DB.pendingStories.length === 0){
+      el.innerHTML = '<p class="admin-empty">No story submissions waiting.</p>';
+      return;
+    }
+    el.innerHTML = DB.pendingStories.map(s => `
+      <div class="queue-card">
+        <div class="queue-card-head"><span class="queue-card-title">${esc(s.title)}</span><span class="queue-card-meta">${esc(s.submittedOn||'')}</span></div>
+        <div class="queue-card-meta">by ${esc(s.by||'')}</div>
+        ${s.photos && s.photos.length ? `<div class="queue-photos">${s.photos.map(p=>`<img src="${esc(p)}">`).join('')}</div>` : ''}
+        <div class="queue-card-body">${esc(s.text||'')}</div>
+        <div class="queue-actions">
+          <button class="btn-approve" onclick="approveStory('${s.id}')">Approve</button>
+          <button class="btn-reject" onclick="rejectSubmission('pendingStories','${s.id}')">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function approveFeatured(id){
+  const idx = DB.pendingFeatured.findIndex(s => s.id === id);
+  if(idx === -1) return;
+  const [sub] = DB.pendingFeatured.splice(idx,1);
+  DB.featured = { name: sub.name, by: sub.by, writeup: sub.writeup, date: todayStr(), photos: sub.photos };
+  saveDB();
+  renderBoard();
+  renderAdminQueue();
+}
+
+function approveTrivia(id){
+  const idx = DB.pendingTrivia.findIndex(s => s.id === id);
+  if(idx === -1) return;
+  const [sub] = DB.pendingTrivia.splice(idx,1);
+  DB.trivia.unshift({id:uid(), text: sub.text});
+  if(DB.trivia.length > 10) DB.trivia.pop();
+  saveDB();
+  renderBoard();
+  renderAdminQueue();
+}
+
+function approveStory(id){
+  const idx = DB.pendingStories.findIndex(s => s.id === id);
+  if(idx === -1) return;
+  const [sub] = DB.pendingStories.splice(idx,1);
+  DB.stories.push({id:uid(), title: sub.title, by: sub.by, text: sub.text, photos: sub.photos});
+  saveDB();
+  renderBoard();
+  renderAdminQueue();
+}
+
+function rejectSubmission(listName, id){
+  const idx = DB[listName].findIndex(s => s.id === id);
+  if(idx === -1) return;
+  DB[listName].splice(idx,1);
+  saveDB();
+  renderAdminQueue();
+}
+
+/* ============ ITEM ACTIONS ============ */
+
+function addCareNote(){
+  const nameEl = document.getElementById('careName');
+  const textEl = document.getElementById('careText');
+  const who = nameEl.value.trim() || 'Anonymous cat parent';
+  const text = textEl.value.trim();
+  if(!text) return;
+  DB.care.push({id:uid(), who, when:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), text});
+  saveDB();
+  renderBoard();
+}
+
+function deleteCareItem(){
+  if(!confirm('Delete all care tips?')) return;
+  DB.care = [];
+  saveDB();
+  renderBoard();
+}
+
+function editFeatured(){
+  const f = DB.featured;
+  const name = prompt('Cat name:', f.name);
+  if(name !== null) f.name = name;
+  const by = prompt('Submitted by:', f.by||'');
+  if(by !== null) f.by = by;
+  const writeup = prompt('Writeup:', f.writeup||'');
+  if(writeup !== null) f.writeup = writeup;
+  saveDB();
+  renderBoard();
+}
+
+function deleteFeatured(){
+  if(!confirm('Delete featured cat?')) return;
+  DB.featured = { name: 'No cat featured', by: '', writeup: '', date: todayStr(), photos: [] };
+  saveDB();
+  renderBoard();
+}
+
+function submitFeaturedCat(){
+  const name = document.getElementById('newCatName').value.trim();
+  if(!name){ alert('Please enter the cat\'s name.'); return; }
+  const photos = window._featuredImages || [];
+  if(photos.length === 0){ alert('Please add at least one photo by dragging or clicking the drop zone.'); return; }
+  const writeup = document.getElementById('newCatWriteup').value.trim();
+  const by = document.getElementById('newCatBy').value.trim();
+  DB.pendingFeatured.push({id:uid(), name, by: by?`Submitted by ${by}`:'', writeup, submittedOn:todayStr(), photos});
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  document.getElementById('newCatName').value='';
+  document.getElementById('newCatWriteup').value='';
+  document.getElementById('newCatBy').value='';
+  window._featuredImages = [];
+  alert('Thanks! Your cat has been sent in for review.');
+}
+
+function editWriteup(){
+  const w = DB.featured;
+  const name = prompt('Cat name:', w.name);
+  if(name !== null) w.name = name;
+  const by = prompt('By:', w.by||'');
+  if(by !== null) w.by = by;
+  const body = prompt('Story:', w.writeup||'');
+  if(body !== null) w.writeup = body;
+  saveDB();
+  renderBoard();
+}
+
+function deleteTrivia(id){
+  if(!confirm('Delete this trivia?')) return;
+  DB.trivia = DB.trivia.filter(t => t.id !== id);
+  saveDB();
+  renderBoard();
+}
+
+function addTriviaPrompt(){
+  const text = prompt('Enter new trivia fact:');
+  if(text && text.trim()){
+    DB.trivia.unshift({id:uid(), text: text.trim()});
+    if(DB.trivia.length > 10) DB.trivia.pop();
+    saveDB();
+    renderBoard();
+  }
+}
+
+function submitTrivia(){
+  const textEl = document.getElementById('newTrivia');
+  const text = textEl.value.trim();
+  if(!text) return;
+  DB.pendingTrivia.push({id:uid(), text, submittedOn:todayStr()});
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  textEl.value='';
+  alert('Thanks! Your trivia fact has been sent in for review.');
+}
+
+function editVideo(){
+  const url = prompt('YouTube embed URL:', DB.video.url);
+  if(url !== null) DB.video.url = url;
+  const cap = prompt('Caption:', DB.video.caption||'');
+  if(cap !== null) DB.video.caption = cap;
+  saveDB();
+  renderBoard();
+}
+
+function deleteVideo(){
+  if(!confirm('Remove video?')) return;
+  DB.video = { url: 'https://www.youtube.com/embed/J---aiyznGQ', caption: 'Default video' };
+  saveDB();
+  renderBoard();
+}
+
+function setVideo(){
+  const urlEl = document.getElementById('videoUrlInput');
+  const capEl = document.getElementById('videoCapInput');
+  const url = urlEl.value.trim();
+  if(!url) return;
+  DB.video = {url, caption: capEl.value.trim() || 'A cat clip worth your time.'};
+  saveDB();
+  renderBoard();
+  urlEl.value=''; capEl.value='';
+}
+
+function deleteStory(id){
+  if(!confirm('Delete this story?')) return;
+  DB.stories = DB.stories.filter(s => s.id !== id);
+  saveDB();
+  renderBoard();
+}
+
+function addStoryPrompt(){
+  const title = prompt('Story title:');
+  if(!title) return;
+  const by = prompt('Your name:') || 'Anonymous';
+  const text = prompt('The story:');
+  if(!text) return;
+  DB.stories.push({id:uid(), title, by, text, photos: []});
+  saveDB();
+  renderBoard();
+}
+
+function submitStory(){
+  const title = document.getElementById('storyTitle').value.trim();
+  const by = document.getElementById('storyBy').value.trim() || 'Anonymous';
+  const text = document.getElementById('storyText').value.trim();
+  if(!title || !text){ alert('Please add a title and story.'); return; }
+  const photos = window._storyImages || [];
+  DB.pendingStories.push({id:uid(), title, by, text, photos, submittedOn:todayStr()});
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  document.getElementById('storyTitle').value='';
+  document.getElementById('storyBy').value='';
+  document.getElementById('storyText').value='';
+  window._storyImages = [];
+  alert('Thanks! Your story has been sent in for review.');
+}
+
+function renderDirectoryList(){
+  const list = document.getElementById('directoryList');
+  if(!list) return;
+  const filter = directoryFilter || 'all';
+  const items = DB.directory.filter(d => filter === 'all' || d.type === filter);
+  if(items.length === 0){
+    list.innerHTML = '<p class="empty-state">No listings here yet.</p>';
+    return;
+  }
+  list.innerHTML = items.slice().reverse().map(d => `
+    <div class="dir-entry">
+      <div><div class="biz-name">${esc(d.name)}</div><div class="biz-meta">${esc(d.area)} · ${esc(d.contact)}</div></div>
+      <span class="biz-tag ${d.type==='product'?'product':''}">${d.type==='vet'?'Vet':'Products'}</span>
+      <button class="btn-admin danger" style="padding:2px 8px;font-size:0.7rem;" onclick="deleteDir('${d.id}')">✕</button>
+    </div>
+  `).join('');
+}
+
+let directoryFilter = 'all';
+
+function filterDirectory(type){
+  directoryFilter = type;
+  document.querySelectorAll('.dtab').forEach(el => el.classList.remove('active'));
+  if(type === 'all') document.querySelector('.dtab:first-child').classList.add('active');
+  else if(type === 'vet') document.querySelector('.dtab:nth-child(2)').classList.add('active');
+  else if(type === 'product') document.querySelector('.dtab:nth-child(3)').classList.add('active');
+  renderDirectoryList();
+}
+
+function addDirectoryEntry(){
+  const type = document.getElementById('bizType').value;
+  const name = document.getElementById('bizName').value.trim();
+  const area = document.getElementById('bizArea').value.trim();
+  const contact = document.getElementById('bizContact').value.trim();
+  if(!name || !contact){ alert('Please add a business name and contact number.'); return; }
+  DB.directory.push({id:uid(), type, name, area, contact});
+  saveDB();
+  renderDirectoryList();
+  document.getElementById('bizName').value='';
+  document.getElementById('bizArea').value='';
+  document.getElementById('bizContact').value='';
+}
+
+function addDirPrompt(){
+  const type = confirm('Vet? (Cancel for Product)') ? 'vet' : 'product';
+  const name = prompt('Business name:');
+  if(!name) return;
+  const area = prompt('Area/city:') || '';
+  const contact = prompt('Contact number:');
+  if(!contact) return;
+  DB.directory.push({id:uid(), type, name, area, contact});
+  saveDB();
+  renderDirectoryList();
+}
+
+function deleteDir(id){
+  if(!confirm('Remove directory entry?')) return;
+  DB.directory = DB.directory.filter(d => d.id !== id);
+  saveDB();
+  renderDirectoryList();
+}
+
+function editTopic(){
+  const newTopic = prompt('New topic:', DB.topic);
+  if(newTopic !== null) { DB.topic = newTopic; saveDB(); renderBoard(); }
+}
+
+/* ============ INIT ============ */
+
+renderBoard();
+</script>
+</body>
+</html>

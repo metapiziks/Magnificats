@@ -1397,7 +1397,7 @@
 
     // ─── GOOGLE SIGN-IN CONFIG ────────────────────────────────────
     // 👇 Replace with your real Client ID from Google Cloud Console
-    const CLIENT_ID = '889906054782-fpu0fldrrh7l7bmvrm9fev11k9uvvg2i.apps.googleusercontent.com';
+    const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
 
     let isAdmin = false;
     let currentUserEmail = null;
@@ -1613,57 +1613,24 @@
       };
     }
 
-const API_URL = '/api/state';
-
-async function loadDB() {
-  // 1. Try cloud first
-  try {
-    const res = await fetch(API_URL);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && Object.keys(data).length > 0) {
-        if (!data.comments) data.comments = {};
-        ['care', 'featured', 'writeup', 'trivia', 'video', 'stories', 'directory', 'topic'].forEach(b => {
-          if (!data.comments[b]) data.comments[b] = [];
-        });
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-        return data;
-      }
+    function loadDB() {
+      try {
+        const raw = localStorage.getItem(DB_KEY);
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (!data.comments) data.comments = {};
+          ['care', 'featured', 'writeup', 'trivia', 'video', 'stories', 'directory', 'topic'].forEach(b => {
+            if (!data.comments[b]) data.comments[b] = [];
+          });
+          return data;
+        }
+      } catch (e) {}
+      return defaultDB();
     }
-  } catch (e) {
-    console.warn('Cloud load failed, using local fallback', e);
-  }
-
-  // 2. Fallback to localStorage
-  try {
-    const raw = localStorage.getItem(DB_KEY);
-    if (raw) {
-      const data = JSON.parse(raw);
-      if (!data.comments) data.comments = {};
-      return data;
-    }
-  } catch (e) {}
-  return defaultDB();
-}
 
     let DB = loadDB();
 
-function saveDB(data) {
-  // Always save to localStorage first (fast UI update)
-  localStorage.setItem(DB_KEY, JSON.stringify(data));
-  // Then sync to cloud in the background
-  (async () => {
-    try {
-      await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-    } catch (e) {
-      console.warn('Cloud sync failed', e);
-    }
-  })();
-}
+    function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
 
     /* ============ SHARE ============ */
     function getPageUrl() { return window.location.href; }

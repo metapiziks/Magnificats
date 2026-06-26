@@ -1613,20 +1613,38 @@
       };
     }
 
-    function loadDB() {
-      try {
-        const raw = localStorage.getItem(DB_KEY);
-        if (raw) {
-          const data = JSON.parse(raw);
-          if (!data.comments) data.comments = {};
-          ['care', 'featured', 'writeup', 'trivia', 'video', 'stories', 'directory', 'topic'].forEach(b => {
-            if (!data.comments[b]) data.comments[b] = [];
-          });
-          return data;
-        }
-      } catch (e) {}
-      return defaultDB();
+const API_URL = '/api/state';
+
+async function loadDB() {
+  // 1. Try cloud first
+  try {
+    const res = await fetch(API_URL);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Object.keys(data).length > 0) {
+        if (!data.comments) data.comments = {};
+        ['care', 'featured', 'writeup', 'trivia', 'video', 'stories', 'directory', 'topic'].forEach(b => {
+          if (!data.comments[b]) data.comments[b] = [];
+        });
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+        return data;
+      }
     }
+  } catch (e) {
+    console.warn('Cloud load failed, using local fallback', e);
+  }
+
+  // 2. Fallback to localStorage
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (!data.comments) data.comments = {};
+      return data;
+    }
+  } catch (e) {}
+  return defaultDB();
+}
 
     let DB = loadDB();
 

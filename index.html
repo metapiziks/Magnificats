@@ -1648,7 +1648,22 @@ async function loadDB() {
 
     let DB = loadDB();
 
-    function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
+function saveDB(data) {
+  // Always save to localStorage first (fast UI update)
+  localStorage.setItem(DB_KEY, JSON.stringify(data));
+  // Then sync to cloud in the background
+  (async () => {
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch (e) {
+      console.warn('Cloud sync failed', e);
+    }
+  })();
+}
 
     /* ============ SHARE ============ */
     function getPageUrl() { return window.location.href; }

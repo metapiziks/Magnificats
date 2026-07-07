@@ -1,2539 +1,1970 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Social Cats — A Cat Interaction Corkboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Whisker Board — A Cat Corkboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
 
-  <!-- Google Identity Services -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  :root{
+    --ink:#3B2810;
+    --cream:#F0E2C8;
+    --cream-2:#E8D5B0;
+    --paper:#FAF3E4;
+    --marmalade:#C4952A;
+    --marmalade-dark:#9B7118;
+    --sage:#6B7A5A;
+    --sage-dark:#4E5C3F;
+    --black:#1C1208;
+    --pin-red:#A8341E;
+    --line: rgba(59,40,16,0.16);
+    --shadow: 0 1px 0 rgba(59,40,16,0.06), 0 8px 24px -10px rgba(59,40,16,0.28);
+    --radius: 14px;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --sepia-light: rgba(139,90,43,0.07);
+    --sepia-mid:   rgba(139,90,43,0.13);
+    --sepia-line:  rgba(92,55,20,0.22);
+  }
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
 
-    :root {
-      --ink: #2B2420;
-      --cream: #F7F1E5;
-      --cream-2: #EFE6D3;
-      --paper: #FFFCF5;
-      --marmalade: #D97E3F;
-      --marmalade-dark: #B8632B;
-      --sage: #7C8A6E;
-      --sage-dark: #5E6A52;
-      --black: #1A1614;
-      --pin-red: #C1432E;
-      --line: rgba(43, 36, 32, 0.14);
-      --shadow: 0 1px 0 rgba(43, 36, 32, 0.04), 0 8px 20px -10px rgba(43, 36, 32, 0.25);
-      --radius: 14px;
-      --font-display: 'Fraunces', serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --fb: #1877F2;
-      --twitter: #000;
-      --ig: #E4405F;
-      --tiktok: #000;
+  /* ── parchment base with layered SVG sketch pattern ── */
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    background-color:#EDD9A3;
+    background-image:
+      /* vellum age-spot noise */
+      radial-gradient(ellipse 120% 60% at 15% 20%, rgba(180,130,60,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 80% at 85% 75%, rgba(160,110,40,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255,245,220,0.22) 0%, transparent 70%),
+      /* constellation + sketch SVG tile */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340'%3E%3C!-- fine grid lines --%3E%3Cline x1='0' y1='85' x2='340' y2='85' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='0' y1='170' x2='340' y2='170' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='0' y1='255' x2='340' y2='255' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='85' y1='0' x2='85' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='170' y1='0' x2='170' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='255' y1='0' x2='255' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3C!-- diagonal sketch hatching --%3E%3Cline x1='0' y1='0' x2='340' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='0' y1='68' x2='272' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='68' y1='0' x2='340' y2='272' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='340' y1='0' x2='0' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='0' y1='272' x2='272' y2='0' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3C!-- constellation: main triangle --%3E%3Cline x1='42' y1='55' x2='128' y2='22' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3Cline x1='128' y1='22' x2='75' y2='108' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3Cline x1='75' y1='108' x2='42' y2='55' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3C!-- constellation: extended arm --%3E%3Cline x1='128' y1='22' x2='195' y2='48' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.22'/%3E%3Cline x1='195' y1='48' x2='230' y2='18' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.22'/%3E%3C!-- star dots --%3E%3Ccircle cx='42' cy='55' r='2.2' fill='%235C3714' fill-opacity='0.45'/%3E%3Ccircle cx='128' cy='22' r='3' fill='%235C3714' fill-opacity='0.5'/%3E%3Ccircle cx='75' cy='108' r='1.8' fill='%235C3714' fill-opacity='0.4'/%3E%3Ccircle cx='195' cy='48' r='2.5' fill='%235C3714' fill-opacity='0.45'/%3E%3Ccircle cx='230' cy='18' r='1.6' fill='%235C3714' fill-opacity='0.38'/%3E%3C!-- second constellation cluster (bottom-right) --%3E%3Cline x1='220' y1='200' x2='290' y2='178' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='290' y1='178' x2='318' y2='235' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='318' y1='235' x2='260' y2='268' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='260' y1='268' x2='220' y2='200' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='290' y1='178' x2='260' y2='268' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.15'/%3E%3Ccircle cx='220' cy='200' r='2' fill='%235C3714' fill-opacity='0.42'/%3E%3Ccircle cx='290' cy='178' r='2.8' fill='%235C3714' fill-opacity='0.5'/%3E%3Ccircle cx='318' cy='235' r='1.7' fill='%235C3714' fill-opacity='0.38'/%3E%3Ccircle cx='260' cy='268' r='2.2' fill='%235C3714' fill-opacity='0.42'/%3E%3C!-- golden spiral arc (Da Vinci vibe) --%3E%3Cpath d='M170,170 Q170,120 220,120 Q270,120 270,170 Q270,245 170,245 Q70,245 70,145 Q70,45 200,45' fill='none' stroke='%235C3714' stroke-width='0.6' stroke-opacity='0.14'/%3E%3C!-- zodiac glyph hints: Aries-like --%3E%3Cpath d='M148,290 Q155,278 162,290 M162,290 Q162,300 155,305 M148,290 Q148,300 155,305' fill='none' stroke='%235C3714' stroke-width='1' stroke-opacity='0.28' stroke-linecap='round'/%3E%3C!-- tiny measurement arc (Da Vinci compass arc) --%3E%3Cpath d='M30,175 A40,40 0 0,1 70,175' fill='none' stroke='%235C3714' stroke-width='0.6' stroke-opacity='0.2'/%3E%3Cline x1='30' y1='175' x2='30' y2='165' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3Cline x1='70' y1='175' x2='70' y2='165' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C!-- small cross/target marks --%3E%3Ccircle cx='155' cy='190' r='4' fill='none' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3Cline x1='151' y1='190' x2='159' y2='190' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3Cline x1='155' y1='186' x2='155' y2='194' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C!-- scattered tiny star sparkles --%3E%3Ccircle cx='305' cy='88' r='1.2' fill='%235C3714' fill-opacity='0.32'/%3E%3Ccircle cx='18' cy='310' r='1' fill='%235C3714' fill-opacity='0.28'/%3E%3Ccircle cx='110' cy='160' r='1.1' fill='%235C3714' fill-opacity='0.25'/%3E%3Ccircle cx='248' cy='130' r='0.9' fill='%235C3714' fill-opacity='0.3'/%3E%3Ccircle cx='88' cy='228' r='1.3' fill='%235C3714' fill-opacity='0.28'/%3E%3C/svg%3E");
+    background-size: auto, auto, auto, 340px 340px;
+  }
 
-      /* cosmic colors */
-      --cosmic-deep: #0c0618;
-      --cosmic-mid: #1a0a2e;
-      --cosmic-purple: #2d1b4e;
-      --cosmic-blue: #0d1b2a;
-      --star-glow: #f7e9d7;
-      --paw-glow: rgba(215, 175, 255, 0.12);
-    }
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
 
-    * {
-      box-sizing: border-box;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
+  :focus-visible{
+    outline:3px solid var(--marmalade-dark);
+    outline-offset:2px;
+    border-radius:4px;
+  }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse at 30% 20%, #2d1b4e 0%, #1a0a2e 40%, #0c0618 80%);
-      color: var(--ink);
-      font-family: var(--font-body);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      position: relative;
-      overflow-x: hidden;
-    }
+  /* ---------- header ---------- */
+  .site-head{
+    position:relative;
+    padding:54px 24px 70px;
+    text-align:center;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse 90% 100% at 50% 0%, rgba(139,90,43,0.13) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 50% 100%, rgba(92,55,20,0.10) 0%, transparent 80%);
+  }
+  .site-head::before{
+    content:"";
+    position:absolute; inset:0;
+    /* fine ink ruling lines, like a manuscript page */
+    background:
+      repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 28px,
+        rgba(92,55,20,0.07) 28px,
+        rgba(92,55,20,0.07) 29px
+      );
+    pointer-events:none;
+  }
+  /* left margin rule, like a Da Vinci notebook */
+  .site-head::after{
+    content:"";
+    position:absolute;
+    top:0; bottom:0;
+    left:clamp(30px, 8%, 90px);
+    width:1px;
+    background:rgba(139,90,43,0.18);
+    pointer-events:none;
+  }
+  .header-deco{
+    position:absolute;
+    color:var(--ink);
+    pointer-events:none;
+    user-select:none;
+  }
+  .header-deco-left{
+    width:clamp(100px,16vw,190px);
+    left:clamp(10px,4vw,60px);
+    top:50%; transform:translateY(-50%);
+    opacity:0.55;
+  }
+  .header-deco-right{
+    width:clamp(70px,10vw,130px);
+    right:clamp(10px,5vw,70px);
+    top:50%; transform:translateY(-48%);
+    opacity:0.5;
+  }
+  @media(max-width:600px){
+    .header-deco{display:none;}
+  }
+  .brand-mark{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.4rem, 5vw, 3.6rem);
+    letter-spacing:-0.01em;
+    color:var(--black);
+    position:relative;
+  }
+  .brand-mark .ear{
+    width:0; height:0;
+    display:inline-block;
+  }
+  .tagline{
+    font-size:1.02rem;
+    color:var(--sage-dark);
+    font-weight:500;
+    margin-top:10px;
+    letter-spacing:0.01em;
+  }
+  .tagline em{
+    font-style:italic;
+    font-family:var(--font-display);
+    color:var(--marmalade-dark);
+  }
+  .paw-divider{
+    margin:22px auto 0;
+    display:flex; gap:14px; justify-content:center; opacity:0.55;
+  }
+  .paw-divider svg{width:18px;height:18px;fill:var(--marmalade-dark);}
 
-    #bg-stars {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    #bg-stars canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+  /* ---------- board layout ---------- */
+  .board{
+    max-width:1240px;
+    margin:0 auto;
+    padding:0 20px 80px;
+    display:grid;
+    grid-template-columns:repeat(12, 1fr);
+    gap:22px;
+  }
 
-    #bg-paws {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='20' cy='16' r='3.5' fill='rgba(215,175,255,0.10)'/%3E%3Ccircle cx='34' cy='10' r='3.5' fill='rgba(215,175,255,0.10)'/%3E%3Ccircle cx='48' cy='16' r='3.5' fill='rgba(215,175,255,0.10)'/%3E%3Cpath d='M28 34 c-6 0-10-4-10-10 c0-6 4-10 10-10 c6 0 10 4 10 10 c0 6-4 10-10 10z' fill='rgba(215,175,255,0.08)'/%3E%3Ccircle cx='72' cy='56' r='2.8' fill='rgba(215,175,255,0.07)'/%3E%3Ccircle cx='86' cy='50' r='2.8' fill='rgba(215,175,255,0.07)'/%3E%3Ccircle cx='100' cy='56' r='2.8' fill='rgba(215,175,255,0.07)'/%3E%3Cpath d='M80 74 c-5 0-8-4-8-8 c0-5 3-8 8-8 c5 0 8 3 8 8 c0 4-3 8-8 8z' fill='rgba(215,175,255,0.06)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 140px 140px;
-      opacity: 0.8;
-    }
+  .box{
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 20%, rgba(255,248,230,0.6) 0%, transparent 70%),
+      var(--paper);
+    border:1px solid rgba(92,55,20,0.20);
+    border-radius:var(--radius);
+    box-shadow:
+      0 1px 0 rgba(92,55,20,0.06),
+      0 8px 24px -10px rgba(59,28,8,0.22),
+      inset 0 1px 0 rgba(255,248,220,0.7);
+    padding:22px 22px 24px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  /* slight hand-set rotation for corkboard feel, alternating */
+  .box{ transform:rotate(var(--tilt, 0deg)); }
+  .box:nth-of-type(3n+1){ --tilt:-0.35deg; }
+  .box:nth-of-type(3n+2){ --tilt:0.3deg; }
+  .box:nth-of-type(3n){ --tilt:-0.15deg; }
 
-    #bg-glow {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse at 70% 30%, rgba(130, 80, 200, 0.10) 0%, transparent 60%),
-        radial-gradient(ellipse at 20% 80%, rgba(200, 120, 255, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(80, 130, 255, 0.04) 0%, transparent 70%);
-    }
+  .pin{
+    position:absolute;
+    top:-9px; left:50%;
+    transform:translateX(-50%);
+    width:16px;height:16px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #e8745a, var(--pin-red) 65%);
+    box-shadow:0 2px 3px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index:2;
+  }
 
-    .site-head,
-    .admin-panel,
-    .board,
-    footer {
-      position: relative;
-      z-index: 1;
-    }
+  .box-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+    padding-bottom:12px;
+    border-bottom:1px dashed var(--line);
+  }
+  .box-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.28rem;
+    color:var(--black);
+    display:flex; align-items:center; gap:8px;
+  }
+  .box-eyebrow{
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--sage-dark);
+    font-weight:700;
+    white-space:nowrap;
+  }
 
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.001ms !important;
-        transition-duration: 0.001ms !important;
-      }
-    }
+  /* grid placement: bento layout */
+  .box-care{ grid-column:span 4; }
+  .box-featured{ grid-column:span 4; grid-row:span 2; }
+  .box-writeup{ grid-column:span 4; }
+  .box-trivia{ grid-column:span 4; }
+  .box-video{ grid-column:span 4; }
+  .box-stories{ grid-column:span 8; }
+  .box-directory{ grid-column:span 6; }
+  .box-topic{ grid-column:span 6; }
 
-    :focus-visible {
-      outline: 3px solid var(--marmalade-dark);
-      outline-offset: 2px;
-      border-radius: 4px;
+  @media (max-width:980px){
+    .board{grid-template-columns:1fr;}
+    .box-care,.box-featured,.box-writeup,.box-trivia,.box-video,.box-stories,.box-directory,.box-topic{
+      grid-column:1; grid-row:auto;
     }
+  }
 
-    .site-head {
-      position: relative;
-      padding: 54px 24px 70px;
-      text-align: center;
-      overflow: hidden;
-    }
-    .site-head::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(135deg, rgba(215, 175, 255, 0.04) 0 2px, transparent 2px 14px);
-      pointer-events: none;
-    }
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: clamp(2.4rem, 5vw, 3.6rem);
-      letter-spacing: -0.01em;
-      color: #f7e9d7;
-      text-shadow: 0 0 40px rgba(215, 175, 255, 0.25);
-      position: relative;
-    }
-    .brand-mark .paw-icon {
-      filter: drop-shadow(0 0 12px rgba(215, 175, 255, 0.4));
-    }
-    .tagline {
-      font-size: 1.02rem;
-      color: rgba(215, 175, 255, 0.75);
-      font-weight: 500;
-      margin-top: 10px;
-      letter-spacing: 0.01em;
-    }
-    .tagline em {
-      font-style: italic;
-      font-family: var(--font-display);
-      color: #e8c9a0;
-    }
-    .paw-divider {
-      margin: 22px auto 0;
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      opacity: 0.5;
-    }
-    .paw-divider svg {
-      width: 18px;
-      height: 18px;
-      fill: #c9a8e8;
-    }
+  /* ---------- buttons & forms ---------- */
+  button{
+    font-family:var(--font-body);
+    cursor:pointer;
+    border:none;
+  }
+  .btn{
+    background:var(--marmalade);
+    color:#fff;
+    font-weight:600;
+    font-size:0.86rem;
+    padding:9px 16px;
+    border-radius:9px;
+    transition:background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover{background:var(--marmalade-dark);}
+  .btn:active{transform:scale(0.97);}
+  .btn-ghost{
+    background:transparent;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+    font-weight:600;
+    font-size:0.82rem;
+    padding:7px 13px;
+    border-radius:9px;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .btn-ghost:hover{border-color:var(--sage-dark); background:rgba(124,138,110,0.08);}
+  .btn-sm{padding:6px 11px; font-size:0.78rem;}
 
-    .share-bar {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 16px auto 0;
-      padding: 10px 20px;
-      background: rgba(12, 6, 24, 0.72);
-      backdrop-filter: blur(12px);
-      border-radius: 50px;
-      border: 1px solid rgba(215, 175, 255, 0.15);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-      max-width: 600px;
-    }
-    .share-bar .share-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: rgba(215, 175, 255, 0.7);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      display: flex;
-      align-items: center;
-    }
-    .share-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 14px;
-      border-radius: 30px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.15s, opacity 0.15s, box-shadow 0.2s;
-      text-decoration: none;
-    }
-    .share-btn:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
-      box-shadow: 0 0 20px rgba(215, 175, 255, 0.15);
-    }
-    .share-btn.fb {
-      background: var(--fb);
-    }
-    .share-btn.twitter {
-      background: var(--twitter);
-    }
-    .share-btn.ig {
-      background: var(--ig);
-    }
-    .share-btn.tiktok {
-      background: var(--tiktok);
-    }
-    .share-btn.copy {
-      background: var(--sage);
-    }
-    .share-btn svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
+  textarea, input[type="text"], input[type="url"], input[type="tel"]{
+    width:100%;
+    font-family:var(--font-body);
+    font-size:0.92rem;
+    padding:9px 11px;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    background:var(--cream);
+    color:var(--ink);
+    resize:vertical;
+  }
+  textarea:focus, input:focus{
+    border-color:var(--marmalade);
+    background:var(--paper);
+  }
+  label{
+    font-size:0.74rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--sage-dark);
+    display:block;
+    margin-bottom:4px;
+  }
+  .field{margin-bottom:11px;}
 
-    .board {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 22px;
-    }
+  /* ---------- box: cat care ---------- */
+  .care-list{
+    display:flex; flex-direction:column; gap:12px;
+    overflow-y:auto; max-height:280px; padding-right:4px;
+    margin-bottom:14px;
+  }
+  .care-note{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 13px;
+  }
+  .care-note .who{
+    font-weight:700; font-size:0.82rem; color:var(--marmalade-dark);
+    display:flex; justify-content:space-between;
+  }
+  .care-note .who span:last-child{font-weight:500; color:var(--sage-dark); font-size:0.72rem;}
+  .care-note p{margin:5px 0 0; font-size:0.88rem;}
 
-    .box {
-      background: rgba(255, 252, 245, 0.92);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(215, 175, 255, 0.20);
-      border-radius: var(--radius);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(215, 175, 255, 0.06);
-      padding: 22px 22px 24px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .box:hover {
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45), 0 0 40px rgba(215, 175, 255, 0.04);
-    }
-    .box {
-      transform: rotate(var(--tilt, 0deg));
-    }
-    .box:nth-of-type(3n+1) {
-      --tilt: -0.35deg;
-    }
-    .box:nth-of-type(3n+2) {
-      --tilt: 0.3deg;
-    }
-    .box:nth-of-type(3n) {
-      --tilt: -0.15deg;
-    }
+  /* ---------- box: featured cat ---------- */
+  .box-featured{
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(92,55,20,0.35) 0%, transparent 65%),
+      #1C1208;
+    color:var(--cream);
+    border:1px solid rgba(139,90,43,0.28);
+  }
+  .box-featured .box-eyebrow{color:#E8B98C;}
+  .box-featured .box-title{color:var(--cream);}
+  .box-featured .box-head{border-bottom-color:rgba(247,241,229,0.18);}
+  .featured-hero{
+    position:relative;
+    border-radius:10px;
+    overflow:hidden;
+    aspect-ratio:4/3;
+    background:#000;
+    margin-bottom:12px;
+    border:1px solid rgba(247,241,229,0.18);
+  }
+  .featured-hero img{width:100%;height:100%;object-fit:cover;display:block;}
+  .featured-name-tag{
+    position:absolute; left:10px; bottom:10px;
+    background:rgba(26,22,20,0.78);
+    backdrop-filter:blur(2px);
+    padding:6px 11px;
+    border-radius:7px;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1rem;
+    border:1px solid rgba(247,241,229,0.25);
+  }
+  .gallery-strip{
+    display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px;
+  }
+  .gallery-strip img{
+    width:60px;height:60px;object-fit:cover;border-radius:7px;
+    border:2px solid transparent; cursor:pointer; flex-shrink:0;
+    opacity:0.65; transition:opacity 0.15s, border-color 0.15s;
+  }
+  .gallery-strip img:hover{opacity:0.9;}
+  .gallery-strip img.active{opacity:1; border-color:var(--marmalade);}
+  .featured-admin{
+    margin-top:auto;
+    border-top:1px dashed rgba(247,241,229,0.2);
+    padding-top:12px;
+  }
+  .featured-admin summary{
+    cursor:pointer; font-size:0.78rem; font-weight:700;
+    color:#E8B98C; text-transform:uppercase; letter-spacing:0.06em;
+    list-style:none;
+  }
+  .featured-admin summary::-webkit-details-marker{display:none;}
+  .featured-admin summary::before{content:"⚙ "; }
+  .featured-admin .panel{margin-top:10px;}
+  .box-featured input, .box-featured textarea{
+    background:rgba(247,241,229,0.08);
+    border-color:rgba(247,241,229,0.25);
+    color:var(--cream);
+  }
+  .box-featured label{color:#E8B98C;}
+  .box-featured .btn-ghost{border-color:rgba(247,241,229,0.3); color:var(--cream);}
+  .thumb-input-row{display:flex; gap:6px; margin-bottom:6px;}
+  .thumb-input-row input{flex:1;}
 
-    .pin {
-      position: absolute;
-      top: -9px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #ffb08a, var(--pin-red) 65%);
-      box-shadow: 0 2px 8px rgba(193, 67, 46, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-      z-index: 2;
-    }
+  /* ---------- box: writeup ---------- */
+  .writeup-name{font-family:var(--font-display); font-weight:700; font-size:1.15rem; margin:0 0 4px;}
+  .writeup-byline{font-size:0.76rem; color:var(--sage-dark); font-weight:600; margin-bottom:10px;}
+  .writeup-body{font-size:0.92rem;}
 
-    .box-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px dashed rgba(43, 36, 32, 0.12);
-    }
-    .box-title {
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 1.28rem;
-      color: var(--black);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .box-eyebrow {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--sage-dark);
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .box-share {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-    .box-share .share-btn {
-      padding: 3px 8px;
-      font-size: 0.6rem;
-      border-radius: 20px;
-      background: rgba(43, 36, 32, 0.06);
-      color: var(--ink);
-    }
-    .box-share .share-btn:hover {
-      background: rgba(43, 36, 32, 0.12);
-    }
-    .box-share .share-btn svg {
-      width: 12px;
-      height: 12px;
-    }
+  /* ---------- box: trivia ---------- */
+  .trivia-today{
+    background:linear-gradient(135deg, #B8860B, #7B5B0A);
+    color:#FDF3DC;
+    border-radius:10px;
+    padding:16px 16px 14px;
+    margin-bottom:12px;
+    position:relative;
+    border:1px solid rgba(139,90,20,0.4);
+    box-shadow: inset 0 1px 0 rgba(255,235,150,0.2);
+  }
+  .trivia-today .label{
+    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; opacity:0.85;
+  }
+  .trivia-today p{margin:8px 0 0; font-family:var(--font-display); font-size:1.08rem; line-height:1.4;}
+  .trivia-meta{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .trivia-meta .count{font-size:0.74rem; color:var(--sage-dark); font-weight:600;}
+  .trivia-archive-toggle{font-size:0.76rem;}
+  .archive-list{
+    display:none; flex-direction:column; gap:7px; max-height:180px; overflow-y:auto; margin-bottom:10px;
+  }
+  .archive-list.open{display:flex;}
+  .archive-item{
+    font-size:0.82rem; background:var(--cream); border:1px solid var(--line);
+    border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; gap:8px; align-items:center;
+  }
+  .archive-item .recall-btn{flex-shrink:0;}
 
-    .box-care {
-      grid-column: span 4;
-    }
-    .box-featured {
-      grid-column: span 4;
-      grid-row: span 2;
-    }
-    .box-writeup {
-      grid-column: span 4;
-    }
-    .box-trivia {
-      grid-column: span 4;
-    }
-    .box-video {
-      grid-column: span 4;
-    }
-    .box-stories {
-      grid-column: span 8;
-    }
-    .box-directory {
-      grid-column: span 6;
-    }
-    .box-topic {
-      grid-column: span 6;
-    }
+  /* ---------- box: video ---------- */
+  .video-frame-wrap{
+    border-radius:10px; overflow:hidden; border:1px solid var(--line);
+    aspect-ratio:16/9; background:#000; margin-bottom:10px;
+  }
+  .video-frame-wrap iframe{width:100%; height:100%; border:0; display:block;}
+  .video-caption{font-size:0.85rem; color:var(--sage-dark); font-style:italic;}
 
-    @media (max-width: 980px) {
-      .board {
-        grid-template-columns: 1fr;
-      }
-      .box-care,
-      .box-featured,
-      .box-writeup,
-      .box-trivia,
-      .box-video,
-      .box-stories,
-      .box-directory,
-      .box-topic {
-        grid-column: 1;
-        grid-row: auto;
-      }
-    }
+  /* ---------- box: stories ---------- */
+  .stories-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:16px; margin-bottom:14px;
+  }
+  .story-card{
+    background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:13px;
+  }
+  .story-photos{display:flex; gap:5px; margin-bottom:9px;}
+  .story-photos img{
+    width:100%; aspect-ratio:1; object-fit:cover; border-radius:6px; flex:1; min-width:0;
+  }
+  .story-title{font-family:var(--font-display); font-weight:700; font-size:1.02rem; margin:0 0 3px;}
+  .story-by{font-size:0.72rem; color:var(--sage-dark); font-weight:600; margin-bottom:6px;}
+  .story-text{font-size:0.86rem;}
 
-    button {
-      font-family: var(--font-body);
-      cursor: pointer;
-      border: none;
-    }
-    .btn {
-      background: var(--marmalade);
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.86rem;
-      padding: 9px 16px;
-      border-radius: 9px;
-      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.2s;
-    }
-    .btn:hover {
-      background: var(--marmalade-dark);
-      box-shadow: 0 4px 16px rgba(217, 126, 63, 0.35);
-    }
-    .btn:active {
-      transform: scale(0.97);
-    }
-    .btn-ghost {
-      background: transparent;
-      border: 1.5px solid rgba(43, 36, 32, 0.15);
-      color: var(--ink);
-      font-weight: 600;
-      font-size: 0.82rem;
-      padding: 7px 13px;
-      border-radius: 9px;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-    .btn-ghost:hover {
-      border-color: var(--sage-dark);
-      background: rgba(124, 138, 110, 0.08);
-    }
-    .btn-sm {
-      padding: 6px 11px;
-      font-size: 0.78rem;
-    }
+  /* ---------- box: directory ---------- */
+  .directory-tabs{display:flex; gap:8px; margin-bottom:12px;}
+  .dtab{
+    font-size:0.78rem; font-weight:700; padding:6px 13px; border-radius:20px;
+    background:var(--cream); border:1px solid var(--line); color:var(--ink);
+  }
+  .dtab.active{background:var(--sage); color:#fff; border-color:var(--sage);}
+  .directory-list{display:flex; flex-direction:column; gap:9px; max-height:230px; overflow-y:auto; margin-bottom:14px;}
+  .dir-entry{
+    background:var(--cream); border:1px solid var(--line); border-radius:9px; padding:10px 12px;
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .dir-entry .biz-name{font-weight:700; font-size:0.9rem;}
+  .dir-entry .biz-meta{font-size:0.76rem; color:var(--sage-dark);}
+  .dir-entry .biz-tag{
+    font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em; font-weight:700;
+    background:var(--marmalade); color:#fff; padding:2px 7px; border-radius:5px; flex-shrink:0;
+  }
+  .dir-entry .biz-tag.product{background:var(--sage);}
 
-    .btn-admin {
-      background: var(--black);
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.72rem;
-      padding: 4px 10px;
-      border-radius: 16px;
-      transition: background 0.15s ease;
-    }
-    .btn-admin:hover {
-      background: var(--marmalade-dark);
-    }
-    .btn-admin.danger {
-      background: var(--pin-red);
-    }
-    .btn-admin.danger:hover {
-      background: #a8321f;
-    }
+  /* ---------- box: topic / comments ---------- */
+  .topic-of-day{
+    background:var(--cream-2); border-radius:10px; padding:14px 16px; margin-bottom:14px;
+    border-left:4px solid var(--marmalade);
+  }
+  .topic-of-day .label{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; color:var(--marmalade-dark);}
+  .topic-of-day p{margin:6px 0 0; font-family:var(--font-display); font-size:1.05rem;}
+  .comments-list{display:flex; flex-direction:column; gap:10px; max-height:220px; overflow-y:auto; margin-bottom:12px;}
+  .comment{background:var(--cream); border:1px solid var(--line); border-radius:9px; padding:9px 12px;}
+  .comment .who{font-weight:700; font-size:0.8rem; color:var(--marmalade-dark);}
+  .comment p{margin:4px 0 0; font-size:0.86rem;}
 
-    .admin-toolbar {
-      display: none;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px dashed rgba(43, 36, 32, 0.12);
-    }
-    .admin-toolbar.visible {
-      display: flex;
-    }
+  .inline-form{display:flex; gap:8px;}
+  .inline-form textarea{min-height:42px;}
 
-    textarea,
-    input[type="text"],
-    input[type="tel"],
-    select {
-      width: 100%;
-      font-family: var(--font-body);
-      font-size: 0.92rem;
-      padding: 9px 11px;
-      border: 1.5px solid rgba(43, 36, 32, 0.12);
-      border-radius: 9px;
-      background: rgba(247, 241, 229, 0.6);
-      color: var(--ink);
-      resize: vertical;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    textarea:focus,
-    input:focus {
-      border-color: var(--marmalade);
-      background: var(--paper);
-    }
-    label {
-      font-size: 0.74rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--sage-dark);
-      display: block;
-      margin-bottom: 4px;
-    }
-    .field {
-      margin-bottom: 11px;
-    }
+  .empty-state{
+    font-size:0.85rem; color:var(--sage-dark); font-style:italic; padding:10px 0;
+  }
 
-    .drop-zone {
-      border: 2px dashed rgba(43, 36, 32, 0.12);
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      background: rgba(247, 241, 229, 0.4);
-      transition: all 0.2s;
-      cursor: pointer;
-      min-height: 100px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .drop-zone:hover,
-    .drop-zone.drag-over {
-      border-color: var(--marmalade);
-      background: var(--paper);
-    }
-    .drop-zone .icon {
-      font-size: 2rem;
-    }
-    .drop-zone .hint {
-      font-size: 0.85rem;
-      color: var(--sage-dark);
-    }
-    .drop-zone .preview-grid {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      width: 100%;
-    }
-    .drop-zone .preview-grid img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 2px solid rgba(43, 36, 32, 0.08);
-    }
-    .drop-zone .preview-grid .remove-btn {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: var(--pin-red);
-      color: #fff;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: none;
-    }
-    .drop-zone .preview-item {
-      position: relative;
-    }
+  footer{
+    text-align:center; padding:30px 20px 50px; color:var(--sage-dark); font-size:0.8rem;
+  }
+  footer .paw-divider{margin-bottom:14px;}
 
-    .care-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      max-height: 280px;
-      padding-right: 4px;
-      margin-bottom: 14px;
-    }
-    .care-note {
-      background: rgba(247, 241, 229, 0.5);
-      border: 1px solid rgba(43, 36, 32, 0.08);
-      border-radius: 10px;
-      padding: 11px 13px;
-    }
-    .care-note .who {
-      font-weight: 700;
-      font-size: 0.82rem;
-      color: var(--marmalade-dark);
-      display: flex;
-      justify-content: space-between;
-    }
-    .care-note .who span:last-child {
-      font-weight: 500;
-      color: var(--sage-dark);
-      font-size: 0.72rem;
-    }
-    .care-note p {
-      margin: 5px 0 0;
-      font-size: 0.88rem;
-    }
+  /* ---------- cuteness contest gallery ---------- */
+  .contest-section{
+    max-width:1240px;
+    margin:0 auto 28px;
+    padding:0 20px;
+  }
+  .contest-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .contest-title-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .contest-h{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.7rem;
+    color:var(--black);
+    margin:0;
+  }
+  .contest-badge{
+    background:linear-gradient(135deg,var(--marmalade),var(--marmalade-dark));
+    color:#fff;
+    font-size:0.68rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    padding:4px 10px;
+    border-radius:20px;
+  }
+  .contest-sub{
+    font-size:0.84rem;
+    color:var(--sage-dark);
+    margin:0;
+  }
+  .contest-submit-btn{
+    background:var(--marmalade);
+    color:#fff;
+    font-weight:700;
+    font-size:0.86rem;
+    padding:9px 18px;
+    border-radius:20px;
+    border:none;
+    white-space:nowrap;
+  }
+  .contest-submit-btn:hover{background:var(--marmalade-dark);}
 
-    .box-featured {
-      background: rgba(12, 6, 24, 0.92);
-      backdrop-filter: blur(8px);
-      color: #f7e9d7;
-      border-color: rgba(215, 175, 255, 0.25);
-    }
-    .box-featured .box-eyebrow {
-      color: #c9a8e8;
-    }
-    .box-featured .box-title {
-      color: #f7e9d7;
-    }
-    .box-featured .box-head {
-      border-bottom-color: rgba(215, 175, 255, 0.15);
-    }
-    .box-featured input,
-    .box-featured textarea,
-    .box-featured .drop-zone {
-      background: rgba(215, 175, 255, 0.06);
-      border-color: rgba(215, 175, 255, 0.20);
-      color: #f7e9d7;
-    }
-    .box-featured label {
-      color: #c9a8e8;
-    }
-    .box-featured .btn-ghost {
-      border-color: rgba(215, 175, 255, 0.25);
-      color: #f7e9d7;
-    }
-    .box-featured .admin-toolbar {
-      border-top-color: rgba(215, 175, 255, 0.15);
-    }
-    .box-featured .drop-zone:hover,
-    .box-featured .drop-zone.drag-over {
-      border-color: #c9a8e8;
-      background: rgba(215, 175, 255, 0.10);
-    }
-    .box-featured .share-btn {
-      background: rgba(215, 175, 255, 0.12);
-      color: #f7e9d7;
-    }
-    .box-featured .share-btn:hover {
-      background: rgba(215, 175, 255, 0.22);
-    }
-    .box-featured .box-share .share-btn {
-      background: rgba(215, 175, 255, 0.12);
-      color: #f7e9d7;
-    }
-    .box-featured .box-share .share-btn:hover {
-      background: rgba(215, 175, 255, 0.22);
-    }
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    gap:10px;
+    margin-bottom:14px;
+  }
+  @media(max-width:1100px){.gallery-grid{grid-template-columns:repeat(5,1fr);}}
+  @media(max-width:600px){.gallery-grid{grid-template-columns:repeat(3,1fr);}}
 
-    .featured-hero {
-      position: relative;
-      border-radius: 10px;
-      overflow: hidden;
-      aspect-ratio: 4/3;
-      background: #0c0618;
-      margin-bottom: 12px;
-      border: 1px solid rgba(215, 175, 255, 0.15);
-      box-shadow: inset 0 0 40px rgba(215, 175, 255, 0.04);
-    }
-    .featured-hero img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .featured-name-tag {
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
-      background: rgba(12, 6, 24, 0.78);
-      backdrop-filter: blur(4px);
-      padding: 6px 11px;
-      border-radius: 7px;
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 1rem;
-      border: 1px solid rgba(215, 175, 255, 0.20);
-      color: #f7e9d7;
-    }
-    .gallery-strip {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 14px;
-    }
-    .gallery-strip img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 7px;
-      border: 2px solid transparent;
-      cursor: pointer;
-      flex-shrink: 0;
-      opacity: 0.65;
-      transition: opacity 0.15s, border-color 0.15s;
-    }
-    .gallery-strip img:hover {
-      opacity: 0.9;
-    }
-    .gallery-strip img.active {
-      opacity: 1;
-      border-color: var(--marmalade);
-    }
+  .gallery-slot{
+    background:
+      radial-gradient(ellipse 80% 80% at 50% 30%, rgba(255,248,225,0.5) 0%, transparent 70%),
+      var(--cream-2);
+    border:2px dashed rgba(92,55,20,0.22);
+    border-radius:12px;
+    aspect-ratio:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .gallery-slot.empty-slot{cursor:default;}
+  .gallery-slot.filled{border-style:solid; border-color:rgba(92,55,20,0.18);}
+  .gallery-slot.is-winner{
+    border-color:var(--marmalade);
+    box-shadow:0 0 0 3px var(--marmalade), 0 4px 22px rgba(196,149,42,0.38);
+  }
+  .gallery-slot img{
+    width:100%; height:100%; object-fit:cover;
+    display:block;
+    position:absolute; inset:0;
+  }
+  .slot-empty-icon{font-size:1.6rem; opacity:0.35;}
+  .slot-empty-label{font-size:0.62rem; color:var(--sage-dark); font-weight:600; text-align:center; padding:0 4px; margin-top:4px;}
 
-    .writeup-name {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.15rem;
-      margin: 0 0 4px;
-    }
-    .writeup-byline {
-      font-size: 0.76rem;
-      color: var(--sage-dark);
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .writeup-body {
-      font-size: 0.92rem;
-    }
+  .slot-overlay{
+    position:absolute;
+    bottom:0; left:0; right:0;
+    background:linear-gradient(transparent, rgba(26,22,20,0.82));
+    padding:20px 6px 7px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .slot-name{
+    font-size:0.65rem;
+    font-weight:700;
+    color:#fff;
+    text-align:center;
+    line-height:1.2;
+    margin-bottom:5px;
+    text-shadow:0 1px 2px rgba(0,0,0,0.6);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+    padding:0 4px;
+  }
+  .vote-btn{
+    background:rgba(255,255,255,0.18);
+    border:1.5px solid rgba(255,255,255,0.55);
+    color:#fff;
+    font-size:0.6rem;
+    font-weight:800;
+    letter-spacing:0.04em;
+    padding:3px 8px;
+    border-radius:20px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background 0.15s;
+    white-space:nowrap;
+  }
+  .vote-btn:hover{background:rgba(255,255,255,0.32);}
+  .vote-btn.voted{
+    background:var(--marmalade);
+    border-color:var(--marmalade-dark);
+  }
+  .vote-count{
+    font-size:0.58rem;
+    color:rgba(255,255,255,0.8);
+    margin-top:3px;
+    font-weight:600;
+  }
+  .winner-crown{
+    position:absolute;
+    top:5px; left:50%;
+    transform:translateX(-50%);
+    font-size:1.2rem;
+    filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  }
 
-    .trivia-today {
-      background: linear-gradient(135deg, var(--marmalade), var(--marmalade-dark));
-      color: #fff;
-      border-radius: 10px;
-      padding: 16px 16px 14px;
-      margin-bottom: 12px;
-      position: relative;
-      box-shadow: 0 4px 20px rgba(217, 126, 63, 0.25);
-    }
-    .trivia-today .label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 700;
-      opacity: 0.9;
-    }
-    .trivia-today p {
-      margin: 8px 0 0;
-      font-family: var(--font-display);
-      font-size: 1.08rem;
-      line-height: 1.4;
-    }
-    .trivia-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .trivia-meta .count {
-      font-size: 0.74rem;
-      color: var(--sage-dark);
-      font-weight: 600;
-    }
-    .trivia-item {
-      background: rgba(247, 241, 229, 0.5);
-      border: 1px solid rgba(43, 36, 32, 0.08);
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
-    }
+  .contest-footer-row{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-size:0.8rem; color:var(--sage-dark);
+  }
+  .vote-rules{font-style:italic;}
+  .winner-banner{
+    background:linear-gradient(135deg,var(--marmalade),var(--marmalade-dark));
+    color:#fff;
+    border-radius:10px;
+    padding:10px 16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+    font-size:0.9rem;
+  }
+  .winner-banner .crown{font-size:1.3rem;}
 
-    .video-frame-wrap {
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(43, 36, 32, 0.08);
-      aspect-ratio: 16/9;
-      background: #0c0618;
-      margin-bottom: 10px;
-    }
-    .video-frame-wrap iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-    }
-    .video-caption {
-      font-size: 0.85rem;
-      color: var(--sage-dark);
-      font-style: italic;
-    }
+  /* submission modal */
+  .modal-backdrop{
+    position:fixed; inset:0;
+    background:rgba(26,22,20,0.55);
+    backdrop-filter:blur(3px);
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .modal-card{
+    background:var(--paper);
+    border-radius:var(--radius);
+    padding:24px 26px 26px;
+    width:100%;
+    max-width:430px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.25);
+    position:relative;
+  }
+  .modal-title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.3rem;
+    margin:0 0 4px;
+    color:var(--black);
+    padding-right:28px;
+  }
+  .modal-sub{font-size:0.84rem; color:var(--sage-dark); margin:0 0 16px;}
+  .modal-close{
+    position:absolute; top:16px; right:16px;
+    background:none; border:none; font-size:1.3rem; color:var(--sage-dark); cursor:pointer;
+  }
+  .modal-close:hover{color:var(--ink);}
 
-    .stories-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 14px;
-    }
-    .story-card {
-      background: rgba(247, 241, 229, 0.5);
-      border: 1px solid rgba(43, 36, 32, 0.08);
-      border-radius: 10px;
-      padding: 13px;
-    }
-    .story-photos {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 9px;
-      flex-wrap: wrap;
-    }
-    .story-photos img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 6px;
-    }
-    .story-title {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.02rem;
-      margin: 0 0 3px;
-    }
-    .story-by {
-      font-size: 0.72rem;
-      color: var(--sage-dark);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .story-text {
-      font-size: 0.86rem;
-    }
+  ::-webkit-scrollbar{width:7px; height:7px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:10px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--sage);}
 
-    .directory-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .dtab {
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 6px 13px;
-      border-radius: 20px;
-      background: rgba(247, 241, 229, 0.5);
-      border: 1px solid rgba(43, 36, 32, 0.08);
-      color: var(--ink);
-      transition: all 0.15s;
-      cursor: pointer;
-    }
-    .dtab.active {
-      background: var(--sage);
-      color: #fff;
-      border-color: var(--sage);
-    }
-    .dtab:hover {
-      background: rgba(124, 138, 110, 0.15);
-    }
-    .dtab.active:hover {
-      background: var(--sage-dark);
-    }
-    .directory-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-      max-height: 230px;
-      overflow-y: auto;
-      margin-bottom: 14px;
-    }
-    .dir-entry {
-      background: rgba(247, 241, 229, 0.5);
-      border: 1px solid rgba(43, 36, 32, 0.08);
-      border-radius: 9px;
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-    .dir-entry .biz-name {
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .dir-entry .biz-meta {
-      font-size: 0.76rem;
-      color: var(--sage-dark);
-    }
-    .dir-entry .biz-tag {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 700;
-      background: var(--marmalade);
-      color: #fff;
-      padding: 2px 7px;
-      border-radius: 5px;
-      flex-shrink: 0;
-    }
-    .dir-entry .biz-tag.product {
-      background: var(--sage);
-    }
+  /* ---------- admin ---------- */
+  .admin-toggle{
+    position:absolute;
+    top:18px; right:22px;
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    color:var(--ink);
+    font-weight:700;
+    font-size:0.78rem;
+    padding:7px 14px;
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    z-index:5;
+  }
+  .admin-toggle:hover{border-color:var(--marmalade-dark);}
+  .admin-toggle.is-on{background:var(--sage); color:#fff; border-color:var(--sage-dark);}
 
-    .topic-of-day {
-      background: rgba(239, 230, 211, 0.5);
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 14px;
-      border-left: 4px solid var(--marmalade);
-    }
-    .topic-of-day .label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 700;
-      color: var(--marmalade-dark);
-    }
-    .topic-of-day p {
-      margin: 6px 0 0;
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-    }
+  .submit-note{
+    font-size:0.84rem;
+    color:var(--sage-dark);
+    background:var(--cream);
+    border:1px dashed var(--line);
+    border-radius:9px;
+    padding:11px 13px;
+    margin-bottom:13px;
+    line-height:1.5;
+  }
+  .submit-note strong{color:var(--ink);}
 
-    .comment-section {
-      margin-top: 14px;
-      border-top: 1px dashed rgba(43, 36, 32, 0.10);
-      padding-top: 12px;
-    }
-    .comments-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 150px;
-      overflow-y: auto;
-      margin-bottom: 8px;
-    }
-    .comment {
-      background: rgba(247, 241, 229, 0.5);
-      border: 1px solid rgba(43, 36, 32, 0.08);
-      border-radius: 9px;
-      padding: 9px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .comment .who {
-      font-weight: 700;
-      font-size: 0.8rem;
-      color: var(--marmalade-dark);
-    }
-    .comment p {
-      margin: 0;
-      font-size: 0.86rem;
-    }
-    .comment .cmt-del {
-      background: none;
-      border: none;
-      color: var(--pin-red);
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.8rem;
-      padding: 2px 6px;
-    }
-    .inline-form {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .inline-form input,
-    .inline-form textarea {
-      flex: 1;
-      min-width: 100px;
-      padding: 8px 12px;
-      border: 1.5px solid rgba(43, 36, 32, 0.10);
-      border-radius: 9px;
-      background: rgba(247, 241, 229, 0.4);
-      font-size: 0.85rem;
-    }
-    .inline-form textarea {
-      min-height: 38px;
-    }
+  .pending-flag{
+    display:inline-block;
+    font-size:0.66rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    font-weight:700;
+    background:#E8B98C;
+    color:#5A3A1A;
+    padding:2px 8px;
+    border-radius:6px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
 
-    .empty-state {
-      font-size: 0.85rem;
-      color: var(--sage-dark);
-      font-style: italic;
-      padding: 10px 0;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px 20px 50px;
-      color: rgba(215, 175, 255, 0.5);
-      font-size: 0.8rem;
-      position: relative;
-      z-index: 1;
-    }
-    footer .paw-divider {
-      margin-bottom: 14px;
-    }
-    footer .paw-divider svg {
-      fill: rgba(215, 175, 255, 0.3);
-    }
-
-    ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(43, 36, 32, 0.15);
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--sage);
-    }
-
-    /* ── Admin toggle – black cat SVG ── */
-    .admin-toggle {
-      position: absolute;
-      top: 18px;
-      right: 22px;
-      background: rgba(12, 6, 24, 0.72);
-      backdrop-filter: blur(12px);
-      border: 2px solid rgba(215, 175, 255, 0.15);
-      color: #f7e9d7;
-      padding: 8px 10px;
-      border-radius: 30px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      z-index: 5;
-      transition: all 0.2s;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 0;
-    }
-    .admin-toggle svg {
-      width: 28px;
-      height: 28px;
-      fill: #f7e9d7;
-      transition: fill 0.2s;
-    }
-    .admin-toggle:hover {
-      border-color: rgba(215, 175, 255, 0.5);
-      box-shadow: 0 4px 28px rgba(215, 175, 255, 0.10);
-      transform: scale(1.05);
-    }
-    .admin-toggle.is-on {
-      border-color: #c9a8e8;
-      box-shadow: 0 0 20px rgba(215, 175, 255, 0.3);
-    }
-    .admin-toggle.is-on svg {
-      fill: #c9a8e8;
-    }
-
-    .submit-note {
-      font-size: 0.84rem;
-      color: var(--sage-dark);
-      background: rgba(247, 241, 229, 0.4);
-      border: 1px dashed rgba(43, 36, 32, 0.12);
-      border-radius: 9px;
-      padding: 11px 13px;
-      margin-bottom: 13px;
-      line-height: 1.5;
-    }
-    .submit-note strong {
-      color: var(--ink);
-    }
-
-    .admin-panel {
-      max-width: 1240px;
-      margin: 0 auto 26px;
-      padding: 0 20px;
-      position: relative;
-      z-index: 1;
-    }
-    .admin-panel-inner {
-      background: rgba(12, 6, 24, 0.92);
-      backdrop-filter: blur(16px);
-      color: #f7e9d7;
-      border-radius: var(--radius);
-      padding: 20px 24px 24px;
-      box-shadow: 0 8px 48px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(215, 175, 255, 0.10);
-    }
-    .admin-panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-    .admin-panel-head h2 {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.3rem;
-      margin: 0;
-      color: #f7e9d7;
-    }
-    .admin-sub {
-      font-size: 0.82rem;
-      color: rgba(215, 175, 255, 0.6);
-      margin: 0 0 16px;
-    }
-    .admin-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .admin-tab {
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 7px 14px;
-      border-radius: 20px;
-      background: rgba(215, 175, 255, 0.06);
-      border: 1px solid rgba(215, 175, 255, 0.15);
-      color: rgba(215, 175, 255, 0.6);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .admin-tab.active {
-      background: var(--marmalade);
-      border-color: var(--marmalade);
-      color: #fff;
-    }
-    .admin-tab:hover {
-      background: rgba(215, 175, 255, 0.12);
-    }
-    .admin-tab.active:hover {
-      background: var(--marmalade-dark);
-    }
-    .admin-queue {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .queue-card {
-      background: rgba(215, 175, 255, 0.04);
-      border: 1px solid rgba(215, 175, 255, 0.10);
-      border-radius: 10px;
-      padding: 14px 16px;
-    }
-    .queue-card-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-    .queue-card-title {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.02rem;
-      color: #f7e9d7;
-    }
-    .queue-card-meta {
-      font-size: 0.72rem;
-      color: rgba(215, 175, 255, 0.5);
-    }
-    .queue-card-body {
-      font-size: 0.86rem;
-      color: rgba(247, 241, 229, 0.8);
-      margin-bottom: 10px;
-    }
-    .queue-photos {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-    .queue-photos img {
-      width: 54px;
-      height: 54px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid rgba(215, 175, 255, 0.10);
-    }
-    .queue-actions {
-      display: flex;
-      gap: 8px;
-    }
-    .btn-approve {
-      background: var(--sage);
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.8rem;
-      padding: 7px 14px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-approve:hover {
-      background: var(--sage-dark);
-    }
-    .btn-reject {
-      background: rgba(193, 67, 46, 0.85);
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.8rem;
-      padding: 7px 14px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-reject:hover {
-      background: var(--pin-red);
-    }
-    .admin-empty {
-      color: rgba(215, 175, 255, 0.4);
-      font-style: italic;
-      padding: 16px 0;
-    }
-
-    .admin-mode .admin-toolbar {
-      display: flex !important;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(12, 6, 24, 0.92);
-      backdrop-filter: blur(12px);
-      color: #f7e9d7;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-      z-index: 9999;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-      border: 1px solid rgba(215, 175, 255, 0.10);
-    }
-    .toast.show {
-      opacity: 1;
-    }
-
-    @media (max-width: 640px) {
-      .site-head {
-        padding: 40px 16px 50px;
-      }
-      .share-bar {
-        padding: 8px 14px;
-        gap: 6px;
-      }
-      .share-btn {
-        padding: 4px 10px;
-        font-size: 0.65rem;
-      }
-      .share-btn svg {
-        width: 13px;
-        height: 13px;
-      }
-      .box {
-        padding: 16px 16px 20px;
-      }
-      .admin-panel-inner {
-        padding: 16px;
-      }
-      .admin-tabs {
-        gap: 4px;
-      }
-      .admin-tab {
-        font-size: 0.7rem;
-        padding: 5px 10px;
-      }
-      .admin-toggle {
-        top: 14px;
-        right: 14px;
-        padding: 6px 8px;
-      }
-      .admin-toggle svg {
-        width: 22px;
-        height: 22px;
-      }
-    }
-  </style>
+  .admin-panel{
+    max-width:1240px;
+    margin:0 auto 26px;
+    padding:0 20px;
+  }
+  .admin-panel-inner{
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(92,55,20,0.25) 0%, transparent 70%),
+      #1C1208;
+    color:var(--cream);
+    border-radius:var(--radius);
+    padding:20px 24px 24px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(139,90,43,0.3);
+  }
+  .admin-panel-head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:6px;
+  }
+  .admin-panel-head h2{
+    font-family:var(--font-display); font-weight:700; font-size:1.3rem; margin:0;
+    color:var(--cream);
+  }
+  .admin-sub{font-size:0.82rem; color:#cfc6b4; margin:0 0 16px;}
+  .admin-tabs{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .admin-tab{
+    font-size:0.78rem; font-weight:700; padding:7px 14px; border-radius:20px;
+    background:rgba(247,241,229,0.08); border:1px solid rgba(247,241,229,0.25); color:var(--cream);
+  }
+  .admin-tab.active{background:var(--marmalade); border-color:var(--marmalade); color:#fff;}
+  .admin-queue{display:flex; flex-direction:column; gap:12px;}
+  .queue-card{
+    background:rgba(247,241,229,0.06);
+    border:1px solid rgba(247,241,229,0.18);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .queue-card-head{display:flex; justify-content:space-between; gap:10px; margin-bottom:6px;}
+  .queue-card-title{font-family:var(--font-display); font-weight:700; font-size:1.02rem;}
+  .queue-card-meta{font-size:0.72rem; color:#cfc6b4;}
+  .queue-card-body{font-size:0.86rem; color:#ece4d2; margin-bottom:10px;}
+  .queue-photos{display:flex; gap:6px; margin-bottom:10px;}
+  .queue-photos img{width:54px; height:54px; object-fit:cover; border-radius:6px; border:1px solid rgba(247,241,229,0.2);}
+  .queue-actions{display:flex; gap:8px;}
+  .btn-approve{background:var(--sage); color:#fff; font-weight:700; font-size:0.8rem; padding:7px 14px; border-radius:8px;}
+  .btn-approve:hover{background:var(--sage-dark);}
+  .btn-reject{background:rgba(193,67,46,0.85); color:#fff; font-weight:700; font-size:0.8rem; padding:7px 14px; border-radius:8px;}
+  .btn-reject:hover{background:var(--pin-red);}
+  .admin-close-row{margin-top:18px; text-align:right;}
+  .admin-empty{font-size:0.85rem; color:#cfc6b4; font-style:italic;}
+</style>
 </head>
 <body>
 
-  <!-- COSMIC BACKGROUND -->
-  <div id="bg-stars"><canvas id="starCanvas"></canvas></div>
-  <div id="bg-paws"></div>
-  <div id="bg-glow"></div>
+<header class="site-head">
+  <button class="admin-toggle" id="adminToggleBtn" onclick="openAdminPrompt()">🔑 Admin</button>
 
-  <!-- HEADER -->
-  <header class="site-head">
-    <!-- Admin button: black cat SVG -->
-    <button class="admin-toggle" id="adminToggleBtn" onclick="handleAdminClick()" aria-label="Admin login">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2C9.5 4 7 6 7 10c0 3 2 5 5 5s5-2 5-5c0-4-2.5-6-5-8z" />
-        <circle cx="9" cy="9" r="1" fill="currentColor" stroke="none" />
-        <circle cx="15" cy="9" r="1" fill="currentColor" stroke="none" />
-        <path d="M10 13c.5.5 1.5.5 2 0" stroke="currentColor" />
-        <path d="M4 18c1.5-1 3.5-2 6-2s4.5 1 6 2" />
-        <path d="M4 20c1.5-1 3.5-2 6-2s4.5 1 6 2" />
-      </svg>
-    </button>
+  <!-- Da Vinci / astrolabe decoration: left side -->
+  <svg class="header-deco header-deco-left" viewBox="0 0 160 160" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" stroke-width="0.8" stroke-opacity="0.22"/>
+    <circle cx="80" cy="80" r="52" fill="none" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.18"/>
+    <circle cx="80" cy="80" r="34" fill="none" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.15"/>
+    <circle cx="80" cy="80" r="3" fill="currentColor" fill-opacity="0.3"/>
+    <!-- radial spokes -->
+    <line x1="80" y1="10" x2="80" y2="150" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="10" y1="80" x2="150" y2="80" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="30" y1="30" x2="130" y2="130" stroke="currentColor" stroke-width="0.4" stroke-opacity="0.12"/>
+    <line x1="130" y1="30" x2="30" y2="130" stroke="currentColor" stroke-width="0.4" stroke-opacity="0.12"/>
+    <!-- constellation dots on rim -->
+    <circle cx="80" cy="10" r="2.5" fill="currentColor" fill-opacity="0.4"/>
+    <circle cx="150" cy="80" r="2" fill="currentColor" fill-opacity="0.35"/>
+    <circle cx="80" cy="150" r="2.5" fill="currentColor" fill-opacity="0.4"/>
+    <circle cx="10" cy="80" r="2" fill="currentColor" fill-opacity="0.35"/>
+    <circle cx="30" cy="30" r="1.8" fill="currentColor" fill-opacity="0.32"/>
+    <circle cx="130" cy="30" r="1.8" fill="currentColor" fill-opacity="0.32"/>
+    <circle cx="130" cy="130" r="1.8" fill="currentColor" fill-opacity="0.32"/>
+    <circle cx="30" cy="130" r="1.8" fill="currentColor" fill-opacity="0.32"/>
+    <!-- tick marks -->
+    <path d="M80,10 L80,18 M80,150 L80,142 M10,80 L18,80 M150,80 L142,80" stroke="currentColor" stroke-width="0.8" stroke-opacity="0.25"/>
+    <!-- Aries glyph near top -->
+    <path d="M72,58 Q80,48 88,58 M80,58 Q80,68 74,74 M80,58 Q80,68 86,74" fill="none" stroke="currentColor" stroke-width="0.9" stroke-opacity="0.3" stroke-linecap="round"/>
+  </svg>
 
-    <div class="brand-mark">
-      <span class="paw-icon">🐾</span>
-      9lives
-    </div>
-    <div class="tagline">a community corkboard for everyone owned by a cat — and all 9 of their <em>lives</em></div>
-    <div class="paw-divider">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="6"/><circle cx="4" cy="7" r="2.4"/><circle cx="20" cy="7" r="2.4"/><circle cx="8" cy="3" r="2.2"/><circle cx="16" cy="3" r="2.2"/></svg>
-    </div>
+  <!-- Da Vinci decoration: right side, mirrored + offset -->
+  <svg class="header-deco header-deco-right" viewBox="0 0 120 200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <!-- golden spiral suggestion -->
+    <path d="M60,180 Q60,140 95,140 Q130,140 130,100 Q130,40 60,40 Q-10,40 -10,120 Q-10,190 80,190" fill="none" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.18"/>
+    <!-- small constellation -->
+    <line x1="20" y1="30" x2="80" y2="55" stroke="currentColor" stroke-width="0.8" stroke-opacity="0.28"/>
+    <line x1="80" y1="55" x2="100" y2="20" stroke="currentColor" stroke-width="0.8" stroke-opacity="0.28"/>
+    <line x1="100" y1="20" x2="20" y2="30" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2"/>
+    <circle cx="20" cy="30" r="2.2" fill="currentColor" fill-opacity="0.42"/>
+    <circle cx="80" cy="55" r="3" fill="currentColor" fill-opacity="0.48"/>
+    <circle cx="100" cy="20" r="1.8" fill="currentColor" fill-opacity="0.38"/>
+    <!-- annotation line + dot, like a Da Vinci label -->
+    <line x1="80" y1="55" x2="80" y2="90" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.2" stroke-dasharray="2,3"/>
+    <circle cx="80" cy="92" r="1.2" fill="currentColor" fill-opacity="0.25"/>
+    <!-- Pisces-like double arc -->
+    <path d="M30,140 Q45,128 60,140 Q75,152 90,140" fill="none" stroke="currentColor" stroke-width="0.9" stroke-opacity="0.28" stroke-linecap="round"/>
+    <line x1="30" y1="140" x2="90" y2="140" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.2"/>
+  </svg>
 
-    <!-- Global Share Bar -->
-    <div class="share-bar">
-      <span class="share-label">🐱 Share this page</span>
-      <button class="share-btn fb" onclick="sharePage('fb')">
-        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        Share
-      </button>
-      <button class="share-btn twitter" onclick="sharePage('twitter')">
-        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        Post
-      </button>
-      <button class="share-btn ig" onclick="sharePage('ig')">
-        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        Share
-      </button>
-      <button class="share-btn tiktok" onclick="sharePage('tiktok')">
-        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.013 2.61-.018 3.91-.02.021 1.53.289 3.51.81 4.91.52 1.4 1.63 2.61 3.12 3.27v4.06c-1.43-.24-2.82-.83-4.06-1.68v7.05c0 1.46-.28 2.89-.82 4.2-.54 1.31-1.32 2.48-2.27 3.45-.95.97-2.08 1.72-3.36 2.25-1.28.53-2.64.8-4.03.8-2.42 0-4.68-.95-6.37-2.64-1.69-1.69-2.64-3.95-2.64-6.37 0-1.31.23-2.59.67-3.82.44-1.23 1.08-2.36 1.91-3.35.83-.99 1.82-1.83 2.93-2.49 1.11-.66 2.33-1.13 3.6-1.39.04.53.1 1.21.18 2.06-.91.24-1.76.64-2.48 1.18-.72.54-1.32 1.21-1.78 1.98-.46.77-.78 1.62-.96 2.51.47.12.94.29 1.39.5.45.21.85.47 1.2.78-.08.49-.12 1.01-.12 1.55 0 .58.12 1.15.35 1.68.23.53.55 1.01.96 1.41.41.4.89.71 1.42.94.53.23 1.11.35 1.7.35.73 0 1.42-.16 2.06-.49.64-.33 1.18-.8 1.62-1.38.44-.58.76-1.26.96-2.01.2-.75.3-1.55.3-2.39 0-.85-.1-1.65-.3-2.39-.2-.74-.52-1.41-.96-1.99-.44-.58-.98-1.05-1.62-1.38-.64-.33-1.33-.49-2.06-.49-.17 0-.34.01-.51.02-.04-.27-.08-.57-.12-.88.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13.12-.04.24-.09.36-.13z"/></svg>
-        Share
-      </button>
-      <button class="share-btn copy" onclick="copyLink()">
-        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-        Copy Link
-      </button>
-    </div>
-  </header>
+  <div class="brand-mark">🐾 The Whisker Board</div>
+  <div class="tagline">a community corkboard for everyone owned by a <em>cat</em></div>
+  <div class="paw-divider">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="6"/><circle cx="4" cy="7" r="2.4"/><circle cx="20" cy="7" r="2.4"/><circle cx="8" cy="3" r="2.2"/><circle cx="16" cy="3" r="2.2"/></svg>
+  </div>
+</header>
 
-  <!-- Admin Panel -->
-  <div class="admin-panel" id="adminPanel" style="display:none;" aria-label="Admin review panel">
-    <div class="admin-panel-inner">
-      <div class="admin-panel-head">
-        <h2>🗂️ Submission Review</h2>
-        <button class="btn-ghost btn-sm" style="border-color:rgba(215,175,255,0.2);color:#f7e9d7;" onclick="closeAdminPanel()">Close</button>
+<!-- CUTENESS CONTEST GALLERY -->
+<section class="contest-section" aria-labelledby="contest-h">
+  <div class="contest-head">
+    <div>
+      <div class="contest-title-row">
+        <h2 class="contest-h" id="contest-h">😻 Cutie Cat of the Week</h2>
+        <span class="contest-badge">Live voting</span>
       </div>
-      <p class="admin-sub">Approve or reject submissions before they appear on the board.</p>
-      <div class="admin-tabs">
-        <button class="admin-tab active" id="qTabFeatured" onclick="setQueueTab('featured')">Featured Cats</button>
-        <button class="admin-tab" id="qTabTrivia" onclick="setQueueTab('trivia')">Trivia</button>
-        <button class="admin-tab" id="qTabStories" onclick="setQueueTab('stories')">Stories</button>
-      </div>
-      <div class="admin-queue" id="adminQueue"></div>
+      <p class="contest-sub">First 10 submissions fill the gallery. Cat with the most votes wins the crown. 📸</p>
     </div>
+    <button class="contest-submit-btn" onclick="openContestModal()">📷 Submit your cat</button>
   </div>
 
-  <!-- Board -->
-  <main class="board" id="boardContainer"></main>
+  <div id="winnerBanner" style="display:none; margin-bottom:14px;"></div>
 
-  <footer>
-    <div class="paw-divider">
-      <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><circle cx="12" cy="14" r="6"/><circle cx="4" cy="7" r="2.4"/><circle cx="20" cy="7" r="2.4"/><circle cx="8" cy="3" r="2.2"/><circle cx="16" cy="3" r="2.2"/></svg>
+  <div class="gallery-grid" id="contestGrid"></div>
+
+  <div class="contest-footer-row">
+    <span class="vote-rules" id="voteStatus"></span>
+    <span id="contestSlotCount"></span>
+  </div>
+</section>
+
+<!-- CONTEST SUBMISSION MODAL -->
+<div class="modal-backdrop" id="contestModal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeContestModal()" aria-label="Close">×</button>
+    <p class="modal-title" id="modal-title">Submit your cat 🐱</p>
+    <p class="modal-sub">Add a photo URL and your cat's name. If a slot is open, an admin will review your entry and add it to the gallery.</p>
+    <div class="field">
+      <label for="contestCatName">Cat's name</label>
+      <input type="text" id="contestCatName" placeholder="e.g. Noodles">
     </div>
-    9lives — built by cat people, for cat people. And all their 9 lives.
-  </footer>
+    <div class="field">
+      <label for="contestOwnerName">Your name</label>
+      <input type="text" id="contestOwnerName" placeholder="e.g. Patricia G.">
+    </div>
+    <div class="field">
+      <label for="contestPhotoUrl">Photo URL</label>
+      <input type="url" id="contestPhotoUrl" placeholder="https://...">
+    </div>
+    <button class="btn" style="width:100%;" onclick="submitContestEntry()">Send for review</button>
+  </div>
+</div>
 
-  <div class="toast" id="toast"></div>
+<div class="admin-panel" id="adminPanel" style="display:none;" aria-label="Admin review panel">
+  <div class="admin-panel-inner">
+    <div class="admin-panel-head">
+      <h2>🗂️ Submission Review</h2>
+      <button class="btn-ghost btn-sm" style="border-color:rgba(247,241,229,0.3); color:var(--cream);" onclick="closeAdminPanel()">Close</button>
+    </div>
+    <p class="admin-sub">Approve a submission to publish it on the board, or reject it to discard it.</p>
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="qTabFeatured" onclick="setQueueTab('featured')">Featured Cats</button>
+      <button class="admin-tab" id="qTabTrivia" onclick="setQueueTab('trivia')">Trivia</button>
+      <button class="admin-tab" id="qTabStories" onclick="setQueueTab('stories')">True Cat Stories</button>
+      <button class="admin-tab" id="qTabGallery" onclick="setQueueTab('gallery')">Gallery Entries</button>
+    </div>
+    <div class="admin-queue" id="adminQueue"></div>
+  </div>
+</div>
 
-  <script>
-    /* ============================================================
-       STARFIELD (Canvas)
-       ============================================================ */
-    (function initStars() {
-      const canvas = document.getElementById('starCanvas');
-      const ctx = canvas.getContext('2d');
-      let stars = [];
-      let W, H;
+<main class="board">
 
-      function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', () => {
-        resize();
-        generateStars();
-        drawStars();
-      });
+  <!-- CAT CARE -->
+  <section class="box box-care" aria-labelledby="care-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="care-h">🩺 Cat Care Corner</h2>
+      <span class="box-eyebrow">From owners, for owners</span>
+    </div>
+    <div class="care-list" id="careList"></div>
+    <details>
+      <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ Share what worked for you</summary>
+      <div class="field" style="margin-top:10px;">
+        <label for="careName">Your name</label>
+        <input type="text" id="careName" placeholder="e.g. Mara from Tondo">
+      </div>
+      <div class="field">
+        <label for="careText">Your tip</label>
+        <textarea id="careText" rows="3" placeholder="What did you learn the hard way?"></textarea>
+      </div>
+      <button class="btn" onclick="addCareNote()">Post tip</button>
+    </details>
+  </section>
 
-      function generateStars() {
-        stars = [];
-        const count = Math.floor((W * H) / 3800) + 280;
-        for (let i = 0; i < count; i++) {
-          stars.push({
-            x: Math.random() * W,
-            y: Math.random() * H,
-            r: Math.random() * 2.0 + 0.4,
-            a: Math.random() * 0.9 + 0.1,
-            speed: 0.005 + Math.random() * 0.02,
-            phase: Math.random() * Math.PI * 2
-          });
-        }
-      }
+  <!-- FEATURED CAT -->
+  <section class="box box-featured" aria-labelledby="feat-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="feat-h">⭐ Featured Cat</h2>
+      <span class="box-eyebrow" id="featDate"></span>
+    </div>
+    <div class="featured-hero">
+      <img id="featuredHeroImg" src="" alt="Featured cat photo">
+      <div class="featured-name-tag" id="featuredNameTag"></div>
+    </div>
+    <div class="gallery-strip" id="featuredGallery"></div>
+    <details class="featured-admin">
+      <summary>Submit your cat to be featured</summary>
+      <div class="panel">
+        <p class="submit-note" style="background:rgba(247,241,229,0.08); border-color:rgba(247,241,229,0.25); color:#ece4d2;">
+          <strong>Want your cat featured?</strong> Send a few photos and a short write-up about your cat. Tip: share what makes them unique, or the silliest thing they do. An admin reviews submissions before one goes up on the board.
+        </p>
+        <div class="field">
+          <label for="newCatName">Cat's name</label>
+          <input type="text" id="newCatName" placeholder="e.g. Biscuit">
+        </div>
+        <div class="field">
+          <label>Photo URLs (up to 5)</label>
+          <div class="thumb-input-row"><input type="url" id="catPhoto1" placeholder="Photo 1 (required)"></div>
+          <div class="thumb-input-row"><input type="url" id="catPhoto2" placeholder="Photo 2 (optional)"></div>
+          <div class="thumb-input-row"><input type="url" id="catPhoto3" placeholder="Photo 3 (optional)"></div>
+          <div class="thumb-input-row"><input type="url" id="catPhoto4" placeholder="Photo 4 (optional)"></div>
+          <div class="thumb-input-row"><input type="url" id="catPhoto5" placeholder="Photo 5 (optional)"></div>
+        </div>
+        <div class="field">
+          <label for="newCatWriteup">Their story (for the write-up box)</label>
+          <textarea id="newCatWriteup" rows="3" placeholder="Tell us about this cat..."></textarea>
+        </div>
+        <div class="field">
+          <label for="newCatBy">Submitted by</label>
+          <input type="text" id="newCatBy" placeholder="Owner's name">
+        </div>
+        <button class="btn" onclick="submitFeaturedCat()">Send for review</button>
+      </div>
+    </details>
+  </section>
 
-      let time = 0;
+  <!-- TRIVIA -->
+  <section class="box box-trivia" aria-labelledby="trivia-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="trivia-h">🧠 Cat Trivia</h2>
+      <span class="box-eyebrow">One a day</span>
+    </div>
+    <div class="trivia-today">
+      <div class="label">Today's trivia</div>
+      <p id="triviaTodayText">Loading...</p>
+    </div>
+    <div class="trivia-meta">
+      <span class="count" id="triviaCount"></span>
+      <button class="btn-ghost btn-sm trivia-archive-toggle" onclick="toggleArchive()">View archive</button>
+    </div>
+    <div class="archive-list" id="archiveList"></div>
+    <details>
+      <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ Suggest a trivia fact</summary>
+      <div class="field" style="margin-top:10px;">
+        <label for="newTrivia">New trivia fact</label>
+        <textarea id="newTrivia" rows="2" placeholder="Did you know..."></textarea>
+      </div>
+      <button class="btn" onclick="submitTrivia()">Send for review</button>
+      <p style="font-size:0.74rem;color:var(--sage-dark);margin-top:8px;">An admin approves facts before they join the rotation. Queue holds 10 active facts — oldest is archived (not deleted) to make room.</p>
+    </details>
+  </section>
 
-      function drawStars() {
-        ctx.clearRect(0, 0, W, H);
-        for (const s of stars) {
-          const alpha = s.a * (0.7 + 0.3 * Math.sin(time * s.speed + s.phase));
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,247,240,${alpha})`;
-          ctx.fill();
-          if (s.r > 1.2) {
-            ctx.shadowColor = 'rgba(215,175,255,0.2)';
-            ctx.shadowBlur = 8;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-          }
-        }
-        time += 1;
-        requestAnimationFrame(drawStars);
-      }
+  <!-- VIDEO -->
+  <section class="box box-video" aria-labelledby="video-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="video-h">🎬 Cat Clip of the Day</h2>
+      <span class="box-eyebrow">Sound on</span>
+    </div>
+    <div class="video-frame-wrap">
+      <iframe id="videoFrame" src="https://www.youtube.com/embed/J---aiyznGQ" title="Featured cat video" allowfullscreen></iframe>
+    </div>
+    <p class="video-caption" id="videoCaption">A keyboard cat classic, because some things never get old.</p>
+    <details style="margin-top:8px;">
+      <summary class="btn-ghost btn-sm" style="display:inline-block; list-style:none;">+ Suggest a video</summary>
+      <div class="field" style="margin-top:10px;">
+        <label for="videoUrlInput">YouTube embed URL</label>
+        <input type="url" id="videoUrlInput" placeholder="https://www.youtube.com/embed/...">
+      </div>
+      <div class="field">
+        <label for="videoCapInput">Caption</label>
+        <input type="text" id="videoCapInput" placeholder="What makes this clip great?">
+      </div>
+      <button class="btn" onclick="setVideo()">Set video</button>
+    </details>
+  </section>
 
-      resize();
-      generateStars();
-      drawStars();
-    })();
+  <!-- WRITE-UP (paired with featured cat) -->
+  <section class="box box-writeup" aria-labelledby="writeup-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="writeup-h">📝 Their Story</h2>
+      <span class="box-eyebrow">About this week's star</span>
+    </div>
+    <p class="writeup-name" id="writeupName"></p>
+    <p class="writeup-byline" id="writeupBy"></p>
+    <p class="writeup-body" id="writeupBody"></p>
+  </section>
 
-    /* ============================================================
-       APP LOGIC
-       ============================================================ */
+  <!-- TRUE CAT STORIES -->
+  <section class="box box-stories" aria-labelledby="stories-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="stories-h">📖 True Cat Stories</h2>
+      <span class="box-eyebrow">Real tales from real owners</span>
+    </div>
+    <div class="stories-grid" id="storiesGrid"></div>
+    <details>
+      <summary class="btn" style="display:inline-block; list-style:none; padding:9px 16px;">Send your cat story</summary>
+      <p class="submit-note" style="margin-top:12px;">Got a true story about your cat? Submissions are reviewed by an admin before they're posted.</p>
+      <div class="field">
+        <label for="storyTitle">Title</label>
+        <input type="text" id="storyTitle" placeholder="e.g. The day she found her way home">
+      </div>
+      <div class="field">
+        <label>Photos (up to 3)</label>
+        <div class="thumb-input-row"><input type="url" id="storyPhoto1" placeholder="Photo 1 URL (optional)"></div>
+        <div class="thumb-input-row"><input type="url" id="storyPhoto2" placeholder="Photo 2 URL (optional)"></div>
+        <div class="thumb-input-row"><input type="url" id="storyPhoto3" placeholder="Photo 3 URL (optional)"></div>
+      </div>
+      <div class="field">
+        <label for="storyBy">Your name</label>
+        <input type="text" id="storyBy" placeholder="Who's telling the story?">
+      </div>
+      <div class="field">
+        <label for="storyText">The story</label>
+        <textarea id="storyText" rows="4" placeholder="Tell us what happened..."></textarea>
+      </div>
+      <button class="btn" onclick="submitStory()">Send for review</button>
+    </details>
+  </section>
 
-    // ─── GOOGLE SIGN-IN CONFIG ────────────────────────────────────
-    // 👇 Replace with your real Client ID from Google Cloud Console
-    const CLIENT_ID = '889906054782-fpu0fldrrh7l7bmvrm9fev11k9uvvg2i.apps.googleusercontent.com';
+  <!-- DIRECTORY -->
+  <section class="box box-directory" aria-labelledby="dir-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="dir-h">📋 Cat Directory</h2>
+      <span class="box-eyebrow">Vets &amp; suppliers</span>
+    </div>
+    <div class="directory-tabs">
+      <button class="dtab active" id="tabAll" onclick="filterDirectory('all')">All</button>
+      <button class="dtab" id="tabVet" onclick="filterDirectory('vet')">Vets</button>
+      <button class="dtab" id="tabProduct" onclick="filterDirectory('product')">Products</button>
+    </div>
+    <div class="directory-list" id="directoryList"></div>
+    <details>
+      <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ List your business</summary>
+      <div class="field" style="margin-top:10px;">
+        <label for="bizType">Type</label>
+        <select id="bizType" style="width:100%; padding:9px 11px; border-radius:9px; border:1.5px solid var(--line); background:var(--cream); font-family:var(--font-body);">
+          <option value="vet">Veterinary clinic</option>
+          <option value="product">Cat products / supplies</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="bizName">Business name</label>
+        <input type="text" id="bizName" placeholder="e.g. Paws & Claws Clinic">
+      </div>
+      <div class="field">
+        <label for="bizArea">Area / city</label>
+        <input type="text" id="bizArea" placeholder="e.g. Las Piñas">
+      </div>
+      <div class="field">
+        <label for="bizContact">Contact number</label>
+        <input type="tel" id="bizContact" placeholder="e.g. 0917 123 4567">
+      </div>
+      <button class="btn" onclick="addDirectoryEntry()">Add listing</button>
+    </details>
+  </section>
 
-    let isAdmin = false;
-    let currentUserEmail = null;
-    let isSignedIn = false;
+  <!-- TOPIC OF THE DAY -->
+  <section class="box box-topic" aria-labelledby="topic-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="topic-h">💬 Topic of the Day</h2>
+      <span class="box-eyebrow">Talk amongst yourselves</span>
+    </div>
+    <div class="topic-of-day">
+      <div class="label">Today we're talking about</div>
+      <p id="topicText"></p>
+    </div>
+    <div class="comments-list" id="commentsList"></div>
+    <div class="inline-form">
+      <input type="text" id="commentName" placeholder="Name" style="max-width:110px;">
+      <textarea id="commentText" rows="1" placeholder="Add your comment..."></textarea>
+      <button class="btn btn-sm" onclick="addComment()" style="align-self:flex-end;">Post</button>
+    </div>
+  </section>
 
-    // Decode JWT payload
-    function decodeJwtPayload(token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split('')
-            .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-            .join('')
-        );
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        return null;
-      }
-    }
+</main>
 
-    // Callback after Google sign-in
-    function handleCredentialResponse(response) {
-      const payload = decodeJwtPayload(response.credential);
-      if (payload && payload.email) {
-        currentUserEmail = payload.email;
-        isSignedIn = true;
+<footer>
+  <div class="paw-divider">
+    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><circle cx="12" cy="14" r="6"/><circle cx="4" cy="7" r="2.4"/><circle cx="20" cy="7" r="2.4"/><circle cx="8" cy="3" r="2.2"/><circle cx="16" cy="3" r="2.2"/></svg>
+  </div>
+  The Whisker Board — built by cat people, for cat people. Stored right here in your browser.
+</footer>
 
-        if (currentUserEmail === 'rico.calalang@gmail.com') {
-          isAdmin = true;
-          updateAdminUI();
-          document.getElementById('adminPanel').style.display = 'block';
-          renderAdminQueue();
-          showToast('✅ Admin access granted. Welcome back, Rico!');
-        } else {
-          isAdmin = false;
-          showToast(`❌ Not authorized. Only rico.calalang@gmail.com can be admin.`);
-          google.accounts.id.disableAutoSelect();
-        }
-      }
-    }
+<script>
+/* ============ ADMIN CONFIG ============
+   Change this password to whatever you like — it's checked entirely
+   in the browser, so it keeps out casual visitors but isn't bank-vault
+   security. Good enough for a small community site with one admin. */
+const ADMIN_PASSWORD = 'whiskers123';
 
-    // Initialize Google Identity Services
-    function initGoogleSignIn() {
-      // Check if Client ID is still the placeholder
-      if (CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
-        console.warn('Google Client ID not configured. Admin login will not work.');
-        // Show a toast when the user clicks the button
-        return;
-      }
-      google.accounts.id.initialize({
-        client_id: CLIENT_ID,
-        callback: handleCredentialResponse,
-        auto_prompt: false
-      });
-    }
+let isAdmin = false;
+let activeQueueTab = 'featured';
 
-    // Admin button click handler
-    function handleAdminClick() {
-      // Check if Client ID is set
-      if (CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
-        showToast('⚠️ Please set your Google Client ID in the script (CLIENT_ID).');
-        return;
-      }
+/* ============ STORAGE HELPERS ============ */
+const DB_KEY = 'whiskerboard_data_v1';
 
-      // If Google API not loaded yet, wait
-      if (typeof google === 'undefined' || !google.accounts) {
-        showToast('⏳ Google Sign-In is loading, please try again in a moment.');
-        return;
-      }
-
-      if (!isSignedIn) {
-        // Show Google One‑Tap dialog
-        google.accounts.id.prompt();
-        return;
-      }
-
-      if (isAdmin) {
-        // Toggle admin mode OFF
-        isAdmin = false;
-        updateAdminUI();
-        document.getElementById('adminPanel').style.display = 'none';
-        showToast('Admin mode disabled');
-      } else {
-        // Signed in but not admin – unlikely, but guard
-        showToast('You are not authorized as admin.');
-      }
-    }
-
-    // Update the cat icon and body class
-    function updateAdminUI() {
-      const btn = document.getElementById('adminToggleBtn');
-      if (isAdmin) {
-        btn.classList.add('is-on');
-        document.body.classList.add('admin-mode');
-      } else {
-        btn.classList.remove('is-on');
-        document.body.classList.remove('admin-mode');
-      }
-    }
-
-    // Optional logout function
-    function logoutAdmin() {
-      if (isSignedIn) {
-        google.accounts.id.disableAutoSelect();
-        google.accounts.id.revoke(currentUserEmail, () => {
-          isSignedIn = false;
-          isAdmin = false;
-          currentUserEmail = null;
-          updateAdminUI();
-          document.getElementById('adminPanel').style.display = 'none';
-          showToast('Logged out');
-        });
-      }
-    }
-
-    // Auto-init when Google SDK is ready
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof google !== 'undefined' && google.accounts) {
-        initGoogleSignIn();
-      } else {
-        const checkInterval = setInterval(() => {
-          if (typeof google !== 'undefined' && google.accounts) {
-            initGoogleSignIn();
-            clearInterval(checkInterval);
-          }
-        }, 200);
-      }
-    });
-
-    // ─── STORAGE ──────────────────────────────────────────────────
-    const DB_KEY = '9lives_data_v1';
-
-    function uid() { return Math.random().toString(36).slice(2, 9); }
-
-    function todayStr() { return new Date().toISOString().slice(0, 10); }
-
-    function esc(str) { const d = document.createElement('div');
-      d.textContent = str == null ? '' : str; return d.innerHTML; }
-
-    function defaultDB() {
-      return {
-        care: [
-          { id: uid(), who: 'Lani', when: 'Jun 14', text: 'Brush short-haired cats once a week, long-haired ones every other day. Cuts down on hairballs a LOT.' },
-          { id: uid(), who: 'Doc Reyes', when: 'Jun 10', text: 'Annual dental check matters even if breath smells fine — tartar builds up quietly under the gumline.' },
-          { id: uid(), who: 'Pao', when: 'Jun 2', text: 'Switching food? Mix old and new over 7-10 days. Sudden switches = upset tummy, learned this the messy way.' }
-        ],
-        featured: {
-          name: 'Biscuit',
-          by: 'Submitted by the Santos family',
-          writeup: 'Biscuit showed up on our doorstep during a typhoon three years ago, soaked and skinny. Now he runs the household — claims the laundry basket as his throne and supervises every meal from the counter. He has never once caught a mouse but is, by his own estimation, an excellent guard cat.',
-          date: todayStr(),
-          photos: [
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23D97E3F" width="400" height="300"/%3E%3Ctext x="50" y="150" fill="white" font-family="sans-serif" font-size="24"%3ECat Photo 1%3C/text%3E%3C/svg%3E',
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%237C8A6E" width="400" height="300"/%3E%3Ctext x="50" y="150" fill="white" font-family="sans-serif" font-size="24"%3ECat Photo 2%3C/text%3E%3C/svg%3E',
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23B8632B" width="400" height="300"/%3E%3Ctext x="50" y="150" fill="white" font-family="sans-serif" font-size="24"%3ECat Photo 3%3C/text%3E%3C/svg%3E'
-          ]
-        },
-        trivia: [
-          { id: uid(), text: 'A group of cats is called a "clowder."' },
-          { id: uid(), text: "Cats can't taste sweetness — they're missing the taste receptor for it entirely." },
-          { id: uid(), text: 'A cat\'s whiskers are roughly as wide as its body, helping it judge if it can fit through a gap.' },
-          { id: uid(), text: 'The oldest known pet cat was found in a 9,500-year-old grave on Cyprus.' },
-          { id: uid(), text: 'Cats spend around 70% of their lives asleep.' },
-          { id: uid(), text: 'A cat\'s purr typically falls between 25–150 Hz, a range linked to bone and tissue healing.' },
-          { id: uid(), text: 'Cats have a third eyelid called the haw, usually only visible when they\'re unwell or very relaxed.' },
-          { id: uid(), text: 'Each cat\'s nose pad has a unique pattern, like a human fingerprint.' },
-          { id: uid(), text: 'Cats walk like camels and giraffes, moving both right legs then both left legs.' },
-          { id: uid(), text: 'A cat\'s back is so flexible because it has no functional collarbone holding it in place.' }
-        ],
-        triviaArchive: [],
-        video: {
-          url: 'https://www.youtube.com/embed/J---aiyznGQ',
-          caption: 'A keyboard cat classic, because some things never get old.'
-        },
-        stories: [{
-          id: uid(),
-          title: 'The day she found her way home',
-          by: 'Inna C.',
-          photos: [
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23D97E3F" width="200" height="200"/%3E%3Ctext x="20" y="110" fill="white" font-family="sans-serif" font-size="18"%3EStory Photo%3C/text%3E%3C/svg%3E'
-          ],
-          text: 'Mochi went missing for eleven days after a thunderstorm spooked her out an open window. We papered the whole subdivision with flyers. On day eleven, a neighbor three streets over heard scratching in her garage. Mochi walked out thinner but completely unbothered, like she\'d just stepped out for a bit.'
-        }, {
-          id: uid(),
-          title: 'Rescued from a drainage pipe',
-          by: 'Marco T.',
-          photos: [
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%237C8A6E" width="200" height="200"/%3E%3Ctext x="20" y="110" fill="white" font-family="sans-serif" font-size="18"%3EStory Photo%3C/text%3E%3C/svg%3E'
-          ],
-          text: 'Heard tiny meows coming from a storm drain during the rainy season. Took two hours, a flashlight, and a lot of patience to coax out a kitten we now call Drainpipe. He\'s the most spoiled cat on the block now.'
-        }],
-        directory: [
-          { id: uid(), type: 'vet', name: 'Paws & Claws Clinic', area: 'Las Piñas', contact: '0917 123 4567' },
-          { id: uid(), type: 'vet', name: 'VetCare Animal Hospital', area: 'Parañaque', contact: '(02) 8123 4567' },
-          { id: uid(), type: 'product', name: 'Whisker Supply Co.', area: 'Online / NCR-wide', contact: '0922 555 0199' }
-        ],
-        topic: 'What\'s the weirdest thing your cat treats as a toy?',
-        comments: {
-          care: [],
-          featured: [],
-          writeup: [],
-          trivia: [],
-          video: [],
-          stories: [],
-          directory: [],
-          topic: []
-        },
-        pendingFeatured: [],
-        pendingTrivia: [],
-        pendingStories: []
-      };
-    }
-
-const API_URL = '/api/state';
-
-async function loadDB() {
-  // 1. Try cloud first
-  try {
-    const res = await fetch(API_URL);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && Object.keys(data).length > 0) {
-        if (!data.comments) data.comments = {};
-        ['care', 'featured', 'writeup', 'trivia', 'video', 'stories', 'directory', 'topic'].forEach(b => {
-          if (!data.comments[b]) data.comments[b] = [];
-        });
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-        return data;
-      }
-    }
-  } catch (e) {
-    console.warn('Cloud load failed, using local fallback', e);
+function loadDB(){
+  const raw = localStorage.getItem(DB_KEY);
+  if(raw){
+    try{
+      const parsed = JSON.parse(raw);
+      return migrateDB(parsed);
+    }catch(e){ /* fall through to default */ }
   }
-
-  // 2. Fallback to localStorage
-  try {
-    const raw = localStorage.getItem(DB_KEY);
-    if (raw) {
-      const data = JSON.parse(raw);
-      if (!data.comments) data.comments = {};
-      return data;
-    }
-  } catch (e) {}
   return defaultDB();
 }
-
-    let DB = loadDB();
-
-function saveDB(data) {
-  // Always save to localStorage first (fast UI update)
-  localStorage.setItem(DB_KEY, JSON.stringify(data));
-  // Then sync to cloud in the background
-  (async () => {
-    try {
-      await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-    } catch (e) {
-      console.warn('Cloud sync failed', e);
-    }
-  })();
+function migrateDB(db){
+  // ensures sites saved before the approval workflow existed don't break
+  if(!db.pendingFeatured) db.pendingFeatured = [];
+  if(!db.pendingTrivia) db.pendingTrivia = [];
+  if(!db.pendingStories) db.pendingStories = [];
+  if(!db.galleryEntries) db.galleryEntries = [];
+  if(!db.galleryWeek) db.galleryWeek = weekStr();
+  if(!db.galleryPastWinners) db.galleryPastWinners = [];
+  if(!db.pendingGallery) db.pendingGallery = [];
+  return db;
+}
+function saveDB(){
+  localStorage.setItem(DB_KEY, JSON.stringify(DB));
+}
+function todayStr(){
+  return new Date().toISOString().slice(0,10);
+}
+function weekStr(){
+  // ISO week: YYYY-Www
+  const d = new Date();
+  const jan4 = new Date(d.getFullYear(), 0, 4);
+  const weekNum = Math.ceil(((d - jan4) / 86400000 + jan4.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${String(weekNum).padStart(2,'0')}`;
+}
+function uid(){
+  return Math.random().toString(36).slice(2,9);
+}
+function escapeHTML(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
 }
 
-    /* ============ SHARE ============ */
-    function getPageUrl() { return window.location.href; }
-
-    function getPageTitle() { return document.title; }
-
-    function sharePage(platform) {
-      const url = encodeURIComponent(getPageUrl());
-      const title = encodeURIComponent(getPageTitle());
-      let shareUrl = '';
-      switch (platform) {
-        case 'fb':
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-          break;
-        case 'twitter':
-          shareUrl = `https://twitter.com/intent/tweet?text=${title}&url=${url}`;
-          break;
-        case 'ig':
-          shareUrl = `https://www.instagram.com/`;
-          break;
-        case 'tiktok':
-          shareUrl = `https://www.tiktok.com/`;
-          break;
+/* ============ DEFAULT SEED DATA ============ */
+function defaultDB(){
+  return {
+    careNotes: [
+      {id:uid(), who:'Lani', when:'Jun 14', text:'Brush short-haired cats once a week, long-haired ones every other day. Cuts down on hairballs a LOT.'},
+      {id:uid(), who:'Doc Reyes', when:'Jun 10', text:'Annual dental check matters even if breath smells fine — tartar builds up quietly under the gumline.'},
+      {id:uid(), who:'Pao', when:'Jun 2', text:'Switching food? Mix old and new over 7-10 days. Sudden switches = upset tummy, learned this the messy way.'}
+    ],
+    featuredCat: {
+      name:'Biscuit',
+      by:'Submitted by the Santos family',
+      writeup:'Biscuit showed up on our doorstep during a typhoon three years ago, soaked and skinny. Now he runs the household — claims the laundry basket as his throne and supervises every meal from the counter. He has never once caught a mouse but is, by his own estimation, an excellent guard cat.',
+      date: todayStr(),
+      photos:[
+        'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&q=80',
+        'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=600&q=80',
+        'https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=600&q=80'
+      ]
+    },
+    triviaActive: [
+      {id:uid(), text:'A group of cats is called a "clowder."', addedOn:'2026-06-12'},
+      {id:uid(), text:"Cats can't taste sweetness — they're missing the taste receptor for it entirely.", addedOn:'2026-06-13'},
+      {id:uid(), text:'A cat\'s whiskers are roughly as wide as its body, helping it judge if it can fit through a gap.', addedOn:'2026-06-14'},
+      {id:uid(), text:'The oldest known pet cat was found in a 9,500-year-old grave on Cyprus.', addedOn:'2026-06-15'},
+      {id:uid(), text:'Cats spend around 70% of their lives asleep.', addedOn:'2026-06-16'},
+      {id:uid(), text:'A cat\'s purr typically falls between 25–150 Hz, a range linked to bone and tissue healing.', addedOn:'2026-06-17'},
+      {id:uid(), text:'Cats have a third eyelid called the haw, usually only visible when they\'re unwell or very relaxed.', addedOn:'2026-06-18'},
+      {id:uid(), text:'Each cat\'s nose pad has a unique pattern, like a human fingerprint.', addedOn:'2026-06-19'},
+      {id:uid(), text:'Cats walk like camels and giraffes, moving both right legs then both left legs.', addedOn:'2026-06-20'},
+      {id:uid(), text:'A cat\'s back is so flexible because it has no functional collarbone holding it in place.', addedOn:'2026-06-21'}
+    ],
+    triviaArchive: [],
+    triviaShownIndex: 9, // index into triviaActive currently displayed as "today's"
+    triviaLastShownDate: todayStr(),
+    video: {
+      url:'https://www.youtube.com/embed/J---aiyznGQ',
+      caption:'A keyboard cat classic, because some things never get old.'
+    },
+    stories: [
+      {
+        id:uid(), title:'The day she found her way home', by:'Inna C.',
+        photos:[
+          'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400&q=80',
+          'https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=400&q=80'
+        ],
+        text:'Mochi went missing for eleven days after a thunderstorm spooked her out an open window. We papered the whole subdivision with flyers. On day eleven, a neighbor three streets over heard scratching in her garage. Mochi walked out thinner but completely unbothered, like she\'d just stepped out for a bit.'
+      },
+      {
+        id:uid(), title:'Rescued from a drainage pipe', by:'Marco T.',
+        photos:[
+          'https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=400&q=80'
+        ],
+        text:'Heard tiny meows coming from a storm drain during the rainy season. Took two hours, a flashlight, and a lot of patience to coax out a kitten we now call Drainpipe. He\'s the most spoiled cat on the block now.'
       }
-      if (shareUrl) window.open(shareUrl, '_blank', 'width=600,height=500');
-    }
-
-    function copyLink() {
-      const url = getPageUrl();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(() => {
-          showToast('✅ Link copied to clipboard!');
-        }).catch(() => { fallbackCopy(url); });
-      } else { fallbackCopy(url); }
-    }
-
-    function fallbackCopy(text) {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      try { document.execCommand('copy');
-        showToast('✅ Link copied to clipboard!'); } catch (e) { showToast('📋 Copy this link: ' + text); }
-      document.body.removeChild(textarea);
-    }
-
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      clearTimeout(toast._timeout);
-      toast._timeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
-    }
-
-    function shareBox(boxId, platform) {
-      const boxElement = document.getElementById(`box-${boxId}`);
-      if (!boxElement) return;
-      const title = boxElement.dataset.shareTitle || getPageTitle();
-      const text = boxElement.dataset.shareText || '';
-      const url = encodeURIComponent(getPageUrl());
-      const shareText = encodeURIComponent(`${title} ${text}`.trim());
-      let shareUrl = '';
-      switch (platform) {
-        case 'fb':
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${shareText}`;
-          break;
-        case 'twitter':
-          shareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${url}`;
-          break;
-        case 'ig':
-          shareUrl = `https://www.instagram.com/`;
-          break;
-        case 'tiktok':
-          shareUrl = `https://www.tiktok.com/`;
-          break;
-        case 'copy':
-          copyLink();
-          return;
+    ],
+    directory: [
+      {id:uid(), type:'vet', name:'Paws & Claws Clinic', area:'Las Piñas', contact:'0917 123 4567'},
+      {id:uid(), type:'vet', name:'VetCare Animal Hospital', area:'Parañaque', contact:'(02) 8123 4567'},
+      {id:uid(), type:'product', name:'Whisker Supply Co.', area:'Online / NCR-wide', contact:'0922 555 0199'}
+    ],
+    topicOfDay: 'What\'s the weirdest thing your cat treats as a toy?',
+    comments: [
+      {id:uid(), who:'Beth', text:'A bottle cap. Just one specific bottle cap. Ignores all the actual cat toys we bought.'},
+      {id:uid(), who:'Jun', text:'The plastic ring from a milk jug. Three years running, still the favorite.'}
+    ],
+    pendingFeatured: [
+      {
+        id:uid(), name:'Tala', by:'Submitted by Reyna G.', submittedOn:todayStr(),
+        writeup:'Tala insists on supervising every Zoom call by sitting directly on the keyboard. She has joined two work meetings uninvited and shows no remorse.',
+        photos:['https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=400&q=80']
       }
-      if (shareUrl) window.open(shareUrl, '_blank', 'width=600,height=500');
+    ],
+    pendingTrivia: [
+      {id:uid(), text:'Cats make about 100 different vocal sounds, while dogs make around 10.', submittedOn:todayStr()}
+    ],
+    pendingStories: [
+      {
+        id:uid(), title:'The great curtain incident', by:'Carlo D.', submittedOn:todayStr(),
+        photos:['https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=400&q=80'],
+        text:'Our cat Ginger climbed the living room curtains during a thunderstorm and got stuck at the very top for two hours. She refused all help and came down on her own the second the rain stopped, completely unbothered.'
+      }
+    ],
+    galleryEntries: [],           // up to 10 live contest entries: {id,catName,ownerName,photoUrl,votes}
+    galleryWeek: weekStr(),       // 'YYYY-Www' — resets votes & entries when admin starts new week
+    galleryPastWinners: [],       // archive of past champions
+    pendingGallery: [             // contest submissions awaiting admin approval
+      {id:uid(), catName:'Miso', ownerName:'Rina T.', photoUrl:'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&q=80', submittedOn:todayStr()},
+      {id:uid(), catName:'Churro', ownerName:'Paolo B.', photoUrl:'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=400&q=80', submittedOn:todayStr()}
+    ]
+  };
+}
+
+let DB = loadDB();
+
+/* ============ DAILY TRIVIA ROTATION ============
+   triviaShownIndex points at the fact currently "on display" within
+   triviaActive. Each new calendar day, the pointer advances by one
+   (wrapping if needed) so the board shows a different fact each day,
+   cycling through whatever is currently in the 10-slot queue. */
+function rotateTriviaIfNewDay(){
+  const today = todayStr();
+  if(DB.triviaActive.length === 0){
+    DB.triviaLastShownDate = today;
+    return;
+  }
+  if(DB.triviaLastShownDate !== today){
+    const daysElapsed = Math.max(1, daysBetween(DB.triviaLastShownDate, today));
+    DB.triviaShownIndex = (DB.triviaShownIndex + daysElapsed) % DB.triviaActive.length;
+    DB.triviaLastShownDate = today;
+    saveDB();
+  } else if (DB.triviaShownIndex >= DB.triviaActive.length){
+    // queue shrank (shouldn't normally happen) - clamp safely
+    DB.triviaShownIndex = DB.triviaActive.length - 1;
+  }
+}
+function daysBetween(a,b){
+  const d1 = new Date(a+'T00:00:00');
+  const d2 = new Date(b+'T00:00:00');
+  return Math.round((d2-d1)/86400000);
+}
+
+/* ============ RENDER: CARE NOTES ============ */
+function renderCare(){
+  const el = document.getElementById('careList');
+  if(DB.careNotes.length === 0){
+    el.innerHTML = '<p class="empty-state">No tips yet — be the first to share one.</p>';
+    return;
+  }
+  el.innerHTML = DB.careNotes.slice().reverse().map(n => `
+    <div class="care-note">
+      <div class="who"><span>${escapeHTML(n.who)}</span><span>${escapeHTML(n.when)}</span></div>
+      <p>${escapeHTML(n.text)}</p>
+    </div>
+  `).join('');
+}
+function addCareNote(){
+  const nameEl = document.getElementById('careName');
+  const textEl = document.getElementById('careText');
+  const who = nameEl.value.trim() || 'Anonymous cat parent';
+  const text = textEl.value.trim();
+  if(!text) return;
+  DB.careNotes.push({id:uid(), who, when:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), text});
+  saveDB();
+  renderCare();
+  nameEl.value=''; textEl.value='';
+}
+
+/* ============ RENDER: FEATURED CAT + WRITEUP ============ */
+let activePhotoIndex = 0;
+function renderFeatured(){
+  const f = DB.featuredCat;
+  document.getElementById('featDate').textContent = f.date || todayStr();
+  document.getElementById('featuredNameTag').textContent = f.name;
+  document.getElementById('writeupName').textContent = f.name;
+  document.getElementById('writeupBy').textContent = f.by || '';
+  document.getElementById('writeupBody').textContent = f.writeup || '';
+
+  const photos = (f.photos || []).slice(0,5);
+  activePhotoIndex = 0;
+  const heroImg = document.getElementById('featuredHeroImg');
+  heroImg.src = photos[0] || '';
+  heroImg.alt = f.name + ' — photo 1';
+
+  const gallery = document.getElementById('featuredGallery');
+  if(photos.length <= 1){
+    gallery.innerHTML = '';
+    return;
+  }
+  gallery.innerHTML = photos.map((p,i) => `
+    <img src="${escapeHTML(p)}" class="${i===0?'active':''}" data-idx="${i}" alt="${escapeHTML(f.name)} thumbnail ${i+1}" onclick="selectPhoto(${i})">
+  `).join('');
+}
+function selectPhoto(i){
+  const f = DB.featuredCat;
+  const photos = (f.photos || []).slice(0,5);
+  activePhotoIndex = i;
+  document.getElementById('featuredHeroImg').src = photos[i];
+  document.querySelectorAll('.gallery-strip img').forEach((img,idx)=>{
+    img.classList.toggle('active', idx===i);
+  });
+}
+function submitFeaturedCat(){
+  const name = document.getElementById('newCatName').value.trim();
+  if(!name) { alert('Please enter the cat\'s name.'); return; }
+  const photoInputs = ['catPhoto1','catPhoto2','catPhoto3','catPhoto4','catPhoto5']
+    .map(id => document.getElementById(id).value.trim())
+    .filter(Boolean)
+    .slice(0,5);
+  if(photoInputs.length === 0){ alert('Please add at least one photo URL.'); return; }
+  const writeup = document.getElementById('newCatWriteup').value.trim();
+  const by = document.getElementById('newCatBy').value.trim();
+
+  DB.pendingFeatured.push({
+    id:uid(),
+    name,
+    by: by ? `Submitted by ${by}` : '',
+    writeup,
+    submittedOn: todayStr(),
+    photos: photoInputs
+  });
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  ['newCatName','catPhoto1','catPhoto2','catPhoto3','catPhoto4','catPhoto5','newCatWriteup','newCatBy']
+    .forEach(id => document.getElementById(id).value = '');
+  alert('Thanks! Your cat has been sent in for review.');
+}
+function publishFeaturedCat(submission){
+  DB.featuredCat = {
+    name: submission.name,
+    by: submission.by,
+    writeup: submission.writeup,
+    date: todayStr(),
+    photos: submission.photos
+  };
+  saveDB();
+  renderFeatured();
+}
+
+/* ============ RENDER: TRIVIA ============ */
+function renderTrivia(){
+  rotateTriviaIfNewDay();
+  const active = DB.triviaActive;
+  const today = active.length ? active[DB.triviaShownIndex] : null;
+  document.getElementById('triviaTodayText').textContent = today ? today.text : 'No trivia queued yet — add one below!';
+  document.getElementById('triviaCount').textContent = `${active.length} / 10 in rotation · ${DB.triviaArchive.length} archived`;
+  renderArchive();
+}
+function renderArchive(){
+  const el = document.getElementById('archiveList');
+  if(DB.triviaArchive.length === 0){
+    el.innerHTML = '<p class="empty-state">Nothing archived yet.</p>';
+    return;
+  }
+  el.innerHTML = DB.triviaArchive.slice().reverse().map(t => `
+    <div class="archive-item">
+      <span>${escapeHTML(t.text)}</span>
+      <button class="btn-ghost btn-sm recall-btn" onclick="recallTrivia('${t.id}')">Recall</button>
+    </div>
+  `).join('');
+}
+function toggleArchive(){
+  document.getElementById('archiveList').classList.toggle('open');
+}
+function submitTrivia(){
+  const textEl = document.getElementById('newTrivia');
+  const text = textEl.value.trim();
+  if(!text) return;
+  DB.pendingTrivia.push({id:uid(), text, submittedOn:todayStr()});
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  textEl.value = '';
+  alert('Thanks! Your trivia fact has been sent in for review.');
+}
+function publishTrivia(text){
+  const shownId = DB.triviaActive[DB.triviaShownIndex] ? DB.triviaActive[DB.triviaShownIndex].id : null;
+  DB.triviaActive.push({id:uid(), text, addedOn:todayStr()});
+  if(DB.triviaActive.length > 10){
+    const oldest = DB.triviaActive.shift();
+    DB.triviaArchive.push(oldest);
+  }
+  // re-sync pointer to the same fact that was on display, if it's still active
+  if(shownId){
+    const newIdx = DB.triviaActive.findIndex(t => t.id === shownId);
+    DB.triviaShownIndex = newIdx !== -1 ? newIdx : 0;
+  } else {
+    DB.triviaShownIndex = 0;
+  }
+  saveDB();
+  renderTrivia();
+}
+function recallTrivia(id){
+  const idx = DB.triviaArchive.findIndex(t => t.id === id);
+  if(idx === -1) return;
+  const shownId = DB.triviaActive[DB.triviaShownIndex] ? DB.triviaActive[DB.triviaShownIndex].id : null;
+  const [item] = DB.triviaArchive.splice(idx,1);
+  DB.triviaActive.push(item);
+  if(DB.triviaActive.length > 10){
+    const oldest = DB.triviaActive.shift();
+    DB.triviaArchive.push(oldest);
+  }
+  if(shownId){
+    const newIdx = DB.triviaActive.findIndex(t => t.id === shownId);
+    DB.triviaShownIndex = newIdx !== -1 ? newIdx : 0;
+  } else {
+    DB.triviaShownIndex = 0;
+  }
+  saveDB();
+  renderTrivia();
+}
+
+/* ============ RENDER: VIDEO ============ */
+function renderVideo(){
+  document.getElementById('videoFrame').src = DB.video.url;
+  document.getElementById('videoCaption').textContent = DB.video.caption;
+}
+function setVideo(){
+  const urlEl = document.getElementById('videoUrlInput');
+  const capEl = document.getElementById('videoCapInput');
+  const url = urlEl.value.trim();
+  if(!url) return;
+  DB.video = {url, caption: capEl.value.trim() || 'A cat clip worth your time.'};
+  saveDB();
+  renderVideo();
+  urlEl.value=''; capEl.value='';
+}
+
+/* ============ RENDER: STORIES ============ */
+function renderStories(){
+  const el = document.getElementById('storiesGrid');
+  if(DB.stories.length === 0){
+    el.innerHTML = '<p class="empty-state">No stories yet — share the first one.</p>';
+    return;
+  }
+  el.innerHTML = DB.stories.slice().reverse().map(s => `
+    <div class="story-card">
+      ${s.photos && s.photos.length ? `<div class="story-photos">${s.photos.slice(0,3).map(p=>`<img src="${escapeHTML(p)}" alt="${escapeHTML(s.title)} photo">`).join('')}</div>` : ''}
+      <p class="story-title">${escapeHTML(s.title)}</p>
+      <p class="story-by">by ${escapeHTML(s.by)}</p>
+      <p class="story-text">${escapeHTML(s.text)}</p>
+    </div>
+  `).join('');
+}
+function submitStory(){
+  const title = document.getElementById('storyTitle').value.trim();
+  const by = document.getElementById('storyBy').value.trim() || 'Anonymous';
+  const text = document.getElementById('storyText').value.trim();
+  if(!title || !text) { alert('Please add a title and story.'); return; }
+  const photos = ['storyPhoto1','storyPhoto2','storyPhoto3']
+    .map(id => document.getElementById(id).value.trim())
+    .filter(Boolean)
+    .slice(0,3);
+  DB.pendingStories.push({id:uid(), title, by, text, photos, submittedOn:todayStr()});
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  ['storyTitle','storyPhoto1','storyPhoto2','storyPhoto3','storyBy','storyText']
+    .forEach(id => document.getElementById(id).value = '');
+  alert('Thanks! Your story has been sent in for review.');
+}
+function publishStory(submission){
+  DB.stories.push({
+    id:uid(),
+    title: submission.title,
+    by: submission.by,
+    text: submission.text,
+    photos: submission.photos
+  });
+  saveDB();
+  renderStories();
+}
+
+/* ============ RENDER: DIRECTORY ============ */
+let directoryFilter = 'all';
+function renderDirectory(){
+  const el = document.getElementById('directoryList');
+  const items = DB.directory.filter(d => directoryFilter === 'all' || d.type === directoryFilter);
+  if(items.length === 0){
+    el.innerHTML = '<p class="empty-state">No listings here yet.</p>';
+    return;
+  }
+  el.innerHTML = items.slice().reverse().map(d => `
+    <div class="dir-entry">
+      <div>
+        <div class="biz-name">${escapeHTML(d.name)}</div>
+        <div class="biz-meta">${escapeHTML(d.area)} · ${escapeHTML(d.contact)}</div>
+      </div>
+      <span class="biz-tag ${d.type==='product'?'product':''}">${d.type==='vet'?'Vet':'Products'}</span>
+    </div>
+  `).join('');
+}
+function filterDirectory(type){
+  directoryFilter = type;
+  document.getElementById('tabAll').classList.toggle('active', type==='all');
+  document.getElementById('tabVet').classList.toggle('active', type==='vet');
+  document.getElementById('tabProduct').classList.toggle('active', type==='product');
+  renderDirectory();
+}
+function addDirectoryEntry(){
+  const type = document.getElementById('bizType').value;
+  const name = document.getElementById('bizName').value.trim();
+  const area = document.getElementById('bizArea').value.trim();
+  const contact = document.getElementById('bizContact').value.trim();
+  if(!name || !contact) { alert('Please add a business name and contact number.'); return; }
+  DB.directory.push({id:uid(), type, name, area, contact});
+  saveDB();
+  renderDirectory();
+  ['bizName','bizArea','bizContact'].forEach(id => document.getElementById(id).value = '');
+}
+
+/* ============ RENDER: TOPIC + COMMENTS ============ */
+function renderTopic(){
+  document.getElementById('topicText').textContent = DB.topicOfDay;
+  const el = document.getElementById('commentsList');
+  if(DB.comments.length === 0){
+    el.innerHTML = '<p class="empty-state">No comments yet — start the conversation.</p>';
+    return;
+  }
+  el.innerHTML = DB.comments.slice().reverse().map(c => `
+    <div class="comment">
+      <div class="who">${escapeHTML(c.who)}</div>
+      <p>${escapeHTML(c.text)}</p>
+    </div>
+  `).join('');
+}
+function addComment(){
+  const nameEl = document.getElementById('commentName');
+  const textEl = document.getElementById('commentText');
+  const who = nameEl.value.trim() || 'Anonymous';
+  const text = textEl.value.trim();
+  if(!text) return;
+  DB.comments.push({id:uid(), who, text});
+  saveDB();
+  renderTopic();
+  nameEl.value=''; textEl.value='';
+}
+
+/* ============ ADMIN ============ */
+function openAdminPrompt(){
+  if(isAdmin){
+    // already logged in -> just toggle the panel open/closed
+    const panel = document.getElementById('adminPanel');
+    const showing = panel.style.display !== 'none';
+    panel.style.display = showing ? 'none' : 'block';
+    if(!showing) renderAdminQueue();
+    return;
+  }
+  const entered = prompt('Enter admin password:');
+  if(entered === null) return; // cancelled
+  if(entered === ADMIN_PASSWORD){
+    isAdmin = true;
+    document.getElementById('adminToggleBtn').textContent = '🔓 Admin (on)';
+    document.getElementById('adminToggleBtn').classList.add('is-on');
+    document.getElementById('adminPanel').style.display = 'block';
+    renderAdminQueue();
+  } else {
+    alert('That password isn\'t right.');
+  }
+}
+function closeAdminPanel(){
+  document.getElementById('adminPanel').style.display = 'none';
+}
+function setQueueTab(tab){
+  activeQueueTab = tab;
+  document.getElementById('qTabFeatured').classList.toggle('active', tab==='featured');
+  document.getElementById('qTabTrivia').classList.toggle('active', tab==='trivia');
+  document.getElementById('qTabStories').classList.toggle('active', tab==='stories');
+  document.getElementById('qTabGallery').classList.toggle('active', tab==='gallery');
+  renderAdminQueue();
+}
+function renderAdminQueue(){
+  const el = document.getElementById('adminQueue');
+  if(activeQueueTab === 'featured'){
+    if(DB.pendingFeatured.length === 0){
+      el.innerHTML = '<p class="admin-empty">No featured-cat submissions waiting.</p>';
+      return;
     }
-
-    /* ============ IMAGE UPLOAD ============ */
-    function handleImageDrop(files, maxCount, onImages) {
-      const validFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
-      if (validFiles.length === 0) return;
-      const readers = validFiles.map(file => new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      }));
-      Promise.all(readers).then(dataUrls => { onImages(dataUrls.slice(0, maxCount)); });
+    el.innerHTML = DB.pendingFeatured.map(s => `
+      <div class="queue-card">
+        <div class="queue-card-head">
+          <span class="queue-card-title">${escapeHTML(s.name)}</span>
+          <span class="queue-card-meta">${escapeHTML(s.submittedOn)}</span>
+        </div>
+        <div class="queue-card-meta" style="margin-bottom:8px;">${escapeHTML(s.by)}</div>
+        ${s.photos && s.photos.length ? `<div class="queue-photos">${s.photos.map(p=>`<img src="${escapeHTML(p)}" alt="">`).join('')}</div>` : ''}
+        <div class="queue-card-body">${escapeHTML(s.writeup)}</div>
+        <div class="queue-actions">
+          <button class="btn-approve" onclick="approveFeatured('${s.id}')">Approve &amp; publish</button>
+          <button class="btn-reject" onclick="rejectSubmission('pendingFeatured','${s.id}')">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  } else if(activeQueueTab === 'trivia'){
+    if(DB.pendingTrivia.length === 0){
+      el.innerHTML = '<p class="admin-empty">No trivia submissions waiting.</p>';
+      return;
     }
-
-    function createDropZone(elementId, maxCount, onImages, existingImages = []) {
-      const container = document.getElementById(elementId);
-      if (!container) return;
-      const zone = document.createElement('div');
-      zone.className = 'drop-zone';
-      zone.innerHTML = `
-          <div class="icon">📸</div>
-          <div class="hint">Drop images here or click to browse</div>
-          <div class="preview-grid" id="preview_${elementId}"></div>
-        `;
-      const previewGrid = zone.querySelector('.preview-grid');
-      let imageData = [...existingImages];
-
-      function renderPreviews() {
-        previewGrid.innerHTML = imageData.map((img, idx) => `
-            <div class="preview-item">
-              <img src="${img}" alt="Uploaded image ${idx+1}">
-              <button class="remove-btn" onclick="removeImage('${elementId}', ${idx})">✕</button>
+    el.innerHTML = DB.pendingTrivia.map(s => `
+      <div class="queue-card">
+        <div class="queue-card-head">
+          <span class="queue-card-title">Trivia suggestion</span>
+          <span class="queue-card-meta">${escapeHTML(s.submittedOn)}</span>
+        </div>
+        <div class="queue-card-body">${escapeHTML(s.text)}</div>
+        <div class="queue-actions">
+          <button class="btn-approve" onclick="approveTrivia('${s.id}')">Approve &amp; add to rotation</button>
+          <button class="btn-reject" onclick="rejectSubmission('pendingTrivia','${s.id}')">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  } else if(activeQueueTab === 'stories'){
+    if(DB.pendingStories.length === 0){
+      el.innerHTML = '<p class="admin-empty">No story submissions waiting.</p>';
+      return;
+    }
+    el.innerHTML = DB.pendingStories.map(s => `
+      <div class="queue-card">
+        <div class="queue-card-head">
+          <span class="queue-card-title">${escapeHTML(s.title)}</span>
+          <span class="queue-card-meta">${escapeHTML(s.submittedOn)}</span>
+        </div>
+        <div class="queue-card-meta" style="margin-bottom:8px;">by ${escapeHTML(s.by)}</div>
+        ${s.photos && s.photos.length ? `<div class="queue-photos">${s.photos.map(p=>`<img src="${escapeHTML(p)}" alt="">`).join('')}</div>` : ''}
+        <div class="queue-card-body">${escapeHTML(s.text)}</div>
+        <div class="queue-actions">
+          <button class="btn-approve" onclick="approveStory('${s.id}')">Approve &amp; publish</button>
+          <button class="btn-reject" onclick="rejectSubmission('pendingStories','${s.id}')">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  } else if(activeQueueTab === 'gallery'){
+    const slotsLeft = GALLERY_MAX - DB.galleryEntries.length;
+    let html = `
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(247,241,229,0.18);">
+        <div style="flex:1; min-width:200px;">
+          <div style="font-weight:700; color:var(--cream); margin-bottom:3px;">Current week: ${escapeHTML(DB.galleryWeek)}</div>
+          <div style="font-size:0.78rem; color:#cfc6b4;">${DB.galleryEntries.length} / ${GALLERY_MAX} slots filled · ${slotsLeft} available</div>
+        </div>
+        <button class="btn-approve" onclick="startNewWeek()" style="background:var(--pin-red);" title="Archives winner and clears the gallery for a fresh week">🔄 Start new week</button>
+      </div>`;
+    if(DB.pendingGallery.length === 0 && DB.galleryEntries.length === 0){
+      html += '<p class="admin-empty">No gallery submissions waiting and gallery is empty.</p>';
+    } else if(DB.pendingGallery.length === 0){
+      html += '<p class="admin-empty">No new gallery submissions waiting.</p>';
+    } else {
+      const slotsFull = DB.galleryEntries.length >= GALLERY_MAX;
+      if(slotsFull){
+        html += `<div style="background:rgba(193,67,46,0.2); border:1px solid rgba(193,67,46,0.5); border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:0.82rem; color:#f8c4b4;">Gallery is full (${GALLERY_MAX}/${GALLERY_MAX} slots). Start a new week to make room for new entries.</div>`;
+      }
+      html += DB.pendingGallery.map(e => `
+        <div class="queue-card">
+          <div class="queue-card-head">
+            <span class="queue-card-title">${escapeHTML(e.catName)}</span>
+            <span class="queue-card-meta">${escapeHTML(e.submittedOn)}</span>
+          </div>
+          <div class="queue-card-meta" style="margin-bottom:8px;">by ${escapeHTML(e.ownerName)}</div>
+          <div class="queue-photos"><img src="${escapeHTML(e.photoUrl)}" alt="${escapeHTML(e.catName)}"></div>
+          <div class="queue-actions">
+            <button class="btn-approve" onclick="approveGalleryEntry('${e.id}')" ${slotsFull ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>Approve &amp; add to gallery</button>
+            <button class="btn-reject" onclick="rejectSubmission('pendingGallery','${e.id}')">Reject</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    if(DB.galleryPastWinners.length > 0){
+      html += `<div style="margin-top:16px; border-top:1px solid rgba(247,241,229,0.18); padding-top:14px;">
+        <div style="font-weight:700; color:var(--cream); margin-bottom:8px; font-size:0.84rem;">👑 Past winners</div>
+        ${DB.galleryPastWinners.slice().reverse().map(w => `
+          <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+            <img src="${escapeHTML(w.photoUrl)}" style="width:40px;height:40px;border-radius:6px;object-fit:cover;">
+            <div>
+              <div style="font-weight:700;font-size:0.84rem;">${escapeHTML(w.catName)}</div>
+              <div style="font-size:0.72rem;color:#cfc6b4;">${escapeHTML(w.week)} · ${w.votes} votes · by ${escapeHTML(w.ownerName)}</div>
             </div>
-          `).join('');
-      }
-      zone._imageData = imageData;
-      zone._maxCount = maxCount;
-      zone._onImages = onImages;
-      zone._renderPreviews = renderPreviews;
-
-      zone.addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.multiple = true;
-        input.onchange = () => {
-          handleImageDrop(input.files, maxCount - imageData.length, (newImages) => {
-            imageData.push(...newImages);
-            zone._imageData = imageData;
-            renderPreviews();
-            onImages(imageData);
-          });
-        };
-        input.click();
-      });
-
-      zone.addEventListener('dragover', (e) => { e.preventDefault();
-        zone.classList.add('drag-over'); });
-      zone.addEventListener('dragleave', () => { zone.classList.remove('drag-over'); });
-      zone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        zone.classList.remove('drag-over');
-        handleImageDrop(e.dataTransfer.files, maxCount - imageData.length, (newImages) => {
-          imageData.push(...newImages);
-          zone._imageData = imageData;
-          renderPreviews();
-          onImages(imageData);
-        });
-      });
-
-      renderPreviews();
-      container.appendChild(zone);
-      window['removeImage_' + elementId] = (idx) => {
-        imageData.splice(idx, 1);
-        zone._imageData = imageData;
-        renderPreviews();
-        onImages(imageData);
-      };
-    }
-
-    window.removeImage = function(elementId, idx) {
-      const fn = window['removeImage_' + elementId];
-      if (fn) fn(idx);
-    };
-
-    /* ============ RENDER ============ */
-    function renderBoard() {
-      const container = document.getElementById('boardContainer');
-      container.innerHTML = '';
-      const boxes = [
-        { id: 'care', title: '🩺 9 Lives Care', eyebrow: 'From owners, for owners', render: renderCareContent,
-          cls: 'box-care', shareText: 'Cat care tips from the community!' },
-        { id: 'featured', title: '⭐ Featured Cat', eyebrow: '', render: renderFeaturedContent, cls: 'box-featured',
-          shareText: 'Check out this amazing featured cat!' },
-        { id: 'writeup', title: '📝 Their Story', eyebrow: 'About this week\'s star', render: renderWriteupContent,
-          cls: 'box-writeup', shareText: 'Read this cat\'s story!' },
-        { id: 'trivia', title: '🧠 Cat Trivia', eyebrow: 'One a day', render: renderTriviaContent, cls: 'box-trivia',
-          shareText: 'Fun cat trivia fact of the day!' },
-        { id: 'video', title: '🎬 Cat Clip of the Day', eyebrow: 'Sound on', render: renderVideoContent,
-          cls: 'box-video', shareText: 'Check out this cat video!' },
-        { id: 'stories', title: '📖 True Cat Stories', eyebrow: 'Real tales from real owners',
-          render: renderStoriesContent, cls: 'box-stories', shareText: 'True cat stories from real owners!' },
-        { id: 'directory', title: '📋 Cat Directory', eyebrow: 'Vets & suppliers', render: renderDirectoryContent,
-          cls: 'box-directory', shareText: 'Cat directory of vets and suppliers!' },
-        { id: 'topic', title: '💬 Topic of the Day', eyebrow: 'Talk amongst yourselves', render: renderTopicContent,
-          cls: 'box-topic', shareText: 'Join the conversation about today\'s topic!' }
-      ];
-
-      boxes.forEach(boxInfo => {
-        const box = document.createElement('section');
-        box.className = `box ${boxInfo.cls}`;
-        box.id = `box-${boxInfo.id}`;
-        box.dataset.shareTitle = boxInfo.title;
-        box.dataset.shareText = boxInfo.shareText || '';
-        if (boxInfo.id === 'featured') box.classList.add('box-featured');
-
-        const pin = document.createElement('span');
-        pin.className = 'pin';
-        pin.setAttribute('aria-hidden', 'true');
-        box.appendChild(pin);
-
-        const head = document.createElement('div');
-        head.className = 'box-head';
-        head.innerHTML = `
-            <h2 class="box-title">${boxInfo.title}</h2>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <span class="box-eyebrow">${boxInfo.eyebrow}</span>
-              <span class="box-share">
-                <button class="share-btn fb" onclick="shareBox('${boxInfo.id}','fb')" style="padding:2px 6px;font-size:0.55rem;">📘</button>
-                <button class="share-btn twitter" onclick="shareBox('${boxInfo.id}','twitter')" style="padding:2px 6px;font-size:0.55rem;">🐦</button>
-                <button class="share-btn copy" onclick="shareBox('${boxInfo.id}','copy')" style="padding:2px 6px;font-size:0.55rem;">🔗</button>
-              </span>
-            </div>
-          `;
-        box.appendChild(head);
-
-        const content = boxInfo.render();
-        box.appendChild(content);
-
-        const commentSection = document.createElement('div');
-        commentSection.className = 'comment-section';
-        commentSection.innerHTML = renderComments(boxInfo.id);
-        box.appendChild(commentSection);
-
-        container.appendChild(box);
-      });
-
-      if (isAdmin) document.body.classList.add('admin-mode');
-    }
-
-    /* ============ CONTENT RENDERERS ============ */
-    function renderCareContent() {
-      const div = document.createElement('div');
-      const list = document.createElement('div');
-      list.className = 'care-list';
-      if (DB.care.length === 0) { list.innerHTML = '<p class="empty-state">No tips yet — be the first to share one.</p>'; } else {
-        DB.care.slice().reverse().forEach(n => {
-          const note = document.createElement('div');
-          note.className = 'care-note';
-          note.innerHTML =
-            `<div class="who"><span>${esc(n.who)}</span><span>${esc(n.when||'')}</span></div><p>${esc(n.text)}</p>`;
-          list.appendChild(note);
-        });
-      }
-      div.appendChild(list);
-
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML = `<button class="btn-admin danger" onclick="deleteCareItem()">🗑 Delete all</button>`;
-      div.appendChild(toolbar);
-
-      const details = document.createElement('details');
-      details.innerHTML = `
-          <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ Share what worked for you</summary>
-          <div class="field" style="margin-top:10px;">
-            <label for="careName">Your name</label>
-            <input type="text" id="careName" placeholder="e.g. Mara from Tondo">
           </div>
-          <div class="field">
-            <label for="careText">Your tip</label>
-            <textarea id="careText" rows="3" placeholder="What did you learn the hard way?"></textarea>
-          </div>
-          <button class="btn" onclick="addCareNote()">Post tip</button>
-        `;
-      div.appendChild(details);
-      return div;
+        `).join('')}
+      </div>`;
     }
+    el.innerHTML = html;
+  }
+  // refresh the little pending-count badges on the public boxes
+  updatePendingBadges();
+}
+function approveFeatured(id){
+  const idx = DB.pendingFeatured.findIndex(s => s.id === id);
+  if(idx === -1) return;
+  const [submission] = DB.pendingFeatured.splice(idx,1);
+  publishFeaturedCat(submission);
+  saveDB();
+  renderAdminQueue();
+}
+function approveTrivia(id){
+  const idx = DB.pendingTrivia.findIndex(s => s.id === id);
+  if(idx === -1) return;
+  const [submission] = DB.pendingTrivia.splice(idx,1);
+  publishTrivia(submission.text);
+  saveDB();
+  renderAdminQueue();
+}
+function approveStory(id){
+  const idx = DB.pendingStories.findIndex(s => s.id === id);
+  if(idx === -1) return;
+  const [submission] = DB.pendingStories.splice(idx,1);
+  publishStory(submission);
+  saveDB();
+  renderAdminQueue();
+}
+function rejectSubmission(listName, id){
+  const idx = DB[listName].findIndex(s => s.id === id);
+  if(idx === -1) return;
+  DB[listName].splice(idx,1);
+  saveDB();
+  renderAdminQueue();
+}
+function updatePendingBadges(){
+  const total = DB.pendingFeatured.length + DB.pendingTrivia.length + DB.pendingStories.length + DB.pendingGallery.length;
+  const btn = document.getElementById('adminToggleBtn');
+  if(!btn) return;
+  const base = isAdmin ? '🔓 Admin (on)' : '🔑 Admin';
+  btn.textContent = total > 0 ? `${base} · ${total}` : base;
+}
 
-    function renderFeaturedContent() {
-      const div = document.createElement('div');
-      const f = DB.featured;
-      const hero = document.createElement('div');
-      hero.className = 'featured-hero';
-      hero.innerHTML =
-        `<img id="featuredHeroImg" src="${esc(f.photos?.[0]||'')}" alt="Featured cat photo"><div class="featured-name-tag">${esc(f.name)}</div>`;
-      div.appendChild(hero);
+/* ============ CUTENESS CONTEST GALLERY ============ */
+const GALLERY_MAX = 10;
 
-      const gallery = document.createElement('div');
-      gallery.className = 'gallery-strip';
-      (f.photos || []).forEach((p, i) => {
-        const img = document.createElement('img');
-        img.src = p;
-        img.className = i === 0 ? 'active' : '';
-        img.onclick = () => {
-          document.getElementById('featuredHeroImg').src = p;
-          gallery.querySelectorAll('img').forEach(el => el.classList.remove('active'));
-          img.classList.add('active');
-        };
-        gallery.appendChild(img);
-      });
-      div.appendChild(gallery);
+function getVotedId(){
+  // localStorage flag: key = 'voted_' + current week, value = entry id or null
+  return localStorage.getItem('voted_' + weekStr()) || null;
+}
+function setVotedId(id){
+  localStorage.setItem('voted_' + weekStr(), id);
+}
+function clearVote(){
+  localStorage.removeItem('voted_' + weekStr());
+}
 
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML =
-        `<button class="btn-admin" onclick="editFeatured()">✎ Edit</button><button class="btn-admin danger" onclick="deleteFeatured()">🗑 Delete</button>`;
-      div.appendChild(toolbar);
+function getLeader(){
+  if(!DB.galleryEntries.length) return null;
+  const maxVotes = Math.max(...DB.galleryEntries.map(e => e.votes));
+  if(maxVotes === 0) return null;
+  return DB.galleryEntries.filter(e => e.votes === maxVotes);
+}
 
-      const details = document.createElement('details');
-      details.className = 'featured-admin';
-      details.innerHTML = `
-          <summary style="cursor:pointer;font-size:0.78rem;font-weight:700;color:#c9a8e8;text-transform:uppercase;letter-spacing:0.06em;list-style:none;">⚙ Submit your cat to be featured</summary>
-          <div class="panel" style="margin-top:10px;">
-            <p class="submit-note" style="background:rgba(215,175,255,0.06);border-color:rgba(215,175,255,0.15);color:rgba(247,241,229,0.8);">
-              <strong>Want your cat featured?</strong> Drag and drop photos below or click to upload.
-            </p>
-            <div class="field"><label for="newCatName">Cat's name</label><input type="text" id="newCatName" placeholder="e.g. Biscuit"></div>
-            <div class="field">
-              <label>Photos (up to 5)</label>
-              <div id="featuredDropZone"></div>
-            </div>
-            <div class="field"><label for="newCatWriteup">Their story</label><textarea id="newCatWriteup" rows="3"></textarea></div>
-            <div class="field"><label for="newCatBy">Submitted by</label><input type="text" id="newCatBy" placeholder="Owner's name"></div>
-            <button class="btn" onclick="submitFeaturedCat()">Send for review</button>
+function renderGallery(){
+  const grid = document.getElementById('contestGrid');
+  const votedId = getVotedId();
+  const leaders = getLeader();
+  const leaderIds = leaders ? leaders.map(l => l.id) : [];
+
+  // build 10 slots: filled ones first, then empties
+  let html = '';
+  for(let i = 0; i < GALLERY_MAX; i++){
+    const entry = DB.galleryEntries[i];
+    if(entry){
+      const isWinner = leaderIds.includes(entry.id);
+      const hasVoted = votedId !== null;
+      const myVote = votedId === entry.id;
+      html += `
+        <div class="gallery-slot filled ${isWinner ? 'is-winner' : ''}" title="${escapeHTML(entry.catName)} — submitted by ${escapeHTML(entry.ownerName)}">
+          <img src="${escapeHTML(entry.photoUrl)}" alt="${escapeHTML(entry.catName)}" loading="lazy">
+          ${isWinner ? '<div class="winner-crown">👑</div>' : ''}
+          <div class="slot-overlay">
+            <div class="slot-name">${escapeHTML(entry.catName)}</div>
+            <button class="vote-btn ${myVote ? 'voted' : ''}"
+              onclick="castVote('${entry.id}')"
+              ${hasVoted && !myVote ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}
+              aria-label="Vote for ${escapeHTML(entry.catName)}">
+              ${myVote ? '✓ Voted' : '♥ Vote'}
+            </button>
+            <div class="vote-count">${entry.votes} vote${entry.votes !== 1 ? 's' : ''}</div>
           </div>
-        `;
-      div.appendChild(details);
-
-      setTimeout(() => {
-        createDropZone('featuredDropZone', 5, (images) => { window._featuredImages = images; }, []);
-      }, 0);
-
-      return div;
-    }
-
-    function renderWriteupContent() {
-      const div = document.createElement('div');
-      const w = DB.featured;
-      div.innerHTML =
-        `<p class="writeup-name">${esc(w.name)}</p><p class="writeup-byline">${esc(w.by||'')}</p><p class="writeup-body">${esc(w.writeup||'')}</p>`;
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML = `<button class="btn-admin" onclick="editWriteup()">✎ Edit</button>`;
-      div.appendChild(toolbar);
-      return div;
-    }
-
-    function renderTriviaContent() {
-      const div = document.createElement('div');
-      const today = DB.trivia[0] || { text: 'No trivia yet' };
-      const todayDiv = document.createElement('div');
-      todayDiv.className = 'trivia-today';
-      todayDiv.innerHTML = `<div class="label">Today's trivia</div><p>${esc(today.text)}</p>`;
-      div.appendChild(todayDiv);
-
-      const list = document.createElement('div');
-      DB.trivia.forEach(t => {
-        const item = document.createElement('div');
-        item.className = 'trivia-item';
-        item.innerHTML = `<span>${esc(t.text)}</span>`;
-        const delBtn = document.createElement('button');
-        delBtn.className = 'btn-admin danger';
-        delBtn.textContent = '✕';
-        delBtn.style.padding = '2px 8px';
-        delBtn.onclick = () => deleteTrivia(t.id);
-        item.appendChild(delBtn);
-        list.appendChild(item);
-      });
-      div.appendChild(list);
-
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML = `<button class="btn-admin" onclick="addTriviaPrompt()">+ Add trivia</button>`;
-      div.appendChild(toolbar);
-
-      const details = document.createElement('details');
-      details.innerHTML = `
-          <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ Suggest a trivia fact</summary>
-          <div class="field" style="margin-top:10px;">
-            <label for="newTrivia">New trivia fact</label>
-            <textarea id="newTrivia" rows="2" placeholder="Did you know..."></textarea>
-          </div>
-          <button class="btn" onclick="submitTrivia()">Send for review</button>
-        `;
-      div.appendChild(details);
-      return div;
-    }
-
-    function renderVideoContent() {
-      const div = document.createElement('div');
-      div.innerHTML = `
-          <div class="video-frame-wrap">
-            <iframe id="videoFrame" src="${esc(DB.video.url)}" title="Featured cat video" allowfullscreen></iframe>
-          </div>
-          <p class="video-caption">${esc(DB.video.caption)}</p>
-        `;
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML =
-        `<button class="btn-admin" onclick="editVideo()">✎ Edit</button><button class="btn-admin danger" onclick="deleteVideo()">🗑 Delete</button>`;
-      div.appendChild(toolbar);
-
-      const details = document.createElement('details');
-      details.style.marginTop = '8px';
-      details.innerHTML = `
-          <summary class="btn-ghost btn-sm" style="display:inline-block; list-style:none;">+ Suggest a video</summary>
-          <div class="field" style="margin-top:10px;">
-            <label for="videoUrlInput">YouTube embed URL</label>
-            <input type="text" id="videoUrlInput" placeholder="https://www.youtube.com/embed/...">
-          </div>
-          <div class="field">
-            <label for="videoCapInput">Caption</label>
-            <input type="text" id="videoCapInput" placeholder="What makes this clip great?">
-          </div>
-          <button class="btn" onclick="setVideo()">Set video</button>
-        `;
-      div.appendChild(details);
-      return div;
-    }
-
-    function renderStoriesContent() {
-      const div = document.createElement('div');
-      const grid = document.createElement('div');
-      grid.className = 'stories-grid';
-      if (DB.stories.length === 0) { grid.innerHTML = '<p class="empty-state">No stories yet — share the first one.</p>'; } else {
-        DB.stories.slice().reverse().forEach(s => {
-          const card = document.createElement('div');
-          card.className = 'story-card';
-          let photosHtml = '';
-          if (s.photos && s.photos.length) { photosHtml =
-              `<div class="story-photos">${s.photos.map(p => `<img src="${esc(p)}">`).join('')}</div>`; }
-          card.innerHTML = `
-              ${photosHtml}
-              <p class="story-title">${esc(s.title)}</p>
-              <p class="story-by">by ${esc(s.by)}</p>
-              <p class="story-text">${esc(s.text)}</p>
-            `;
-          const delBtn = document.createElement('button');
-          delBtn.className = 'btn-admin danger';
-          delBtn.textContent = '✕ Delete';
-          delBtn.style.marginTop = '6px';
-          delBtn.onclick = () => deleteStory(s.id);
-          card.appendChild(delBtn);
-          grid.appendChild(card);
-        });
-      }
-      div.appendChild(grid);
-
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML = `<button class="btn-admin" onclick="addStoryPrompt()">+ Add story</button>`;
-      div.appendChild(toolbar);
-
-      const details = document.createElement('details');
-      details.innerHTML = `
-          <summary class="btn" style="display:inline-block; list-style:none; padding:9px 16px;">Send your cat story</summary>
-          <p class="submit-note" style="margin-top:12px;">Got a true story about your cat? Drag and drop photos or click to upload.</p>
-          <div class="field"><label for="storyTitle">Title</label><input type="text" id="storyTitle" placeholder="e.g. The day she found her way home"></div>
-          <div class="field">
-            <label>Photos (up to 3)</label>
-            <div id="storyDropZone"></div>
-          </div>
-          <div class="field"><label for="storyBy">Your name</label><input type="text" id="storyBy" placeholder="Who's telling the story?"></div>
-          <div class="field"><label for="storyText">The story</label><textarea id="storyText" rows="4" placeholder="Tell us what happened..."></textarea></div>
-          <button class="btn" onclick="submitStory()">Send for review</button>
-        `;
-      div.appendChild(details);
-
-      setTimeout(() => {
-        createDropZone('storyDropZone', 3, (images) => { window._storyImages = images; }, []);
-      }, 0);
-
-      return div;
-    }
-
-    function renderDirectoryContent() {
-      const div = document.createElement('div');
-      const tabs = document.createElement('div');
-      tabs.className = 'directory-tabs';
-      tabs.innerHTML = `
-          <button class="dtab active" onclick="filterDirectory('all')">All</button>
-          <button class="dtab" onclick="filterDirectory('vet')">Vets</button>
-          <button class="dtab" onclick="filterDirectory('product')">Products</button>
-        `;
-      div.appendChild(tabs);
-
-      const list = document.createElement('div');
-      list.className = 'directory-list';
-      list.id = 'directoryList';
-      div.appendChild(list);
-
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML = `<button class="btn-admin" onclick="addDirPrompt()">+ Add listing</button>`;
-      div.appendChild(toolbar);
-
-      const details = document.createElement('details');
-      details.innerHTML = `
-          <summary class="btn-ghost" style="display:inline-block; list-style:none;">+ List your business</summary>
-          <div class="field" style="margin-top:10px;">
-            <label for="bizType">Type</label>
-            <select id="bizType" style="width:100%;padding:9px 11px;border-radius:9px;border:1.5px solid rgba(43,36,32,0.12);background:rgba(247,241,229,0.4);font-family:var(--font-body);">
-              <option value="vet">Veterinary clinic</option>
-              <option value="product">Cat products / supplies</option>
-            </select>
-          </div>
-          <div class="field"><label for="bizName">Business name</label><input type="text" id="bizName" placeholder="e.g. Paws & Claws Clinic"></div>
-          <div class="field"><label for="bizArea">Area / city</label><input type="text" id="bizArea" placeholder="e.g. Las Piñas"></div>
-          <div class="field"><label for="bizContact">Contact number</label><input type="tel" id="bizContact" placeholder="e.g. 0917 123 4567"></div>
-          <button class="btn" onclick="addDirectoryEntry()">Add listing</button>
-        `;
-      div.appendChild(details);
-
-      renderDirectoryList();
-      return div;
-    }
-
-    function renderTopicContent() {
-      const div = document.createElement('div');
-      const topicDiv = document.createElement('div');
-      topicDiv.className = 'topic-of-day';
-      topicDiv.innerHTML = `<div class="label">Today we're talking about</div><p>${esc(DB.topic)}</p>`;
-      div.appendChild(topicDiv);
-
-      const toolbar = document.createElement('div');
-      toolbar.className = 'admin-toolbar';
-      toolbar.innerHTML = `<button class="btn-admin" onclick="editTopic()">✎ Edit topic</button>`;
-      div.appendChild(toolbar);
-      return div;
-    }
-
-    /* ============ COMMENTS ============ */
-    function renderComments(boxId) {
-      const comments = DB.comments[boxId] || [];
-      let html = `<div class="comments-list">`;
-      if (comments.length === 0) { html += `<p class="empty-state">No comments yet.</p>`; } else {
-        comments.slice().reverse().forEach(c => {
-          html +=
-            `<div class="comment"><span><span class="who">${esc(c.who)}</span> ${esc(c.text)}</span><button class="cmt-del" onclick="deleteComment('${boxId}','${c.id}')">✕</button></div>`;
-        });
-      }
-      html += `</div><div class="inline-form">
-          <input type="text" placeholder="Name" id="cmtName_${boxId}">
-          <textarea rows="1" placeholder="Add comment..." id="cmtText_${boxId}"></textarea>
-          <button class="btn btn-sm" onclick="addComment('${boxId}')">Post</button>
         </div>`;
-      return html;
+    } else {
+      html += `
+        <div class="gallery-slot empty-slot" aria-label="Empty slot ${i+1}">
+          <div class="slot-empty-icon">🐾</div>
+          <div class="slot-empty-label">Slot ${i+1}</div>
+        </div>`;
     }
+  }
+  grid.innerHTML = html;
 
-    function addComment(boxId) {
-      const nameEl = document.getElementById(`cmtName_${boxId}`);
-      const textEl = document.getElementById(`cmtText_${boxId}`);
-      const who = nameEl.value.trim() || 'Anonymous';
-      const text = textEl.value.trim();
-      if (!text) return;
-      if (!DB.comments[boxId]) DB.comments[boxId] = [];
-      DB.comments[boxId].push({ id: uid(), who, text });
-      saveDB();
-      renderBoard();
+  // winner banner
+  const banner = document.getElementById('winnerBanner');
+  if(leaders && leaders.length){
+    const names = leaders.map(l => l.catName).join(' & ');
+    const voteWord = leaders[0].votes === 1 ? 'vote' : 'votes';
+    banner.style.display = 'flex';
+    banner.innerHTML = `<div class="winner-banner"><span class="crown">👑</span> Current leader${leaders.length > 1 ? 's' : ''}: <strong>${escapeHTML(names)}</strong> with ${leaders[0].votes} ${voteWord}!</div>`;
+  } else {
+    banner.style.display = 'none';
+  }
+
+  // footer status
+  const filled = DB.galleryEntries.length;
+  document.getElementById('contestSlotCount').textContent =
+    `${filled} of ${GALLERY_MAX} slots filled`;
+
+  const voteStatus = document.getElementById('voteStatus');
+  if(votedId){
+    const myEntry = DB.galleryEntries.find(e => e.id === votedId);
+    voteStatus.textContent = myEntry
+      ? `You voted for ${myEntry.catName} this week — only one vote per week!`
+      : 'You\'ve already voted this week.';
+  } else {
+    voteStatus.textContent = 'One vote per person per week. Choose wisely! 🐱';
+  }
+}
+
+function castVote(id){
+  const votedId = getVotedId();
+  if(votedId){
+    if(votedId === id){
+      alert('You already voted for this cat!');
+    } else {
+      alert('You\'ve already cast your vote this week. Come back next week!');
     }
+    return;
+  }
+  const entry = DB.galleryEntries.find(e => e.id === id);
+  if(!entry) return;
+  entry.votes++;
+  setVotedId(id);
+  saveDB();
+  renderGallery();
+}
 
-    function deleteComment(boxId, commentId) {
-      if (!confirm('Delete this comment?')) return;
-      DB.comments[boxId] = DB.comments[boxId].filter(c => c.id !== commentId);
-      saveDB();
-      renderBoard();
-    }
+function openContestModal(){
+  if(DB.galleryEntries.length >= GALLERY_MAX && DB.pendingGallery.length === 0){
+    // check pending too — if gallery full and no pending slots could open, let them know
+  }
+  document.getElementById('contestModal').style.display = 'flex';
+  document.getElementById('contestCatName').focus();
+}
+function closeContestModal(){
+  document.getElementById('contestModal').style.display = 'none';
+  ['contestCatName','contestOwnerName','contestPhotoUrl'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+// close modal if backdrop clicked
+document.getElementById('contestModal').addEventListener('click', function(e){
+  if(e.target === this) closeContestModal();
+});
 
-    /* ============ ADMIN QUEUE ============ */
-    function closeAdminPanel() { document.getElementById('adminPanel').style.display = 'none'; }
+function submitContestEntry(){
+  const catName = document.getElementById('contestCatName').value.trim();
+  const ownerName = document.getElementById('contestOwnerName').value.trim() || 'Anonymous';
+  const photoUrl = document.getElementById('contestPhotoUrl').value.trim();
+  if(!catName){ alert('Please enter your cat\'s name.'); return; }
+  if(!photoUrl){ alert('Please add a photo URL.'); return; }
 
-    function setQueueTab(tab) {
-      activeQueueTab = tab;
-      ['featured', 'trivia', 'stories'].forEach(t => {
-        document.getElementById(`qTab${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('active', t === tab);
+  DB.pendingGallery.push({id:uid(), catName, ownerName, photoUrl, submittedOn:todayStr()});
+  saveDB();
+  closeContestModal();
+  if(isAdmin) renderAdminQueue();
+  updatePendingBadges();
+  alert('Thanks! Your entry has been sent for review. Keep an eye on the gallery!');
+}
+
+function approveGalleryEntry(id){
+  const idx = DB.pendingGallery.findIndex(e => e.id === id);
+  if(idx === -1) return;
+  if(DB.galleryEntries.length >= GALLERY_MAX){
+    alert('Gallery is already full (10 slots). Start a new week first to make room.');
+    return;
+  }
+  const [entry] = DB.pendingGallery.splice(idx, 1);
+  DB.galleryEntries.push({
+    id: entry.id,
+    catName: entry.catName,
+    ownerName: entry.ownerName,
+    photoUrl: entry.photoUrl,
+    votes: 0
+  });
+  saveDB();
+  renderGallery();
+  renderAdminQueue();
+}
+
+function startNewWeek(){
+  // archive the current winner(s) then reset
+  const leaders = getLeader();
+  if(leaders && leaders.length){
+    leaders.forEach(l => {
+      DB.galleryPastWinners.push({
+        catName: l.catName,
+        ownerName: l.ownerName,
+        photoUrl: l.photoUrl,
+        votes: l.votes,
+        week: DB.galleryWeek
       });
-      renderAdminQueue();
-    }
+    });
+  }
+  DB.galleryEntries = [];
+  DB.galleryWeek = weekStr();
+  saveDB();
+  clearVote();
+  renderGallery();
+  renderAdminQueue();
+  alert('New week started! Gallery cleared and winner archived. Submissions can fill the slots again.');
+}
 
-    let activeQueueTab = 'featured';
+/* ============ INIT ============ */
+function renderAll(){
+  renderGallery();
+  renderCare();
+  renderFeatured();
+  renderTrivia();
+  renderVideo();
+  renderStories();
+  renderDirectory();
+  renderTopic();
+  updatePendingBadges();
+}
+renderAll();
+</script>
 
-    function renderAdminQueue() {
-      const el = document.getElementById('adminQueue');
-      if (activeQueueTab === 'featured') {
-        if (DB.pendingFeatured.length === 0) { el.innerHTML = '<p class="admin-empty">No featured-cat submissions waiting.</p>'; return; }
-        el.innerHTML = DB.pendingFeatured.map(s => `
-            <div class="queue-card">
-              <div class="queue-card-head"><span class="queue-card-title">${esc(s.name)}</span><span class="queue-card-meta">${esc(s.submittedOn||'')}</span></div>
-              <div class="queue-card-meta">${esc(s.by||'')}</div>
-              ${s.photos && s.photos.length ? `<div class="queue-photos">${s.photos.map(p=>`<img src="${esc(p)}">`).join('')}</div>` : ''}
-              <div class="queue-card-body">${esc(s.writeup||'')}</div>
-              <div class="queue-actions">
-                <button class="btn-approve" onclick="approveFeatured('${s.id}')">Approve</button>
-                <button class="btn-reject" onclick="rejectSubmission('pendingFeatured','${s.id}')">Reject</button>
-              </div>
-            </div>
-          `).join('');
-      } else if (activeQueueTab === 'trivia') {
-        if (DB.pendingTrivia.length === 0) { el.innerHTML = '<p class="admin-empty">No trivia submissions waiting.</p>'; return; }
-        el.innerHTML = DB.pendingTrivia.map(s => `
-            <div class="queue-card">
-              <div class="queue-card-head"><span class="queue-card-title">Trivia suggestion</span><span class="queue-card-meta">${esc(s.submittedOn||'')}</span></div>
-              <div class="queue-card-body">${esc(s.text)}</div>
-              <div class="queue-actions">
-                <button class="btn-approve" onclick="approveTrivia('${s.id}')">Approve</button>
-                <button class="btn-reject" onclick="rejectSubmission('pendingTrivia','${s.id}')">Reject</button>
-              </div>
-            </div>
-          `).join('');
-      } else if (activeQueueTab === 'stories') {
-        if (DB.pendingStories.length === 0) { el.innerHTML = '<p class="admin-empty">No story submissions waiting.</p>'; return; }
-        el.innerHTML = DB.pendingStories.map(s => `
-            <div class="queue-card">
-              <div class="queue-card-head"><span class="queue-card-title">${esc(s.title)}</span><span class="queue-card-meta">${esc(s.submittedOn||'')}</span></div>
-              <div class="queue-card-meta">by ${esc(s.by||'')}</div>
-              ${s.photos && s.photos.length ? `<div class="queue-photos">${s.photos.map(p=>`<img src="${esc(p)}">`).join('')}</div>` : ''}
-              <div class="queue-card-body">${esc(s.text||'')}</div>
-              <div class="queue-actions">
-                <button class="btn-approve" onclick="approveStory('${s.id}')">Approve</button>
-                <button class="btn-reject" onclick="rejectSubmission('pendingStories','${s.id}')">Reject</button>
-              </div>
-            </div>
-          `).join('');
-      }
-    }
-
-    function approveFeatured(id) {
-      const idx = DB.pendingFeatured.findIndex(s => s.id === id);
-      if (idx === -1) return;
-      const [sub] = DB.pendingFeatured.splice(idx, 1);
-      DB.featured = { name: sub.name, by: sub.by, writeup: sub.writeup, date: todayStr(), photos: sub.photos };
-      saveDB();
-      renderBoard();
-      renderAdminQueue();
-    }
-
-    function approveTrivia(id) {
-      const idx = DB.pendingTrivia.findIndex(s => s.id === id);
-      if (idx === -1) return;
-      const [sub] = DB.pendingTrivia.splice(idx, 1);
-      DB.trivia.unshift({ id: uid(), text: sub.text });
-      if (DB.trivia.length > 10) DB.trivia.pop();
-      saveDB();
-      renderBoard();
-      renderAdminQueue();
-    }
-
-    function approveStory(id) {
-      const idx = DB.pendingStories.findIndex(s => s.id === id);
-      if (idx === -1) return;
-      const [sub] = DB.pendingStories.splice(idx, 1);
-      DB.stories.push({ id: uid(), title: sub.title, by: sub.by, text: sub.text, photos: sub.photos });
-      saveDB();
-      renderBoard();
-      renderAdminQueue();
-    }
-
-    function rejectSubmission(listName, id) {
-      const idx = DB[listName].findIndex(s => s.id === id);
-      if (idx === -1) return;
-      DB[listName].splice(idx, 1);
-      saveDB();
-      renderAdminQueue();
-    }
-
-    /* ============ ITEM ACTIONS ============ */
-    function addCareNote() {
-      const nameEl = document.getElementById('careName');
-      const textEl = document.getElementById('careText');
-      const who = nameEl.value.trim() || 'Anonymous cat parent';
-      const text = textEl.value.trim();
-      if (!text) return;
-      DB.care.push({ id: uid(), who, when: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        text });
-      saveDB();
-      renderBoard();
-    }
-
-    function deleteCareItem() { if (!confirm('Delete all care tips?')) return;
-      DB.care = [];
-      saveDB();
-      renderBoard(); }
-
-    function editFeatured() {
-      const f = DB.featured;
-      const name = prompt('Cat name:', f.name);
-      if (name !== null) f.name = name;
-      const by = prompt('Submitted by:', f.by || '');
-      if (by !== null) f.by = by;
-      const writeup = prompt('Writeup:', f.writeup || '');
-      if (writeup !== null) f.writeup = writeup;
-      saveDB();
-      renderBoard();
-    }
-
-    function deleteFeatured() { if (!confirm('Delete featured cat?')) return;
-      DB.featured = { name: 'No cat featured', by: '', writeup: '', date: todayStr(), photos: [] };
-      saveDB();
-      renderBoard(); }
-
-    function submitFeaturedCat() {
-      const name = document.getElementById('newCatName').value.trim();
-      if (!name) { alert('Please enter the cat\'s name.'); return; }
-      const photos = window._featuredImages || [];
-      if (photos.length === 0) { alert('Please add at least one photo by dragging or clicking the drop zone.'); return; }
-      const writeup = document.getElementById('newCatWriteup').value.trim();
-      const by = document.getElementById('newCatBy').value.trim();
-      DB.pendingFeatured.push({ id: uid(), name, by: by ? `Submitted by ${by}` : '', writeup, submittedOn: todayStr(),
-        photos });
-      saveDB();
-      if (isAdmin) renderAdminQueue();
-      document.getElementById('newCatName').value = '';
-      document.getElementById('newCatWriteup').value = '';
-      document.getElementById('newCatBy').value = '';
-      window._featuredImages = [];
-      alert('Thanks! Your cat has been sent in for review.');
-    }
-
-    function editWriteup() {
-      const w = DB.featured;
-      const name = prompt('Cat name:', w.name);
-      if (name !== null) w.name = name;
-      const by = prompt('By:', w.by || '');
-      if (by !== null) w.by = by;
-      const body = prompt('Story:', w.writeup || '');
-      if (body !== null) w.writeup = body;
-      saveDB();
-      renderBoard();
-    }
-
-    function deleteTrivia(id) { if (!confirm('Delete this trivia?')) return;
-      DB.trivia = DB.trivia.filter(t => t.id !== id);
-      saveDB();
-      renderBoard(); }
-
-    function addTriviaPrompt() {
-      const text = prompt('Enter new trivia fact:');
-      if (text && text.trim()) { DB.trivia.unshift({ id: uid(), text: text.trim() });
-        if (DB.trivia.length > 10) DB.trivia.pop();
-        saveDB();
-        renderBoard(); }
-    }
-
-    function submitTrivia() {
-      const textEl = document.getElementById('newTrivia');
-      const text = textEl.value.trim();
-      if (!text) return;
-      DB.pendingTrivia.push({ id: uid(), text, submittedOn: todayStr() });
-      saveDB();
-      if (isAdmin) renderAdminQueue();
-      textEl.value = '';
-      alert('Thanks! Your trivia fact has been sent in for review.');
-    }
-
-    function editVideo() {
-      const url = prompt('YouTube embed URL:', DB.video.url);
-      if (url !== null) DB.video.url = url;
-      const cap = prompt('Caption:', DB.video.caption || '');
-      if (cap !== null) DB.video.caption = cap;
-      saveDB();
-      renderBoard();
-    }
-
-    function deleteVideo() { if (!confirm('Remove video?')) return;
-      DB.video = { url: 'https://www.youtube.com/embed/J---aiyznGQ', caption: 'Default video' };
-      saveDB();
-      renderBoard(); }
-
-    function setVideo() {
-      const urlEl = document.getElementById('videoUrlInput');
-      const capEl = document.getElementById('videoCapInput');
-      const url = urlEl.value.trim();
-      if (!url) return;
-      DB.video = { url, caption: capEl.value.trim() || 'A cat clip worth your time.' };
-      saveDB();
-      renderBoard();
-      urlEl.value = '';
-      capEl.value = '';
-    }
-
-    function deleteStory(id) { if (!confirm('Delete this story?')) return;
-      DB.stories = DB.stories.filter(s => s.id !== id);
-      saveDB();
-      renderBoard(); }
-
-    function addStoryPrompt() {
-      const title = prompt('Story title:');
-      if (!title) return;
-      const by = prompt('Your name:') || 'Anonymous';
-      const text = prompt('The story:');
-      if (!text) return;
-      DB.stories.push({ id: uid(), title, by, text, photos: [] });
-      saveDB();
-      renderBoard();
-    }
-
-    function submitStory() {
-      const title = document.getElementById('storyTitle').value.trim();
-      const by = document.getElementById('storyBy').value.trim() || 'Anonymous';
-      const text = document.getElementById('storyText').value.trim();
-      if (!title || !text) { alert('Please add a title and story.'); return; }
-      const photos = window._storyImages || [];
-      DB.pendingStories.push({ id: uid(), title, by, text, photos, submittedOn: todayStr() });
-      saveDB();
-      if (isAdmin) renderAdminQueue();
-      document.getElementById('storyTitle').value = '';
-      document.getElementById('storyBy').value = '';
-      document.getElementById('storyText').value = '';
-      window._storyImages = [];
-      alert('Thanks! Your story has been sent in for review.');
-    }
-
-    function renderDirectoryList() {
-      const list = document.getElementById('directoryList');
-      if (!list) return;
-      const filter = directoryFilter || 'all';
-      const items = DB.directory.filter(d => filter === 'all' || d.type === filter);
-      if (items.length === 0) { list.innerHTML = '<p class="empty-state">No listings here yet.</p>'; return; }
-      list.innerHTML = items.slice().reverse().map(d => `
-          <div class="dir-entry">
-            <div><div class="biz-name">${esc(d.name)}</div><div class="biz-meta">${esc(d.area)} · ${esc(d.contact)}</div></div>
-            <span class="biz-tag ${d.type==='product'?'product':''}">${d.type==='vet'?'Vet':'Products'}</span>
-            <button class="btn-admin danger" style="padding:2px 8px;font-size:0.7rem;" onclick="deleteDir('${d.id}')">✕</button>
-          </div>
-        `).join('');
-    }
-
-    let directoryFilter = 'all';
-
-    function filterDirectory(type) {
-      directoryFilter = type;
-      document.querySelectorAll('.dtab').forEach(el => el.classList.remove('active'));
-      if (type === 'all') document.querySelector('.dtab:first-child').classList.add('active');
-      else if (type === 'vet') document.querySelector('.dtab:nth-child(2)').classList.add('active');
-      else if (type === 'product') document.querySelector('.dtab:nth-child(3)').classList.add('active');
-      renderDirectoryList();
-    }
-
-    function addDirectoryEntry() {
-      const type = document.getElementById('bizType').value;
-      const name = document.getElementById('bizName').value.trim();
-      const area = document.getElementById('bizArea').value.trim();
-      const contact = document.getElementById('bizContact').value.trim();
-      if (!name || !contact) { alert('Please add a business name and contact number.'); return; }
-      DB.directory.push({ id: uid(), type, name, area, contact });
-      saveDB();
-      renderDirectoryList();
-      document.getElementById('bizName').value = '';
-      document.getElementById('bizArea').value = '';
-      document.getElementById('bizContact').value = '';
-    }
-
-    function addDirPrompt() {
-      const type = confirm('Vet? (Cancel for Product)') ? 'vet' : 'product';
-      const name = prompt('Business name:');
-      if (!name) return;
-      const area = prompt('Area/city:') || '';
-      const contact = prompt('Contact number:');
-      if (!contact) return;
-      DB.directory.push({ id: uid(), type, name, area, contact });
-      saveDB();
-      renderDirectoryList();
-    }
-
-    function deleteDir(id) { if (!confirm('Remove directory entry?')) return;
-      DB.directory = DB.directory.filter(d => d.id !== id);
-      saveDB();
-      renderDirectoryList(); }
-
-    function editTopic() {
-      const newTopic = prompt('New topic:', DB.topic);
-      if (newTopic !== null) { DB.topic = newTopic;
-        saveDB();
-        renderBoard(); }
-    }
-
-    /* ============ INIT ============ */
-    renderBoard();
-  </script>
 </body>
 </html>

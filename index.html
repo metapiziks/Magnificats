@@ -38,15 +38,50 @@
     font-family:var(--font-body);
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
-    background-color:#EDD9A3;
+        background-color:#EDD9A3;
     background-image:
-      /* vellum age-spot noise */
       radial-gradient(ellipse 120% 60% at 15% 20%, rgba(180,130,60,0.18) 0%, transparent 60%),
       radial-gradient(ellipse 80% 80% at 85% 75%, rgba(160,110,40,0.14) 0%, transparent 55%),
       radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255,245,220,0.22) 0%, transparent 70%),
-      /* constellation + sketch SVG tile */
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340'%3E%3C!-- fine grid lines --%3E%3Cline x1='0' y1='85' x2='340' y2='85' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='0' y1='170' x2='340' y2='170' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='0' y1='255' x2='340' y2='255' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='85' y1='0' x2='85' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='170' y1='0' x2='170' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='255' y1='0' x2='255' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3C!-- diagonal sketch hatching --%3E%3Cline x1='0' y1='0' x2='340' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='0' y1='68' x2='272' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='68' y1='0' x2='340' y2='272' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='340' y1='0' x2='0' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='0' y1='272' x2='272' y2='0' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3C!-- constellation: main triangle --%3E%3Cline x1='42' y1='55' x2='128' y2='22' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3Cline x1='128' y1='22' x2='75' y2='108' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3Cline x1='75' y1='108' x2='42' y2='55' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3C!-- constellation: extended arm --%3E%3Cline x1='128' y1='22' x2='195' y2='48' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.22'/%3E%3Cline x1='195' y1='48' x2='230' y2='18' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.22'/%3E%3C!-- star dots --%3E%3Ccircle cx='42' cy='55' r='2.2' fill='%235C3714' fill-opacity='0.45'/%3E%3Ccircle cx='128' cy='22' r='3' fill='%235C3714' fill-opacity='0.5'/%3E%3Ccircle cx='75' cy='108' r='1.8' fill='%235C3714' fill-opacity='0.4'/%3E%3Ccircle cx='195' cy='48' r='2.5' fill='%235C3714' fill-opacity='0.45'/%3E%3Ccircle cx='230' cy='18' r='1.6' fill='%235C3714' fill-opacity='0.38'/%3E%3C!-- second constellation cluster (bottom-right) --%3E%3Cline x1='220' y1='200' x2='290' y2='178' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='290' y1='178' x2='318' y2='235' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='318' y1='235' x2='260' y2='268' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='260' y1='268' x2='220' y2='200' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='290' y1='178' x2='260' y2='268' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.15'/%3E%3Ccircle cx='220' cy='200' r='2' fill='%235C3714' fill-opacity='0.42'/%3E%3Ccircle cx='290' cy='178' r='2.8' fill='%235C3714' fill-opacity='0.5'/%3E%3Ccircle cx='318' cy='235' r='1.7' fill='%235C3714' fill-opacity='0.38'/%3E%3Ccircle cx='260' cy='268' r='2.2' fill='%235C3714' fill-opacity='0.42'/%3E%3C!-- golden spiral arc (Da Vinci vibe) --%3E%3Cpath d='M170,170 Q170,120 220,120 Q270,120 270,170 Q270,245 170,245 Q70,245 70,145 Q70,45 200,45' fill='none' stroke='%235C3714' stroke-width='0.6' stroke-opacity='0.14'/%3E%3C!-- zodiac glyph hints: Aries-like --%3E%3Cpath d='M148,290 Q155,278 162,290 M162,290 Q162,300 155,305 M148,290 Q148,300 155,305' fill='none' stroke='%235C3714' stroke-width='1' stroke-opacity='0.28' stroke-linecap='round'/%3E%3C!-- tiny measurement arc (Da Vinci compass arc) --%3E%3Cpath d='M30,175 A40,40 0 0,1 70,175' fill='none' stroke='%235C3714' stroke-width='0.6' stroke-opacity='0.2'/%3E%3Cline x1='30' y1='175' x2='30' y2='165' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3Cline x1='70' y1='175' x2='70' y2='165' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C!-- small cross/target marks --%3E%3Ccircle cx='155' cy='190' r='4' fill='none' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3Cline x1='151' y1='190' x2='159' y2='190' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3Cline x1='155' y1='186' x2='155' y2='194' stroke='%235C3714' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C!-- scattered tiny star sparkles --%3E%3Ccircle cx='305' cy='88' r='1.2' fill='%235C3714' fill-opacity='0.32'/%3E%3Ccircle cx='18' cy='310' r='1' fill='%235C3714' fill-opacity='0.28'/%3E%3Ccircle cx='110' cy='160' r='1.1' fill='%235C3714' fill-opacity='0.25'/%3E%3Ccircle cx='248' cy='130' r='0.9' fill='%235C3714' fill-opacity='0.3'/%3E%3Ccircle cx='88' cy='228' r='1.3' fill='%235C3714' fill-opacity='0.28'/%3E%3C/svg%3E");
-    background-size: auto, auto, auto, 340px 340px;
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 340 420%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%22170%22 cy=%22210%22 r=%2297%22 stroke-width=%220.5%22 stroke-opacity=%220.28%22/><rect x=%2296%22 y=%22136%22 width=%22148%22 height=%22148%22 stroke-width=%220.4%22 stroke-opacity=%220.22%22/><line x1=%22170%22 y1=%22113%22 x2=%22170%22 y2=%22307%22 stroke-width=%220.3%22 stroke-opacity=%220.15%22/><line x1=%2273%22 y1=%22210%22 x2=%22267%22 y2=%22210%22 stroke-width=%220.3%22 stroke-opacity=%220.15%22/><ellipse cx=%22170%22 cy=%22212%22 rx=%2226%22 ry=%2235%22 stroke-width=%221.2%22/><path d=%22M162,222 Q170,230 178,222%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><path d=%22M161,234 Q170,243 179,234%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><path d=%22M158,179 Q160,172 168,168 Q170,167 172,168 Q180,172 182,179%22 stroke-width=%220.9%22/><path d=%22M152,161 Q148,151 149,138 Q151,124 170,120 Q189,124 191,138 Q192,151 188,161%22 stroke-width=%221.2%22/><path d=%22M152,161 Q144,167 143,172 Q146,177 155,175%22 stroke-width=%220.9%22/><path d=%22M188,161 Q196,167 197,172 Q194,177 185,175%22 stroke-width=%220.9%22/><ellipse cx=%22170%22 cy=%22167%22 rx=%2210%22 ry=%227%22 stroke-width=%220.9%22/><path d=%22M167,163 L170,161 L173,163 L170,165 Z%22 stroke-width=%220.7%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M170,165 Q167,169 163,170%22 stroke-width=%220.7%22/><path d=%22M170,165 Q173,169 177,170%22 stroke-width=%220.7%22/><line x1=%22143%22 y1=%22166%22 x2=%22162%22 y2=%22168%22 stroke-width=%220.6%22 stroke-opacity=%220.55%22/><line x1=%22142%22 y1=%22171%22 x2=%22161%22 y2=%22171%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><line x1=%22197%22 y1=%22166%22 x2=%22178%22 y2=%22168%22 stroke-width=%220.6%22 stroke-opacity=%220.55%22/><line x1=%22198%22 y1=%22171%22 x2=%22179%22 y2=%22171%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><ellipse cx=%22161%22 cy=%22148%22 rx=%227%22 ry=%225%22 stroke-width=%220.9%22/><ellipse cx=%22179%22 cy=%22148%22 rx=%227%22 ry=%225%22 stroke-width=%220.9%22/><path d=%22M161,143 Q159,148 161,153%22 stroke-width=%220.9%22 fill=%22#5C3714%22 fill-opacity=%220.35%22/><path d=%22M179,143 Q177,148 179,153%22 stroke-width=%220.9%22 fill=%22#5C3714%22 fill-opacity=%220.35%22/><path d=%22M152,135 L145,119 L161,130 Z%22 stroke-width=%221.2%22/><path d=%22M188,135 L195,119 L179,130 Z%22 stroke-width=%221.2%22/><path d=%22M155,184 Q138,178 122,166 Q108,155 99,142%22 stroke-width=%221.2%22/><path d=%22M99,142 Q95,138 93,134 Q98,132 103,135 Q98,138 99,142%22 stroke-width=%220.9%22/><path d=%22M93,134 Q90,130 92,127%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M98,132 Q97,128 99,125%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M103,135 Q104,131 106,128%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M185,184 Q202,178 218,166 Q232,155 241,142%22 stroke-width=%221.2%22/><path d=%22M241,142 Q245,138 247,134 Q242,132 237,135 Q242,138 241,142%22 stroke-width=%220.9%22/><path d=%22M247,134 Q250,130 248,127%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M242,132 Q243,128 241,125%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M237,135 Q236,131 234,128%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M154,243 Q138,258 122,275 Q112,287 108,300%22 stroke-width=%221.2%22/><path d=%22M108,300 Q102,303 101,308 Q109,311 113,306 Q112,302 108,300%22 stroke-width=%220.9%22/><path d=%22M101,308 Q98,312 100,316%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M107,310 Q106,314 108,318%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M113,306 Q114,310 113,314%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M186,243 Q202,258 218,275 Q228,287 232,300%22 stroke-width=%221.2%22/><path d=%22M232,300 Q238,303 239,308 Q231,311 227,306 Q228,302 232,300%22 stroke-width=%220.9%22/><path d=%22M239,308 Q242,312 240,316%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M233,310 Q234,314 232,318%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M227,306 Q226,310 227,314%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M170,246 Q180,258 186,272 Q192,287 183,295 Q172,302 162,295 Q156,288 159,279 Q164,272 170,275%22 stroke-width=%221.2%22/><path d=%22M164,192 Q167,189 170,192%22 stroke-width=%220.4%22 stroke-opacity=%220.45%22/><path d=%22M170,191 Q173,188 176,191%22 stroke-width=%220.4%22 stroke-opacity=%220.45%22/><path d=%22M163,202 Q166,199 169,202%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/><path d=%22M171,200 Q174,197 177,200%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 160 90%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><ellipse cx=%2292%22 cy=%2250%22 rx=%2245%22 ry=%2218%22 transform=%22rotate(-15,92,50)%22 stroke-width=%221.1%22/><path d=%22M55,38 Q42,30 28,28 Q16,28 10,34 Q8,38 14,40 Q22,42 30,36%22 stroke-width=%221%22/><path d=%22M10,34 Q4,34 4,38 Q6,44 14,40%22 stroke-width=%220.8%22/><line x1=%224%22 y1=%2234%22 x2=%2214%22 y2=%2238%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><line x1=%226%22 y1=%2238%22 x2=%2214%22 y2=%2240%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><line x1=%224%22 y1=%2242%22 x2=%2214%22 y2=%2242%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><path d=%22M30,36 Q22,34 18,28 Q24,24 30,28%22 stroke-width=%220.9%22/><line x1=%2218%22 y1=%2224%22 x2=%2222%22 y2=%2228%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><line x1=%2224%22 y1=%2222%22 x2=%2226%22 y2=%2226%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><line x1=%2230%22 y1=%2224%22 x2=%2230%22 y2=%2228%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M125,34 Q132,22 140,16 Q148,12 152,18%22 stroke-width=%221%22/><path d=%22M118,38 Q126,30 130,18 Q134,10 140,12%22 stroke-width=%220.9%22/><ellipse cx=%22148%22 cy=%2214%22 rx=%2210%22 ry=%228%22 stroke-width=%221.1%22/><path d=%22M140,8 L136,0 L146,6 Z%22 stroke-width=%221%22/><path d=%22M156,10 L160,0 L152,8 Z%22 stroke-width=%221%22/><ellipse cx=%22144%22 cy=%2216%22 rx=%225%22 ry=%223%22 stroke-width=%220.8%22/><path d=%22M142,14 L144,12 L146,14 L144,16 Z%22 stroke-width=%220.6%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><ellipse cx=%22137%22 cy=%2210%22 rx=%224%22 ry=%223%22 stroke-width=%220.7%22/><ellipse cx=%22151%22 cy=%2210%22 rx=%224%22 ry=%223%22 stroke-width=%220.7%22/><line x1=%22128%22 y1=%2214%22 x2=%22138%22 y2=%2216%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><line x1=%22127%22 y1=%2218%22 x2=%22137%22 y2=%2218%22 stroke-width=%220.5%22 stroke-opacity=%220.45%22/><line x1=%22160%22 y1=%2214%22 x2=%22152%22 y2=%2216%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><line x1=%22162%22 y1=%2218%22 x2=%22154%22 y2=%2218%22 stroke-width=%220.5%22 stroke-opacity=%220.45%22/><path d=%22M135,60 Q140,75 136,82 Q128,88 120,82 Q116,75 122,70 Q128,66 135,60%22 stroke-width=%221%22/><path d=%22M90,62 Q88,70 80,74 Q74,76 70,72 Q72,66 78,64 Q86,62 90,62%22 stroke-width=%220.9%22/><path d=%22M62,68 Q58,72 54,72 Q52,68 56,66 Q60,65 62,68%22 stroke-width=%220.8%22/><path d=%22M52,68 Q48,70 46,68%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M54,72 Q52,76 52,78%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M60,72 Q60,76 58,78%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 120%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><ellipse cx=%2240%22 cy=%2280%22 rx=%2224%22 ry=%2228%22 stroke-width=%221.1%22/><path d=%22M22,58 Q18,50 20,38 Q22,24 40,20 Q58,24 60,38 Q62,50 58,58%22 stroke-width=%221.2%22/><path d=%22M22,58 Q14,64 13,70 Q16,76 24,74%22 stroke-width=%220.9%22/><path d=%22M58,58 Q66,64 67,70 Q64,76 56,74%22 stroke-width=%220.9%22/><ellipse cx=%2240%22 cy=%2270%22 rx=%2210%22 ry=%227%22 stroke-width=%220.8%22/><path d=%22M37,65 L40,63 L43,65 L40,68 Z%22 stroke-width=%220.7%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M40,68 Q37,72 33,74%22 stroke-width=%220.7%22/><path d=%22M40,68 Q43,72 47,74%22 stroke-width=%220.7%22/><ellipse cx=%2232%22 cy=%2244%22 rx=%227%22 ry=%225%22 stroke-width=%220.9%22/><ellipse cx=%2248%22 cy=%2244%22 rx=%227%22 ry=%225%22 stroke-width=%220.9%22/><path d=%22M32,40 Q30,44 32,48%22 stroke-width=%220.9%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M48,40 Q46,44 48,48%22 stroke-width=%220.9%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M22,36 L14,18 L30,28 Z%22 stroke-width=%221.1%22/><path d=%22M58,36 L66,18 L50,28 Z%22 stroke-width=%221.1%22/><line x1=%2212%22 y1=%2266%22 x2=%2228%22 y2=%2268%22 stroke-width=%220.6%22 stroke-opacity=%220.55%22/><line x1=%2210%22 y1=%2272%22 x2=%2226%22 y2=%2272%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><line x1=%2268%22 y1=%2266%22 x2=%2252%22 y2=%2268%22 stroke-width=%220.6%22 stroke-opacity=%220.55%22/><line x1=%2270%22 y1=%2272%22 x2=%2254%22 y2=%2272%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><path d=%22M16,96 Q20,106 28,108 Q36,108 40,104%22 stroke-width=%220.9%22/><path d=%22M64,96 Q60,106 52,108 Q44,108 40,104%22 stroke-width=%220.9%22/><path d=%22M16,96 Q20,90 28,90 Q36,90 40,96 Q44,90 52,90 Q60,90 64,96%22 stroke-width=%220.8%22 stroke-opacity=%220.5%22/><path d=%22M16,108 Q14,114 18,118 Q22,120 28,118 Q32,116 36,116%22 stroke-width=%220.9%22/><path d=%22M64,108 Q66,114 62,118 Q58,120 52,118 Q48,116 44,116%22 stroke-width=%220.9%22/><path d=%22M28,88 Q30,86 32,88%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/><path d=%22M38,86 Q40,84 42,86%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/><path d=%22M48,88 Q50,86 52,88%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 90 110%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><ellipse cx=%2245%22 cy=%2274%22 rx=%2222%22 ry=%2226%22 stroke-width=%221.1%22/><path d=%22M28,52 Q24,42 26,30 Q30,14 45,10 Q60,14 64,30 Q66,42 62,52%22 stroke-width=%221.2%22/><path d=%22M28,52 Q20,58 19,64 Q22,70 30,68%22 stroke-width=%220.9%22/><path d=%22M62,52 Q70,58 71,64 Q68,70 60,68%22 stroke-width=%220.9%22/><ellipse cx=%2245%22 cy=%2264%22 rx=%229%22 ry=%226%22 stroke-width=%220.8%22/><path d=%22M42,60 L45,57 L48,60 L45,63 Z%22 stroke-width=%220.7%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><ellipse cx=%2236%22 cy=%2236%22 rx=%227%22 ry=%225%22 stroke-width=%220.9%22/><ellipse cx=%2254%22 cy=%2236%22 rx=%227%22 ry=%225%22 stroke-width=%220.9%22/><path d=%22M28,30 L18,12 L32,22 Z%22 stroke-width=%221.1%22/><path d=%22M62,30 L72,12 L58,22 Z%22 stroke-width=%221.1%22/><path d=%22M36,32 Q34,36 36,40%22 stroke-width=%220.9%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M54,32 Q52,36 54,40%22 stroke-width=%220.9%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M30,62 Q26,58 24,52 Q24,46 28,44 Q34,42 38,48 Q40,52 38,58 Q36,62 30,62%22 stroke-width=%221%22/><ellipse cx=%2230%22 cy=%2246%22 rx=%227%22 ry=%225%22 stroke-width=%220.7%22 stroke-opacity=%220.5%22/><path d=%22M24,44 Q22,40 24,36%22 stroke-width=%220.6%22 stroke-opacity=%220.6%22/><path d=%22M28,42 Q28,38 30,34%22 stroke-width=%220.6%22 stroke-opacity=%220.6%22/><path d=%22M34,42 Q36,38 36,34%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><line x1=%2214%22 y1=%2260%22 x2=%2228%22 y2=%2262%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><line x1=%2212%22 y1=%2266%22 x2=%2226%22 y2=%2266%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><line x1=%2276%22 y1=%2260%22 x2=%2262%22 y2=%2262%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><line x1=%2278%22 y1=%2266%22 x2=%2264%22 y2=%2266%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><path d=%22M23,92 Q26,100 34,102%22 stroke-width=%220.9%22/><path d=%22M67,92 Q64,100 56,102%22 stroke-width=%220.9%22/><path d=%22M28,82 Q30,80 32,82%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/><path d=%22M44,80 Q46,78 48,80%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/><path d=%22M56,82 Q58,80 60,82%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 140 100%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><ellipse cx=%2272%22 cy=%2252%22 rx=%2234%22 ry=%2220%22 transform=%22rotate(-25,72,52)%22 stroke-width=%221.1%22/><path d=%22M52,36 Q46,26 40,20 Q32,14 24,16%22 stroke-width=%221%22/><path d=%22M24,16 Q16,16 12,22 Q14,28 22,26 Q16,22 24,16%22 stroke-width=%220.9%22/><path d=%22M12,22 Q8,22 8,26 Q10,30 18,28%22 stroke-width=%220.8%22/><path d=%22M8,22 Q4,24 4,28%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M8,26 Q4,28 4,32%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><path d=%22M20,24 Q16,20 14,16%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M46,34 Q42,24 38,18 Q34,12 26,10%22 stroke-width=%220.9%22/><path d=%22M26,10 Q18,10 16,16 Q18,20 24,18%22 stroke-width=%220.8%22/><path d=%22M16,12 Q12,12 10,16%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M18,8 Q14,8 12,12%22 stroke-width=%220.6%22 stroke-opacity=%220.45%22/><path d=%22M90,64 Q98,76 106,82 Q114,86 120,82%22 stroke-width=%221%22/><path d=%22M120,82 Q128,80 130,74 Q126,70 118,74 Q124,78 120,82%22 stroke-width=%220.9%22/><path d=%22M130,74 Q134,72 136,68%22 stroke-width=%220.7%22 stroke-opacity=%220.5%22/><path d=%22M118,72 Q120,68 118,64%22 stroke-width=%220.7%22 stroke-opacity=%220.5%22/><path d=%22M94,60 Q102,70 110,74 Q118,76 122,72%22 stroke-width=%220.9%22/><path d=%22M122,72 Q128,68 128,62%22 stroke-width=%220.8%22/><path d=%22M58,32 Q52,22 48,14%22 stroke-width=%221%22/><path d=%22M48,14 Q40,8 32,8 Q26,12 28,18 Q34,20 36,14%22 stroke-width=%220.9%22/><path d=%22M28,8 Q22,8 20,14%22 stroke-width=%220.7%22 stroke-opacity=%220.6%22/><path d=%22M56,28 Q48,20 44,14 Q40,8 34,6%22 stroke-width=%220.9%22/><ellipse cx=%2254%22 cy=%2228%22 rx=%2214%22 ry=%2210%22 transform=%22rotate(-40,54,28)%22 stroke-width=%221.1%22/><ellipse cx=%2248%22 cy=%2222%22 rx=%225%22 ry=%224%22 stroke-width=%220.8%22/><ellipse cx=%2260%22 cy=%2224%22 rx=%225%22 ry=%224%22 stroke-width=%220.8%22/><path d=%22M48,20 Q46,22 48,24%22 stroke-width=%220.8%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M60,22 Q58,24 60,26%22 stroke-width=%220.8%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M46,18 L40,8 L52,16 Z%22 stroke-width=%221%22/><path d=%22M60,20 L66,8 L56,18 Z%22 stroke-width=%221%22/><line x1=%2236%22 y1=%2225%22 x2=%2244%22 y2=%2224%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><line x1=%2234%22 y1=%2229%22 x2=%2242%22 y2=%2228%22 stroke-width=%220.5%22 stroke-opacity=%220.45%22/><line x1=%2272%22 y1=%2227%22 x2=%2264%22 y2=%2224%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><line x1=%2274%22 y1=%2231%22 x2=%2266%22 y2=%2228%22 stroke-width=%220.5%22 stroke-opacity=%220.45%22/><path d=%22M88,70 Q94,82 90,90 Q84,96 76,90 Q72,82 78,76%22 stroke-width=%221%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M20,80 Q18,68 22,58 Q28,44 40,36 Q52,28 62,30 Q74,32 80,44 Q86,56 82,68 Q78,80 70,84%22 stroke-width=%221.2%22/><path d=%22M20,80 Q24,88 32,90 Q42,90 46,84%22 stroke-width=%221%22/><path d=%22M70,84 Q74,90 68,94 Q60,96 54,92 Q50,88 52,84%22 stroke-width=%221%22/><path d=%22M40,36 Q36,28 30,22 Q22,16 14,18%22 stroke-width=%221%22/><path d=%22M14,18 Q6,18 4,24 Q6,30 14,28 Q8,24 14,18%22 stroke-width=%220.9%22/><path d=%22M4,24 Q2,26 2,30%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M14,28 Q10,32 10,36%22 stroke-width=%220.6%22 stroke-opacity=%220.5%22/><path d=%22M38,34 Q32,26 28,18 Q24,10 18,10%22 stroke-width=%220.9%22/><path d=%22M18,10 Q10,10 8,16%22 stroke-width=%220.8%22/><path d=%22M54,30 Q52,22 56,14 Q60,8 66,8%22 stroke-width=%221%22/><path d=%22M66,8 Q74,8 76,14 Q74,20 66,18 Q72,14 66,8%22 stroke-width=%220.9%22/><path d=%22M76,14 Q80,14 82,18%22 stroke-width=%220.7%22 stroke-opacity=%220.6%22/><path d=%22M56,30 Q54,22 58,14 Q62,8 68,6%22 stroke-width=%220.9%22/><ellipse cx=%2238%22 cy=%2225%22 rx=%2211%22 ry=%228%22 transform=%22rotate(-20,38,25)%22 stroke-width=%221.1%22/><ellipse cx=%2232%22 cy=%2222%22 rx=%224%22 ry=%223%22 stroke-width=%220.8%22/><ellipse cx=%2244%22 cy=%2222%22 rx=%224%22 ry=%223%22 stroke-width=%220.8%22/><path d=%22M32,20 Q30,22 32,24%22 stroke-width=%220.8%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M44,20 Q42,22 44,24%22 stroke-width=%220.8%22 fill=%22#5C3714%22 fill-opacity=%220.3%22/><path d=%22M36,27 L38,25 L40,27%22 stroke-width=%220.7%22 fill=%22#5C3714%22 fill-opacity=%220.25%22/><path d=%22M18,22 Q14,22 12,24%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><path d=%22M18,26 Q14,26 12,28%22 stroke-width=%220.5%22 stroke-opacity=%220.45%22/><path d=%22M62,26 Q66,24 68,22%22 stroke-width=%220.5%22 stroke-opacity=%220.5%22/><path d=%22M62,30 Q66,28 70,28%22 stroke-width=%220.5%22 stroke-opacity=%220.45%22/><path d=%22M76,80 Q84,72 90,60 Q96,48 94,40%22 stroke-width=%221.1%22/><path d=%22M70,84 Q78,82 86,76 Q94,68 96,58%22 stroke-width=%220.9%22 stroke-opacity=%220.6%22/><path d=%22M20,82 Q16,90 12,96%22 stroke-width=%220.9%22 stroke-opacity=%220.7%22/><path d=%22M32,90 Q30,96 28,100%22 stroke-width=%220.8%22 stroke-opacity=%220.6%22/><path d=%22M68,90 Q70,96 72,100%22 stroke-width=%220.8%22 stroke-opacity=%220.6%22/><path d=%22M54,92 Q56,97 54,100%22 stroke-width=%220.8%22 stroke-opacity=%220.6%22/><path d=%22M44,52 Q48,48 52,52%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/><path d=%22M60,46 Q64,42 68,46%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 110 80%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22><ellipse cx=%2258%22 cy=%2248%22 rx=%2236%22 ry=%2222%22 transform=%22rotate(-12,58,48)%22 stroke-width=%221%22/><ellipse cx=%2228%22 cy=%2234%22 rx=%2218%22 ry=%2213%22 transform=%22rotate(15,28,34)%22 stroke-width=%220.9%22/><path d=%22M18,27 L13,15 L26,22 Z%22 stroke-width=%220.9%22/><path d=%22M38,23 L44,11 L50,21 Z%22 stroke-width=%220.9%22/><path d=%22M22,34 Q26,30 30,34%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M32,32 Q36,28 40,32%22 stroke-width=%220.7%22 stroke-opacity=%220.7%22/><path d=%22M8,38 Q6,42 8,46 Q18,50 22,44 Q22,40 16,36 Z%22 stroke-width=%220.8%22/><path d=%22M84,55 Q96,51 94,40 Q92,30 80,27 Q68,25 62,34 Q58,42 66,46%22 stroke-width=%220.9%22/><path d=%22M42,44 Q45,41 48,44%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/><path d=%22M56,42 Q59,39 62,42%22 stroke-width=%220.4%22 stroke-opacity=%220.4%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 70%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22><ellipse cx=%2240%22 cy=%2242%22 rx=%2222%22 ry=%2216%22 stroke-width=%220.9%22/><ellipse cx=%2227%22 cy=%2229%22 rx=%227%22 ry=%226%22 stroke-width=%220.8%22/><ellipse cx=%2240%22 cy=%2226%22 rx=%227%22 ry=%226%22 stroke-width=%220.8%22/><ellipse cx=%2253%22 cy=%2229%22 rx=%227%22 ry=%226%22 stroke-width=%220.8%22/><ellipse cx=%2221%22 cy=%2239%22 rx=%226%22 ry=%225%22 stroke-width=%220.8%22/><ellipse cx=%2259%22 cy=%2239%22 rx=%226%22 ry=%225%22 stroke-width=%220.8%22/><path d=%22M25,25 Q22,19 20,15%22 stroke-width=%220.7%22 stroke-opacity=%220.6%22/><path d=%22M40,22 Q40,16 40,12%22 stroke-width=%220.7%22 stroke-opacity=%220.6%22/><path d=%22M55,25 Q58,19 60,15%22 stroke-width=%220.7%22 stroke-opacity=%220.6%22/></g></svg>"),
+      url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 90 100%22><g fill=%22none%22 stroke=%22#5C3714%22 stroke-linecap=%22round%22><path d=%22M28,60 Q22,44 24,26 Q28,8 45,4 Q62,8 66,26 Q68,44 62,60%22 stroke-width=%221%22/><ellipse cx=%2245%22 cy=%2270%22 rx=%2216%22 ry=%2210%22 stroke-width=%220.8%22/><path d=%22M41,65 L45,62 L49,65 L45,68 Z%22 stroke-width=%220.7%22 fill=%22#5C3714%22 fill-opacity=%220.28%22/><ellipse cx=%2234%22 cy=%2234%22 rx=%229%22 ry=%227%22 stroke-width=%220.8%22/><ellipse cx=%2256%22 cy=%2234%22 rx=%229%22 ry=%227%22 stroke-width=%220.8%22/><path d=%22M28,55 L17,30 L32,42 Z%22 stroke-width=%221%22/><path d=%22M62,55 L73,30 L58,42 Z%22 stroke-width=%221%22/><line x1=%2214%22 y1=%224%22 x2=%2276%22 y2=%224%22 stroke-width=%220.4%22 stroke-opacity=%220.3%22/><line x1=%2214%22 y1=%2234%22 x2=%2276%22 y2=%2234%22 stroke-width=%220.4%22 stroke-opacity=%220.3%22/><line x1=%2214%22 y1=%2260%22 x2=%2276%22 y2=%2260%22 stroke-width=%220.4%22 stroke-opacity=%220.3%22/><line x1=%2245%22 y1=%224%22 x2=%2245%22 y2=%2278%22 stroke-width=%220.3%22 stroke-opacity=%220.25%22/><line x1=%229%22 y1=%224%22 x2=%229%22 y2=%2260%22 stroke-width=%220.4%22 stroke-opacity=%220.32%22/></g></svg>"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340'%3E%3Cline x1='0' y1='85' x2='340' y2='85' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='0' y1='170' x2='340' y2='170' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='0' y1='255' x2='340' y2='255' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='85' y1='0' x2='85' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='170' y1='0' x2='170' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='255' y1='0' x2='255' y2='340' stroke='%235C3714' stroke-width='0.4' stroke-opacity='0.18'/%3E%3Cline x1='0' y1='0' x2='340' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Cline x1='340' y1='0' x2='0' y2='340' stroke='%235C3714' stroke-width='0.3' stroke-opacity='0.07'/%3E%3Ccircle cx='128' cy='22' r='3' fill='%235C3714' fill-opacity='0.5'/%3E%3Ccircle cx='42' cy='55' r='2.2' fill='%235C3714' fill-opacity='0.45'/%3E%3Ccircle cx='75' cy='108' r='1.8' fill='%235C3714' fill-opacity='0.4'/%3E%3Cline x1='42' y1='55' x2='128' y2='22' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3Cline x1='128' y1='22' x2='75' y2='108' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3Cline x1='75' y1='108' x2='42' y2='55' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.28'/%3E%3Ccircle cx='290' cy='178' r='2.8' fill='%235C3714' fill-opacity='0.5'/%3E%3Ccircle cx='220' cy='200' r='2' fill='%235C3714' fill-opacity='0.42'/%3E%3Ccircle cx='318' cy='235' r='1.7' fill='%235C3714' fill-opacity='0.38'/%3E%3Cline x1='220' y1='200' x2='290' y2='178' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3Cline x1='290' y1='178' x2='318' y2='235' stroke='%235C3714' stroke-width='0.7' stroke-opacity='0.25'/%3E%3C/svg%3E");
+    background-size:
+      auto, auto, auto,
+      480px 592px,
+      320px 180px,
+      160px 240px,
+      180px 220px,
+      280px 200px,
+      200px 200px,
+      220px 160px,
+      160px 140px,
+      180px 200px,
+      340px 340px;
+    background-position:
+      0 0, 0 0, 0 0,
+      center 280px,
+      right 40px top 900px,
+      left 20px top 1400px,
+      right 60px top 1700px,
+      left 30px top 2200px,
+      right 20px top 2600px,
+      left 60px top 3000px,
+      right 80px top 3300px,
+      left 40px top 3600px,
+      0 0;
+    background-repeat:
+      no-repeat, no-repeat, no-repeat,
+      no-repeat, no-repeat, no-repeat, no-repeat,
+      no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+      repeat;
   }
 
   /* ---------- reduced motion ---------- */
@@ -666,6 +701,36 @@
   }
   .modal-close:hover{color:var(--ink);}
 
+
+  /* ---------- visitor counter ---------- */
+  .visitor-bar{
+    text-align:center; padding:7px 20px;
+    font-size:0.76rem; color:rgba(59,40,16,0.65);
+    font-family:var(--font-body); letter-spacing:0.04em;
+    border-bottom:1px solid rgba(92,55,20,0.12);
+    background:rgba(255,248,220,0.4);
+  }
+  .visitor-bar strong{ color:var(--marmalade-dark); }
+
+  /* ---------- per-box comment threads ---------- */
+  .box-comment-section{ margin-top:14px; padding-top:12px; border-top:1px dashed var(--line); }
+  .box-comment-toggle{
+    background:none; border:none; padding:0;
+    font-size:0.74rem; font-weight:700; color:var(--sage-dark); cursor:pointer;
+    letter-spacing:0.04em; text-transform:uppercase; display:flex; align-items:center; gap:5px;
+  }
+  .box-comment-toggle:hover{ color:var(--marmalade-dark); }
+  .box-comment-body{ display:none; margin-top:10px; }
+  .box-comment-body.open{ display:block; }
+  .bthread{ display:flex; flex-direction:column; gap:7px; max-height:180px; overflow-y:auto; margin-bottom:9px; }
+  .bcomment{ background:var(--cream); border:1px solid var(--line); border-radius:8px; padding:7px 10px; }
+  .bcomment .bwho{ font-weight:700; font-size:0.75rem; color:var(--marmalade-dark); }
+  .bcomment p{ margin:3px 0 0; font-size:0.82rem; }
+  .bcomment-form{ display:flex; gap:6px; align-items:flex-end; }
+  .bcomment-form .bc-name{ max-width:90px; flex-shrink:0; font-size:0.82rem; padding:6px 8px; }
+  .bcomment-form .bc-text{ font-size:0.82rem; min-height:34px; resize:none; flex:1; }
+  .bcomment-form button{ flex-shrink:0; padding:6px 10px; font-size:0.76rem; }
+  .bcomment-empty{ font-size:0.78rem; color:var(--sage-dark); font-style:italic; }
   ::-webkit-scrollbar{width:7px; height:7px;}
   ::-webkit-scrollbar-thumb{background:var(--line); border-radius:10px;}
   ::-webkit-scrollbar-thumb:hover{background:var(--sage);}
@@ -767,6 +832,7 @@
 </head>
 <body>
 
+<div class="visitor-bar" id="visitorBar">👁 You are visitor <strong id="visitorNum">—</strong> &nbsp;·&nbsp; <strong id="totalVisits">—</strong> total visits</div>
 <header class="site-head">
   <button class="admin-toggle" id="adminToggleBtn" onclick="openAdminPrompt()">🔑 Admin</button>
 
@@ -860,8 +926,8 @@
       <input type="text" id="contestOwnerName" placeholder="e.g. Patricia G.">
     </div>
     <div class="field">
-      <label for="contestPhotoUrl">Photo URL</label>
-      <input type="url" id="contestPhotoUrl" placeholder="https://...">
+      <label>Photo (from your device)</label>
+      <input type="file" id="contestPhotoFile" accept="image/*" style="padding:6px 0;">
     </div>
     <button class="btn" style="width:100%;" onclick="submitContestEntry()">Send for review</button>
   </div>
@@ -906,6 +972,20 @@
       </div>
       <button class="btn" onclick="addCareNote()">Post tip</button>
     </details>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('care',this)">
+        💬 <span class="bc-count" id="bc-count-care">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-care">
+        <div class="bthread" id="bc-thread-care"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-care" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-care" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('care')">Post</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- FEATURED CAT -->
@@ -931,12 +1011,12 @@
           <input type="text" id="newCatName" placeholder="e.g. Biscuit">
         </div>
         <div class="field">
-          <label>Photo URLs (up to 5)</label>
-          <div class="thumb-input-row"><input type="url" id="catPhoto1" placeholder="Photo 1 (required)"></div>
-          <div class="thumb-input-row"><input type="url" id="catPhoto2" placeholder="Photo 2 (optional)"></div>
-          <div class="thumb-input-row"><input type="url" id="catPhoto3" placeholder="Photo 3 (optional)"></div>
-          <div class="thumb-input-row"><input type="url" id="catPhoto4" placeholder="Photo 4 (optional)"></div>
-          <div class="thumb-input-row"><input type="url" id="catPhoto5" placeholder="Photo 5 (optional)"></div>
+          <label>Photos from device (up to 5)</label>
+          <div class="thumb-input-row"><input type="file" id="catPhoto1" accept="image/*" style="padding:5px 0;"></div>
+          <div class="thumb-input-row"><input type="file" id="catPhoto2" accept="image/*" style="padding:5px 0;"></div>
+          <div class="thumb-input-row"><input type="file" id="catPhoto3" accept="image/*" style="padding:5px 0;"></div>
+          <div class="thumb-input-row"><input type="file" id="catPhoto4" accept="image/*" style="padding:5px 0;"></div>
+          <div class="thumb-input-row"><input type="file" id="catPhoto5" accept="image/*" style="padding:5px 0;"></div>
         </div>
         <div class="field">
           <label for="newCatWriteup">Their story (for the write-up box)</label>
@@ -949,6 +1029,20 @@
         <button class="btn" onclick="submitFeaturedCat()">Send for review</button>
       </div>
     </details>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('featured',this)">
+        💬 <span class="bc-count" id="bc-count-featured">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-featured">
+        <div class="bthread" id="bc-thread-featured"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-featured" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-featured" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('featured')">Post</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- TRIVIA -->
@@ -976,6 +1070,20 @@
       <button class="btn" onclick="submitTrivia()">Send for review</button>
       <p style="font-size:0.74rem;color:var(--sage-dark);margin-top:8px;">An admin approves facts before they join the rotation. Queue holds 10 active facts — oldest is archived (not deleted) to make room.</p>
     </details>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('trivia',this)">
+        💬 <span class="bc-count" id="bc-count-trivia">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-trivia">
+        <div class="bthread" id="bc-thread-trivia"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-trivia" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-trivia" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('trivia')">Post</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- VIDEO -->
@@ -1001,6 +1109,20 @@
       </div>
       <button class="btn" onclick="setVideo()">Set video</button>
     </details>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('video',this)">
+        💬 <span class="bc-count" id="bc-count-video">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-video">
+        <div class="bthread" id="bc-thread-video"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-video" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-video" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('video')">Post</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- WRITE-UP (paired with featured cat) -->
@@ -1013,6 +1135,20 @@
     <p class="writeup-name" id="writeupName"></p>
     <p class="writeup-byline" id="writeupBy"></p>
     <p class="writeup-body" id="writeupBody"></p>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('writeup',this)">
+        💬 <span class="bc-count" id="bc-count-writeup">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-writeup">
+        <div class="bthread" id="bc-thread-writeup"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-writeup" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-writeup" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('writeup')">Post</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- TRUE CAT STORIES -->
@@ -1031,10 +1167,10 @@
         <input type="text" id="storyTitle" placeholder="e.g. The day she found her way home">
       </div>
       <div class="field">
-        <label>Photos (up to 3)</label>
-        <div class="thumb-input-row"><input type="url" id="storyPhoto1" placeholder="Photo 1 URL (optional)"></div>
-        <div class="thumb-input-row"><input type="url" id="storyPhoto2" placeholder="Photo 2 URL (optional)"></div>
-        <div class="thumb-input-row"><input type="url" id="storyPhoto3" placeholder="Photo 3 URL (optional)"></div>
+        <label>Photos from device (up to 3)</label>
+        <div class="thumb-input-row"><input type="file" id="storyPhoto1" accept="image/*" style="padding:5px 0;"></div>
+        <div class="thumb-input-row"><input type="file" id="storyPhoto2" accept="image/*" style="padding:5px 0;"></div>
+        <div class="thumb-input-row"><input type="file" id="storyPhoto3" accept="image/*" style="padding:5px 0;"></div>
       </div>
       <div class="field">
         <label for="storyBy">Your name</label>
@@ -1046,6 +1182,20 @@
       </div>
       <button class="btn" onclick="submitStory()">Send for review</button>
     </details>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('stories',this)">
+        💬 <span class="bc-count" id="bc-count-stories">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-stories">
+        <div class="bthread" id="bc-thread-stories"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-stories" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-stories" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('stories')">Post</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- DIRECTORY -->
@@ -1084,6 +1234,20 @@
       </div>
       <button class="btn" onclick="addDirectoryEntry()">Add listing</button>
     </details>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('directory',this)">
+        💬 <span class="bc-count" id="bc-count-directory">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-directory">
+        <div class="bthread" id="bc-thread-directory"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-directory" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-directory" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('directory')">Post</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- TOPIC OF THE DAY -->
@@ -1102,6 +1266,20 @@
       <input type="text" id="commentName" placeholder="Name" style="max-width:110px;">
       <textarea id="commentText" rows="1" placeholder="Add your comment..."></textarea>
       <button class="btn btn-sm" onclick="addComment()" style="align-self:flex-end;">Post</button>
+    </div>
+  
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('topic',this)">
+        💬 <span class="bc-count" id="bc-count-topic">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-topic">
+        <div class="bthread" id="bc-thread-topic"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-topic" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-topic" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('topic')">Post</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1146,6 +1324,7 @@ function migrateDB(db){
   if(!db.galleryWeek) db.galleryWeek = weekStr();
   if(!db.galleryPastWinners) db.galleryPastWinners = [];
   if(!db.pendingGallery) db.pendingGallery = [];
+  if(!db.boxComments) db.boxComments = {};
   return db;
 }
 function saveDB(){
@@ -1884,29 +2063,17 @@ function openContestModal(){
 }
 function closeContestModal(){
   document.getElementById('contestModal').style.display = 'none';
-  ['contestCatName','contestOwnerName','contestPhotoUrl'].forEach(id => {
+  ['contestCatName','contestOwnerName'].forEach(id => {
     document.getElementById(id).value = '';
   });
+  const cf = document.getElementById('contestPhotoFile'); if(cf) cf.value='';
 }
 // close modal if backdrop clicked
 document.getElementById('contestModal').addEventListener('click', function(e){
   if(e.target === this) closeContestModal();
 });
 
-function submitContestEntry(){
-  const catName = document.getElementById('contestCatName').value.trim();
-  const ownerName = document.getElementById('contestOwnerName').value.trim() || 'Anonymous';
-  const photoUrl = document.getElementById('contestPhotoUrl').value.trim();
-  if(!catName){ alert('Please enter your cat\'s name.'); return; }
-  if(!photoUrl){ alert('Please add a photo URL.'); return; }
 
-  DB.pendingGallery.push({id:uid(), catName, ownerName, photoUrl, submittedOn:todayStr()});
-  saveDB();
-  closeContestModal();
-  if(isAdmin) renderAdminQueue();
-  updatePendingBadges();
-  alert('Thanks! Your entry has been sent for review. Keep an eye on the gallery!');
-}
 
 function approveGalleryEntry(id){
   const idx = DB.pendingGallery.findIndex(e => e.id === id);
@@ -1951,6 +2118,166 @@ function startNewWeek(){
   alert('New week started! Gallery cleared and winner archived. Submissions can fill the slots again.');
 }
 
+
+/* ============ IMAGE UPLOAD HELPERS ============ */
+// Reads a file input, resizes via canvas to max 800px, returns base64 data-URL
+function readImageFile(fileInput){
+  return new Promise((resolve) => {
+    const file = fileInput.files[0];
+    if(!file){ resolve(null); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 800;
+        let w = img.width, h = img.height;
+        if(w > MAX || h > MAX){
+          if(w > h){ h = Math.round(h * MAX / w); w = MAX; }
+          else { w = Math.round(w * MAX / h); h = MAX; }
+        }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function readMultipleImageFiles(ids){
+  const results = [];
+  for(const id of ids){
+    const el = document.getElementById(id);
+    if(el && el.files && el.files[0]){
+      const b64 = await readImageFile(el);
+      if(b64) results.push(b64);
+    }
+  }
+  return results;
+}
+
+/* ── Override submitFeaturedCat to use file inputs ── */
+async function submitFeaturedCat(){
+  const name = document.getElementById('newCatName').value.trim();
+  if(!name){ alert("Please enter the cat's name."); return; }
+  const photos = await readMultipleImageFiles(['catPhoto1','catPhoto2','catPhoto3','catPhoto4','catPhoto5']);
+  if(!photos.length){ alert('Please choose at least one photo.'); return; }
+  const writeup = document.getElementById('newCatWriteup').value.trim();
+  const by = document.getElementById('newCatBy').value.trim();
+  DB.pendingFeatured.push({ id:uid(), name, by: by ? `Submitted by ${by}` : '', writeup, submittedOn:todayStr(), photos });
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  updatePendingBadges();
+  ['newCatName','newCatWriteup','newCatBy'].forEach(id=>document.getElementById(id).value='');
+  ['catPhoto1','catPhoto2','catPhoto3','catPhoto4','catPhoto5'].forEach(id=>document.getElementById(id).value='');
+  alert("Thanks! Your cat has been sent in for review.");
+}
+
+/* ── Override submitStory to use file inputs ── */
+async function submitStory(){
+  const title = document.getElementById('storyTitle').value.trim();
+  const by = document.getElementById('storyBy').value.trim() || 'Anonymous';
+  const text = document.getElementById('storyText').value.trim();
+  if(!title || !text){ alert('Please add a title and story.'); return; }
+  const photos = await readMultipleImageFiles(['storyPhoto1','storyPhoto2','storyPhoto3']);
+  DB.pendingStories.push({ id:uid(), title, by, text, photos, submittedOn:todayStr() });
+  saveDB();
+  if(isAdmin) renderAdminQueue();
+  ['storyTitle','storyBy','storyText'].forEach(id=>document.getElementById(id).value='');
+  ['storyPhoto1','storyPhoto2','storyPhoto3'].forEach(id=>document.getElementById(id).value='');
+  alert('Thanks! Your story has been sent in for review.');
+}
+
+/* ── Override submitContestEntry to use file input ── */
+async function submitContestEntry(){
+  const catName = document.getElementById('contestCatName').value.trim();
+  const ownerName = document.getElementById('contestOwnerName').value.trim() || 'Anonymous';
+  if(!catName){ alert("Please enter your cat's name."); return; }
+  const fileEl = document.getElementById('contestPhotoFile');
+  if(!fileEl || !fileEl.files || !fileEl.files[0]){ alert('Please choose a photo.'); return; }
+  const photoData = await readImageFile(fileEl);
+  if(!photoData){ alert('Could not read the photo. Please try again.'); return; }
+  DB.pendingGallery.push({ id:uid(), catName, ownerName, photoUrl: photoData, submittedOn:todayStr() });
+  saveDB();
+  closeContestModal();
+  if(isAdmin) renderAdminQueue();
+  updatePendingBadges();
+  alert('Thanks! Your entry has been sent for review. Keep an eye on the gallery!');
+}
+
+/* ============ VISITOR COUNTER ============ */
+function initVisitorCounter(){
+  const VKEY = 'wb_visitor_num';
+  const TKEY = 'wb_total_visits';
+  const SEEN = 'wb_seen';
+  let total = parseInt(localStorage.getItem(TKEY) || '0', 10);
+  let myNum = parseInt(localStorage.getItem(VKEY) || '0', 10);
+  const seen = localStorage.getItem(SEEN);
+  if(!seen){
+    total++;
+    myNum = total;
+    localStorage.setItem(TKEY, total);
+    localStorage.setItem(VKEY, myNum);
+    localStorage.setItem(SEEN, '1');
+  }
+  const numEl = document.getElementById('visitorNum');
+  const totEl = document.getElementById('totalVisits');
+  if(numEl) numEl.textContent = '#' + myNum.toLocaleString();
+  if(totEl) totEl.textContent = total.toLocaleString() + (total === 1 ? ' visit' : ' visits');
+}
+
+/* ============ PER-BOX COMMENTS ============ */
+function getBoxComments(sectionId){
+  return (DB.boxComments && DB.boxComments[sectionId]) || [];
+}
+function saveBoxComment(sectionId, who, text){
+  if(!DB.boxComments) DB.boxComments = {};
+  if(!DB.boxComments[sectionId]) DB.boxComments[sectionId] = [];
+  DB.boxComments[sectionId].push({ id:uid(), who, text, when: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}) });
+  saveDB();
+}
+function toggleBoxComments(sectionId, btn){
+  const body = document.getElementById('bc-body-' + sectionId);
+  if(!body) return;
+  const open = body.classList.toggle('open');
+  if(open) renderBoxThread(sectionId);
+}
+function renderBoxThread(sectionId){
+  const comments = getBoxComments(sectionId);
+  const thread = document.getElementById('bc-thread-' + sectionId);
+  const countEl = document.getElementById('bc-count-' + sectionId);
+  if(countEl) countEl.textContent = comments.length;
+  if(!thread) return;
+  if(comments.length === 0){
+    thread.innerHTML = '<div class="bcomment-empty">No comments yet — be the first!</div>';
+    return;
+  }
+  thread.innerHTML = comments.slice().reverse().map(c => `
+    <div class="bcomment">
+      <div class="bwho">${escapeHTML(c.who)} <span style="font-weight:400;color:var(--sage-dark);font-size:0.7rem;">${escapeHTML(c.when)}</span></div>
+      <p>${escapeHTML(c.text)}</p>
+    </div>`).join('');
+}
+function addBoxComment(sectionId){
+  const nameEl = document.getElementById('bc-name-' + sectionId);
+  const textEl = document.getElementById('bc-text-' + sectionId);
+  if(!nameEl || !textEl) return;
+  const who = nameEl.value.trim() || 'Anonymous';
+  const text = textEl.value.trim();
+  if(!text) return;
+  saveBoxComment(sectionId, who, text);
+  renderBoxThread(sectionId);
+  nameEl.value = ''; textEl.value = '';
+}
+function renderAllBoxCounts(){
+  const sections = ['care','trivia','video','writeup','stories','directory','topic','featured'];
+  sections.forEach(sid => {
+    const el = document.getElementById('bc-count-' + sid);
+    if(el) el.textContent = getBoxComments(sid).length;
+  });
+}
+
 /* ============ INIT ============ */
 function renderAll(){
   renderGallery();
@@ -1962,7 +2289,9 @@ function renderAll(){
   renderDirectory();
   renderTopic();
   updatePendingBadges();
+  renderAllBoxCounts();
 }
+initVisitorCounter();
 renderAll();
 </script>
 

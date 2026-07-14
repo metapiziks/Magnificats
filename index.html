@@ -702,6 +702,24 @@
   .modal-close:hover{color:var(--ink);}
 
 
+
+  /* ---------- share buttons ---------- */
+  .box-share-row{ display:flex; justify-content:flex-end; margin-top:10px; }
+  .share-btn{
+    background:none; border:1.5px solid var(--line); color:var(--sage-dark);
+    font-size:0.72rem; font-weight:700; padding:5px 11px; border-radius:20px;
+    cursor:pointer; letter-spacing:0.04em; display:flex; align-items:center; gap:5px;
+    transition:border-color 0.15s, color 0.15s;
+  }
+  .share-btn:hover{ border-color:var(--marmalade-dark); color:var(--marmalade-dark); }
+  .share-toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--black); color:var(--cream); font-size:0.84rem;
+    padding:10px 22px; border-radius:30px; z-index:999;
+    opacity:0; pointer-events:none; transition:opacity 0.25s;
+    box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  }
+  .share-toast.show{ opacity:1; }
   /* ---------- visitor counter ---------- */
   .visitor-bar{
     text-align:center; padding:7px 20px;
@@ -731,6 +749,41 @@
   .bcomment-form .bc-text{ font-size:0.82rem; min-height:34px; resize:none; flex:1; }
   .bcomment-form button{ flex-shrink:0; padding:6px 10px; font-size:0.76rem; }
   .bcomment-empty{ font-size:0.78rem; color:var(--sage-dark); font-style:italic; }
+
+  /* ---------- welfare directory ---------- */
+  .box-welfare{ grid-column:span 12; }
+  .welfare-type-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .welfare-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:16px; }
+  .welfare-card{
+    background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:13px 14px;
+    position:relative;
+  }
+  .welfare-card .wc-type{
+    font-size:0.62rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;
+    background:var(--sage); color:#fff; padding:2px 8px; border-radius:5px;
+    display:inline-block; margin-bottom:7px;
+  }
+  .welfare-card .wc-type.rescue{ background:#8B4A2E; }
+  .welfare-card .wc-type.tnr{ background:#4A6E3A; }
+  .welfare-card .wc-type.advocacy{ background:#2E4A6E; }
+  .welfare-card .wc-type.shelter{ background:#6E2E5A; }
+  .welfare-card .wc-type.foundation{ background:#6E5A2E; }
+  .welfare-card .wc-type.movement{ background:#2E6E5A; }
+  .welfare-card .wc-name{ font-weight:700; font-size:0.96rem; margin-bottom:3px; }
+  .welfare-card .wc-desc{ font-size:0.82rem; color:var(--sage-dark); margin-bottom:8px; line-height:1.4; }
+  .welfare-card .wc-links{ display:flex; flex-wrap:wrap; gap:6px; }
+  .welfare-card .wc-link{
+    font-size:0.72rem; font-weight:600; color:var(--marmalade-dark);
+    text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:3px 8px;
+  }
+  .welfare-card .wc-link:hover{ background:var(--cream-2); }
+  .welfare-card .admin-remove{
+    position:absolute; top:8px; right:8px;
+    background:none; border:none; color:var(--sage-dark); font-size:0.75rem;
+    cursor:pointer; opacity:0.5; display:none;
+  }
+  .welfare-card .admin-remove:hover{ opacity:1; color:var(--pin-red); }
+  body.admin-mode .welfare-card .admin-remove{ display:block; }
   /* ---------- greeting card generator ---------- */
   .greeting-layout{ display:grid; grid-template-columns:1fr 1fr; gap:28px; }
   @media(max-width:800px){ .greeting-layout{ grid-template-columns:1fr; } }
@@ -859,6 +912,7 @@
 </head>
 <body>
 
+<div class="share-toast" id="shareToast">✓ Link copied to clipboard!</div>
 <div class="visitor-bar" id="visitorBar">👁 You are visitor <strong id="visitorNum">—</strong> &nbsp;·&nbsp; <strong id="totalVisits">—</strong> total visits</div>
 <header class="site-head">
   <button class="admin-toggle" id="adminToggleBtn" onclick="openAdminPrompt()">🔑 Admin</button>
@@ -910,209 +964,274 @@
 
   <div class="brand-mark">
     <!-- HERALDIC CREST: The 9 Lives Club -->
-    <svg class="crest-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The 9 Lives Club heraldic crest with two rampant cats flanking a shield">
+    <svg class="crest-svg" viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The 9 Lives Club heraldic crest — two rampant cats clawing at a shield">
       <defs>
-        <linearGradient id="gold" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#F5D060"/>
-          <stop offset="40%" stop-color="#C4952A"/>
-          <stop offset="100%" stop-color="#8B6310"/>
+        <linearGradient id="gGold" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#F7E070"/>
+          <stop offset="45%" stop-color="#C4952A"/>
+          <stop offset="100%" stop-color="#7A5010"/>
         </linearGradient>
-        <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#F0C040"/>
-          <stop offset="50%" stop-color="#B8860B"/>
-          <stop offset="100%" stop-color="#8B6310"/>
+        <linearGradient id="gShield" x1="0%" y1="0%" x2="10%" y2="100%">
+          <stop offset="0%" stop-color="#2A1C08"/>
+          <stop offset="100%" stop-color="#120C02"/>
         </linearGradient>
-        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#3B2810"/>
-          <stop offset="100%" stop-color="#1C1208"/>
+        <linearGradient id="gRibbon" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#E8C040"/>
+          <stop offset="100%" stop-color="#8B6008"/>
         </linearGradient>
+        <linearGradient id="gCrown" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#FFE878"/>
+          <stop offset="100%" stop-color="#C4952A"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
       </defs>
 
-      <!-- ═══ LEFT RAMPANT CAT ═══ -->
-      <g transform="translate(72,18) scale(-1,1) translate(-72,0)">
-        <!-- body rampant - leaning back on haunches, foreleg raised -->
-        <ellipse cx="72" cy="110" rx="22" ry="38" transform="rotate(-18,72,110)" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <!-- haunches -->
-        <ellipse cx="60" cy="138" rx="16" ry="12" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <!-- hind leg down -->
-        <path d="M52,148 Q46,160 44,172 Q50,176 56,172 Q54,162 58,152" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- hind paw -->
-        <path d="M44,172 Q40,176 42,182 Q50,184 56,180 Q56,174 44,172" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- back leg -->
-        <path d="M80,148 Q84,162 82,174 Q76,178 70,174 Q72,164 74,152" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M82,174 Q86,178 84,184 Q76,186 70,182 Q70,175 82,174" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- raised foreleg (rampant pose) -->
-        <path d="M82,92 Q92,76 96,60 Q98,50 92,44" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <!-- raised paw with claws -->
-        <path d="M92,44 Q96,38 94,32 Q88,30 84,36 Q88,40 92,44" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="94" y1="32" x2="98" y2="24" stroke="url(#gold)" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="88" y1="30" x2="88" y2="22" stroke="url(#gold)" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="84" y1="34" x2="80" y2="26" stroke="url(#gold)" stroke-width="1.4" stroke-linecap="round"/>
-        <!-- lower foreleg -->
-        <path d="M62,100 Q56,88 56,76 Q56,68 60,64" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M60,64 Q56,58 52,56 Q48,62 52,68 Q56,64 60,64" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="52" y1="56" x2="48" y2="48" stroke="url(#gold)" stroke-width="1.3" stroke-linecap="round"/>
-        <line x1="56" y1="54" x2="54" y2="46" stroke="url(#gold)" stroke-width="1.3" stroke-linecap="round"/>
-        <line x1="60" y1="56" x2="60" y2="48" stroke="url(#gold)" stroke-width="1.3" stroke-linecap="round"/>
-        <!-- neck -->
-        <path d="M62,78 Q64,66 70,60 Q74,56 80,56" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <!-- head -->
-        <path d="M72,22 Q62,24 58,34 Q56,44 60,54 Q66,60 80,58 Q92,56 96,46 Q98,36 94,28 Q88,18 72,22" fill="url(#shieldGrad)" fill-opacity="0.3" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <!-- ears -->
-        <path d="M62,26 L54,10 L68,22 Z" fill="url(#gold)" stroke="url(#gold)" stroke-width="1.2" stroke-linejoin="round"/>
-        <path d="M82,22 L88,6 L94,20 Z" fill="url(#gold)" stroke="url(#gold)" stroke-width="1.2" stroke-linejoin="round"/>
-        <!-- inner ears -->
-        <path d="M62,24 L57,14 L67,22 Z" fill="#5C3714" fill-opacity="0.5"/>
-        <path d="M82,21 L87,10 L92,20 Z" fill="#5C3714" fill-opacity="0.5"/>
-        <!-- eyes -->
-        <ellipse cx="68" cy="38" rx="5" ry="4" fill="#C4952A" stroke="url(#gold)" stroke-width="1"/>
-        <ellipse cx="82" cy="36" rx="5" ry="4" fill="#C4952A" stroke="url(#gold)" stroke-width="1"/>
-        <ellipse cx="68" cy="38" rx="2" ry="3.5" fill="#1C1208"/>
-        <ellipse cx="82" cy="36" rx="2" ry="3.5" fill="#1C1208"/>
-        <!-- nose -->
-        <path d="M74,46 L76,44 L78,46 L76,48 Z" fill="url(#gold)"/>
-        <!-- mouth -->
-        <path d="M76,48 Q73,52 70,53" fill="none" stroke="url(#gold)" stroke-width="1.2" stroke-linecap="round"/>
-        <path d="M76,48 Q79,52 82,53" fill="none" stroke="url(#gold)" stroke-width="1.2" stroke-linecap="round"/>
-        <!-- whiskers -->
-        <line x1="56" y1="46" x2="70" y2="47" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.8"/>
-        <line x1="54" y1="50" x2="69" y2="50" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.7"/>
-        <line x1="88" y1="44" x2="80" y2="45" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.8"/>
-        <line x1="90" y1="48" x2="81" y2="49" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.7"/>
-        <!-- tail curving up decoratively -->
-        <path d="M72,145 Q62,152 54,148 Q46,142 52,132 Q58,126 66,130 Q72,134 70,140" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <!-- fur texture -->
-        <path d="M68,98 Q72,94 76,98" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.6"/>
-        <path d="M66,110 Q70,106 74,110" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.6"/>
-        <path d="M68,122 Q72,118 76,122" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.5"/>
-        <!-- decorative heraldic scrollwork beside cat -->
-        <path d="M30,80 Q22,70 26,58 Q30,50 38,52" fill="none" stroke="#C4952A" stroke-width="1" stroke-opacity="0.5"/>
-        <path d="M26,58 Q20,50 24,42 Q30,38 36,44" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.4"/>
-        <circle cx="24" cy="80" r="3" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.45"/>
-        <circle cx="20" cy="62" r="2" fill="none" stroke="#C4952A" stroke-width="0.7" stroke-opacity="0.4"/>
-      </g>
+      <!-- ═══ SHIELD (centre, slightly tall) ═══ -->
+      <!-- shield shadow -->
+      <path d="M188,28 L372,28 L372,142 Q372,180 280,206 Q188,180 188,142 Z"
+            fill="#0a0602" fill-opacity="0.5" transform="translate(3,4)"/>
+      <!-- shield body -->
+      <path d="M188,28 L372,28 L372,142 Q372,180 280,206 Q188,180 188,142 Z"
+            fill="url(#gShield)" stroke="url(#gGold)" stroke-width="2.5"/>
+      <!-- shield inner bevel -->
+      <path d="M198,36 L362,36 L362,140 Q362,172 280,196 Q198,172 198,140 Z"
+            fill="none" stroke="#C4952A" stroke-width="1" stroke-opacity="0.45"/>
+      <!-- shield horizontal divider -->
+      <line x1="198" y1="118" x2="362" y2="118" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.4"/>
+      <!-- shield vertical divider -->
+      <line x1="280" y1="36" x2="280" y2="196" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.4"/>
 
-      <!-- ═══ RIGHT RAMPANT CAT (mirror) ═══ -->
-      <g transform="translate(448,18)">
-        <!-- body rampant -->
-        <ellipse cx="72" cy="110" rx="22" ry="38" transform="rotate(-18,72,110)" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <ellipse cx="60" cy="138" rx="16" ry="12" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M52,148 Q46,160 44,172 Q50,176 56,172 Q54,162 58,152" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M44,172 Q40,176 42,182 Q50,184 56,180 Q56,174 44,172" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M80,148 Q84,162 82,174 Q76,178 70,174 Q72,164 74,152" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M82,174 Q86,178 84,184 Q76,186 70,182 Q70,175 82,174" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M82,92 Q92,76 96,60 Q98,50 92,44" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M92,44 Q96,38 94,32 Q88,30 84,36 Q88,40 92,44" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="94" y1="32" x2="98" y2="24" stroke="url(#gold)" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="88" y1="30" x2="88" y2="22" stroke="url(#gold)" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="84" y1="34" x2="80" y2="26" stroke="url(#gold)" stroke-width="1.4" stroke-linecap="round"/>
-        <path d="M62,100 Q56,88 56,76 Q56,68 60,64" fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M60,64 Q56,58 52,56 Q48,62 52,68 Q56,64 60,64" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="52" y1="56" x2="48" y2="48" stroke="url(#gold)" stroke-width="1.3" stroke-linecap="round"/>
-        <line x1="56" y1="54" x2="54" y2="46" stroke="url(#gold)" stroke-width="1.3" stroke-linecap="round"/>
-        <line x1="60" y1="56" x2="60" y2="48" stroke="url(#gold)" stroke-width="1.3" stroke-linecap="round"/>
-        <path d="M62,78 Q64,66 70,60 Q74,56 80,56" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M72,22 Q62,24 58,34 Q56,44 60,54 Q66,60 80,58 Q92,56 96,46 Q98,36 94,28 Q88,18 72,22" fill="url(#shieldGrad)" fill-opacity="0.3" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M62,26 L54,10 L68,22 Z" fill="url(#gold)" stroke="url(#gold)" stroke-width="1.2" stroke-linejoin="round"/>
-        <path d="M82,22 L88,6 L94,20 Z" fill="url(#gold)" stroke="url(#gold)" stroke-width="1.2" stroke-linejoin="round"/>
-        <path d="M62,24 L57,14 L67,22 Z" fill="#5C3714" fill-opacity="0.5"/>
-        <path d="M82,21 L87,10 L92,20 Z" fill="#5C3714" fill-opacity="0.5"/>
-        <ellipse cx="68" cy="38" rx="5" ry="4" fill="#C4952A" stroke="url(#gold)" stroke-width="1"/>
-        <ellipse cx="82" cy="36" rx="5" ry="4" fill="#C4952A" stroke="url(#gold)" stroke-width="1"/>
-        <ellipse cx="68" cy="38" rx="2" ry="3.5" fill="#1C1208"/>
-        <ellipse cx="82" cy="36" rx="2" ry="3.5" fill="#1C1208"/>
-        <path d="M74,46 L76,44 L78,46 L76,48 Z" fill="url(#gold)"/>
-        <path d="M76,48 Q73,52 70,53" fill="none" stroke="url(#gold)" stroke-width="1.2" stroke-linecap="round"/>
-        <path d="M76,48 Q79,52 82,53" fill="none" stroke="url(#gold)" stroke-width="1.2" stroke-linecap="round"/>
-        <line x1="56" y1="46" x2="70" y2="47" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.8"/>
-        <line x1="54" y1="50" x2="69" y2="50" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.7"/>
-        <line x1="88" y1="44" x2="80" y2="45" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.8"/>
-        <line x1="90" y1="48" x2="81" y2="49" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.7"/>
-        <path d="M72,145 Q62,152 54,148 Q46,142 52,132 Q58,126 66,130 Q72,134 70,140" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M68,98 Q72,94 76,98" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.6"/>
-        <path d="M66,110 Q70,106 74,110" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.6"/>
-        <path d="M68,122 Q72,118 76,122" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.5"/>
-        <path d="M114,80 Q122,70 118,58 Q114,50 106,52" fill="none" stroke="#C4952A" stroke-width="1" stroke-opacity="0.5"/>
-        <path d="M118,58 Q124,50 120,42 Q114,38 108,44" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.4"/>
-        <circle cx="120" cy="80" r="3" fill="none" stroke="#C4952A" stroke-width="0.8" stroke-opacity="0.45"/>
-        <circle cx="124" cy="62" r="2" fill="none" stroke="#C4952A" stroke-width="0.7" stroke-opacity="0.4"/>
-      </g>
-
-      <!-- ═══ CENTRAL SHIELD ═══ -->
-      <!-- shield outline -->
-      <path d="M198,20 L322,20 L322,118 Q322,150 260,174 Q198,150 198,118 Z" fill="url(#shieldGrad)" stroke="url(#gold)" stroke-width="2.5"/>
-      <!-- shield inner border -->
-      <path d="M206,28 L314,28 L314,116 Q314,144 260,166 Q206,144 206,116 Z" fill="none" stroke="#C4952A" stroke-width="1.2" stroke-opacity="0.6"/>
-      <!-- shield quarters divider -->
-      <line x1="260" y1="28" x2="260" y2="166" stroke="#C4952A" stroke-width="1" stroke-opacity="0.5"/>
-      <line x1="206" y1="97" x2="314" y2="97" stroke="#C4952A" stroke-width="1" stroke-opacity="0.5"/>
       <!-- top-left quarter: paw print -->
-      <circle cx="237" cy="70" r="9" fill="none" stroke="url(#gold)" stroke-width="1.5"/>
-      <circle cx="225" cy="56" r="4" fill="#C4952A" fill-opacity="0.7"/>
-      <circle cx="237" cy="52" r="4" fill="#C4952A" fill-opacity="0.7"/>
-      <circle cx="249" cy="56" r="4" fill="#C4952A" fill-opacity="0.7"/>
-      <circle cx="219" cy="65" r="3.5" fill="#C4952A" fill-opacity="0.7"/>
-      <circle cx="255" cy="65" r="3.5" fill="#C4952A" fill-opacity="0.7"/>
-      <!-- top-right quarter: 9 (roman IX) -->
-      <text x="283" y="82" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="url(#gold)" text-anchor="middle" dominant-baseline="middle">IX</text>
-      <!-- bottom-left: crescent moon + star -->
-      <path d="M226,124 Q216,118 216,108 Q216,98 226,92 Q220,100 220,108 Q220,116 226,124" fill="#C4952A" fill-opacity="0.8"/>
-      <polygon points="237,96 239,103 246,103 240,107 242,114 237,110 232,114 234,107 228,103 235,103" fill="#C4952A" fill-opacity="0.7"/>
-      <!-- bottom-right quarter: cat face mini -->
-      <ellipse cx="283" cy="116" rx="14" ry="12" fill="none" stroke="url(#gold)" stroke-width="1.4"/>
-      <ellipse cx="278" cy="113" rx="3" ry="2.5" fill="#C4952A" fill-opacity="0.8"/>
-      <ellipse cx="288" cy="113" rx="3" ry="2.5" fill="#C4952A" fill-opacity="0.8"/>
-      <path d="M283,117 L284,115 L285,117" fill="#C4952A"/>
-      <path d="M275,106 L270,101 L276,105 Z" fill="url(#gold)" stroke="url(#gold)" stroke-width="0.8"/>
-      <path d="M291,106 L296,101 L290,105 Z" fill="url(#gold)" stroke="url(#gold)" stroke-width="0.8"/>
+      <circle cx="242" cy="90" r="11" fill="#C4952A" fill-opacity="0.18"/>
+      <circle cx="242" cy="90" r="8" fill="#C4952A" fill-opacity="0.65"/>
+      <circle cx="230" cy="72" r="5" fill="#C4952A" fill-opacity="0.7"/>
+      <circle cx="242" cy="68" r="5" fill="#C4952A" fill-opacity="0.7"/>
+      <circle cx="254" cy="72" r="5" fill="#C4952A" fill-opacity="0.7"/>
+      <circle cx="224" cy="82" r="4.5" fill="#C4952A" fill-opacity="0.65"/>
+      <circle cx="260" cy="82" r="4.5" fill="#C4952A" fill-opacity="0.65"/>
 
-      <!-- ═══ HELM / CROWN above shield ═══ -->
-      <!-- crown base -->
-      <rect x="238" y="8" width="44" height="14" rx="3" fill="url(#shieldGrad)" stroke="url(#gold)" stroke-width="1.8"/>
-      <!-- crown points -->
-      <polygon points="240,8 244,0 248,8" fill="url(#gold)"/>
-      <polygon points="258,8 260,0 262,8" fill="url(#gold)"/>
-      <polygon points="272,8 276,0 280,8" fill="url(#gold)"/>
-      <!-- crown gems -->
-      <circle cx="244" cy="4" r="2.5" fill="#C4952A"/>
-      <circle cx="260" cy="2" r="2.5" fill="#C4952A"/>
-      <circle cx="276" cy="4" r="2.5" fill="#C4952A"/>
+      <!-- top-right quarter: Roman IX -->
+      <text x="318" y="103" font-family="Georgia,serif" font-size="34" font-weight="bold"
+            fill="url(#gGold)" text-anchor="middle" filter="url(#glow)">IX</text>
 
-      <!-- ═══ CROSSED CLAWS beneath shield ═══ -->
-      <!-- claw left -->
-      <g transform="translate(196,170)">
-        <path d="M0,0 Q-8,-10 -12,-22 Q-10,-28 -4,-26 Q-6,-14 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M0,0 Q-2,-12 2,-24 Q6,-28 10,-24 Q6,-12 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M0,0 Q8,-10 12,-22 Q10,-28 4,-26 Q6,-14 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M0,0 Q14,-6 18,-18 Q16,-24 10,-20 Q8,-10 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M-14,6 Q-4,10 0,0 Q-4,12 -14,6" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-      </g>
-      <!-- claw right (mirror) -->
-      <g transform="translate(324,170) scale(-1,1)">
-        <path d="M0,0 Q-8,-10 -12,-22 Q-10,-28 -4,-26 Q-6,-14 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M0,0 Q-2,-12 2,-24 Q6,-28 10,-24 Q6,-12 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M0,0 Q8,-10 12,-22 Q10,-28 4,-26 Q6,-14 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M0,0 Q14,-6 18,-18 Q16,-24 10,-20 Q8,-10 0,0" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-        <path d="M-14,6 Q-4,10 0,0 Q-4,12 -14,6" fill="url(#gold)" stroke="url(#gold)" stroke-width="1"/>
-      </g>
-      <!-- cross bar connecting the two claw bundles -->
-      <rect x="196" y="168" width="128" height="5" rx="2.5" fill="url(#gold)" stroke="url(#gold)" stroke-width="0.5"/>
+      <!-- bottom-left: crescent + star -->
+      <path d="M232,152 Q218,144 218,132 Q218,120 232,112 Q224,120 224,132 Q224,144 232,152"
+            fill="#C4952A" fill-opacity="0.85"/>
+      <polygon points="244,112 246.5,120 255,120 248.5,125 251,133 244,128 237,133 239.5,125 233,120 241.5,120"
+               fill="#C4952A" fill-opacity="0.75"/>
+
+      <!-- bottom-right: tiny cat face -->
+      <ellipse cx="318" cy="158" rx="18" ry="15" fill="none" stroke="url(#gGold)" stroke-width="1.5"/>
+      <ellipse cx="312" cy="153" rx="4" ry="3" fill="#C4952A" fill-opacity="0.8"/>
+      <ellipse cx="324" cy="153" rx="4" ry="3" fill="#C4952A" fill-opacity="0.8"/>
+      <path d="M318,158 L319,155 L320,158" fill="#C4952A"/>
+      <path d="M308,144 L302,136 L312,142 Z" fill="url(#gGold)"/>
+      <path d="M328,144 L334,136 L324,142 Z" fill="url(#gGold)"/>
+      <line x1="296" y1="156" x2="310" y2="158" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.7"/>
+      <line x1="296" y1="160" x2="310" y2="160" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.6"/>
+      <line x1="340" y1="156" x2="326" y2="158" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.7"/>
+      <line x1="340" y1="160" x2="326" y2="160" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.6"/>
+
+      <!-- ═══ CROWN atop shield ═══ -->
+      <rect x="252" y="14" width="56" height="16" rx="3" fill="url(#gShield)" stroke="url(#gGold)" stroke-width="1.8"/>
+      <polygon points="254,14 259,2 264,14" fill="url(#gCrown)"/>
+      <polygon points="277,14 280,2 283,14" fill="url(#gCrown)"/>
+      <polygon points="296,14 301,2 306,14" fill="url(#gCrown)"/>
+      <circle cx="259" cy="5" r="3" fill="#C4952A"/>
+      <circle cx="280" cy="3" r="3" fill="#C4952A"/>
+      <circle cx="301" cy="5" r="3" fill="#C4952A"/>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- LEFT CAT — body faces RIGHT, head faces viewer, left foreleg CLAWS shield edge at x≈188 -->
+      <!-- ═══════════════════════════════════════ -->
+      <!-- tail curling behind/below -->
+      <path d="M90,195 Q74,180 72,160 Q70,140 82,130 Q94,122 100,132 Q106,144 96,152 Q88,158 90,170 Q92,180 102,188"
+            fill="none" stroke="url(#gGold)" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- hind haunches -->
+      <ellipse cx="108" cy="172" rx="28" ry="20" transform="rotate(10,108,172)"
+               fill="none" stroke="url(#gGold)" stroke-width="2.2"/>
+      <!-- hind leg planted -->
+      <path d="M90,184 Q82,196 80,210 Q86,214 94,210 Q92,198 96,186"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <!-- hind paw planted -->
+      <path d="M80,210 Q74,214 74,220 Q84,224 94,218 Q94,212 80,210"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="76" y1="220" x2="72" y2="226" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="84" y1="222" x2="82" y2="228" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="92" y1="220" x2="92" y2="226" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- back hind leg raised behind -->
+      <path d="M126,178 Q138,190 140,206 Q134,212 126,208 Q124,196 120,184"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M140,206 Q146,210 144,218 Q136,220 128,216 Q128,208 140,206"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="144" y1="218" x2="148" y2="224" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="136" y1="220" x2="136" y2="226" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="128" y1="218" x2="126" y2="224" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- main torso — rearing up toward shield -->
+      <path d="M96,168 Q100,148 108,132 Q118,114 132,104 Q148,94 162,94 Q172,94 178,100 Q184,108 186,120"
+            fill="none" stroke="url(#gGold)" stroke-width="2.4" stroke-linecap="round"/>
+      <!-- belly line -->
+      <path d="M96,168 Q104,155 114,144 Q126,132 140,124 Q154,116 166,116 Q176,118 182,126"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <!-- fur texture on torso -->
+      <path d="M130,128 Q134,124 138,128" fill="none" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.6"/>
+      <path d="M144,118 Q148,114 152,118" fill="none" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.55"/>
+      <path d="M116,144 Q120,140 124,144" fill="none" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.5"/>
+      <!-- LEFT raised foreleg — REACHING/CLAWING at shield left edge -->
+      <path d="M162,100 Q168,80 174,64 Q178,52 180,42"
+            fill="none" stroke="url(#gGold)" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- claw paw pressing on shield edge at ~188,52 -->
+      <path d="M180,42 Q184,36 190,32 Q192,42 188,50 Q184,52 180,52 Q178,48 180,42"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <!-- claws digging in — extending past x=188 onto shield border -->
+      <line x1="190" y1="30" x2="194" y2="22" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="186" y1="28" x2="188" y2="18" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="182" y1="30" x2="182" y2="20" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="178" y1="34" x2="176" y2="24" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <!-- lower foreleg tucked -->
+      <path d="M152,112 Q146,100 144,86 Q144,76 150,72"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M150,72 Q148,64 144,60 Q140,66 142,74 Q146,72 150,72"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="144" y1="58" x2="140" y2="50" stroke="url(#gGold)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="148" y1="56" x2="146" y2="48" stroke="url(#gGold)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="152" y1="58" x2="152" y2="50" stroke="url(#gGold)" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- neck -->
+      <path d="M156,100 Q162,88 166,78 Q168,70 168,62"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <!-- HEAD — facing viewer, slightly turned toward shield -->
+      <path d="M148,46 Q142,34 144,20 Q148,8 166,4 Q182,8 186,20 Q188,32 182,44 Q178,52 164,54 Q152,54 148,46"
+            fill="#1C1208" fill-opacity="0.6" stroke="url(#gGold)" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- ears -->
+      <path d="M148,26 L138,6 L156,20 Z" fill="url(#gGold)" stroke="url(#gGold)" stroke-width="1.2"/>
+      <path d="M180,22 L188,4 L178,18 Z" fill="url(#gGold)" stroke="url(#gGold)" stroke-width="1.2"/>
+      <!-- inner ears -->
+      <path d="M149,24 L142,10 L155,20 Z" fill="#7A3010" fill-opacity="0.6"/>
+      <path d="M179,21 L186,8 L177,18 Z" fill="#7A3010" fill-opacity="0.6"/>
+      <!-- eyes — fierce, alert -->
+      <ellipse cx="158" cy="30" rx="8" ry="7" fill="#C4952A" stroke="url(#gGold)" stroke-width="1.2"/>
+      <ellipse cx="174" cy="28" rx="8" ry="7" fill="#C4952A" stroke="url(#gGold)" stroke-width="1.2"/>
+      <ellipse cx="158" cy="30" rx="3" ry="6" fill="#0a0602"/>
+      <ellipse cx="174" cy="28" rx="3" ry="6" fill="#0a0602"/>
+      <!-- eye catch-light -->
+      <circle cx="160" cy="28" r="1.5" fill="#FFE878" fill-opacity="0.8"/>
+      <circle cx="176" cy="26" r="1.5" fill="#FFE878" fill-opacity="0.8"/>
+      <!-- nose -->
+      <path d="M165,38 L167,35 L169,38 L167,41 Z" fill="url(#gGold)"/>
+      <!-- snarl / open mouth -->
+      <path d="M167,41 Q164,46 160,48 Q158,46 160,44" fill="none" stroke="url(#gGold)" stroke-width="1.3" stroke-linecap="round"/>
+      <path d="M167,41 Q170,46 174,48 Q176,46 174,44" fill="none" stroke="url(#gGold)" stroke-width="1.3" stroke-linecap="round"/>
+      <!-- whiskers -->
+      <line x1="132" y1="36" x2="154" y2="38" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.75"/>
+      <line x1="130" y1="42" x2="152" y2="42" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.65"/>
+      <line x1="132" y1="48" x2="152" y2="46" stroke="#C4952A" stroke-width="1" stroke-opacity="0.55"/>
+      <line x1="200" y1="34" x2="182" y2="36" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.75"/>
+      <line x1="202" y1="40" x2="184" y2="40" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.65"/>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- RIGHT CAT — mirror of left, claws on right side of shield at x≈372 -->
+      <!-- ═══════════════════════════════════════ -->
+      <!-- tail -->
+      <path d="M470,195 Q486,180 488,160 Q490,140 478,130 Q466,122 460,132 Q454,144 464,152 Q472,158 470,170 Q468,180 458,188"
+            fill="none" stroke="url(#gGold)" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- haunches -->
+      <ellipse cx="452" cy="172" rx="28" ry="20" transform="rotate(-10,452,172)"
+               fill="none" stroke="url(#gGold)" stroke-width="2.2"/>
+      <!-- hind leg planted -->
+      <path d="M470,184 Q478,196 480,210 Q474,214 466,210 Q468,198 464,186"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M480,210 Q486,214 486,220 Q476,224 466,218 Q466,212 480,210"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="484" y1="220" x2="488" y2="226" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="476" y1="222" x2="478" y2="228" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="468" y1="220" x2="468" y2="226" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- back hind leg -->
+      <path d="M434,178 Q422,190 420,206 Q426,212 434,208 Q436,196 440,184"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M420,206 Q414,210 416,218 Q424,220 432,216 Q432,208 420,206"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="416" y1="218" x2="412" y2="224" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="424" y1="220" x2="424" y2="226" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="432" y1="218" x2="434" y2="224" stroke="url(#gGold)" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- torso rearing toward shield -->
+      <path d="M464,168 Q460,148 452,132 Q442,114 428,104 Q412,94 398,94 Q388,94 382,100 Q376,108 374,120"
+            fill="none" stroke="url(#gGold)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M464,168 Q456,155 446,144 Q434,132 420,124 Q406,116 394,116 Q384,118 378,126"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <!-- fur texture -->
+      <path d="M422,128 Q418,124 422,120" fill="none" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.6"/>
+      <path d="M408,118 Q404,114 408,120" fill="none" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.55"/>
+      <path d="M436,144 Q432,140 436,136" fill="none" stroke="#C4952A" stroke-width="0.9" stroke-opacity="0.5"/>
+      <!-- raised foreleg clawing RIGHT side of shield -->
+      <path d="M398,100 Q392,80 386,64 Q382,52 380,42"
+            fill="none" stroke="url(#gGold)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M380,42 Q376,36 370,32 Q368,42 372,50 Q376,52 380,52 Q382,48 380,42"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="370" y1="30" x2="366" y2="22" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="374" y1="28" x2="372" y2="18" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="378" y1="30" x2="378" y2="20" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="382" y1="34" x2="384" y2="24" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <!-- lower right foreleg -->
+      <path d="M408,112 Q414,100 416,86 Q416,76 410,72"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M410,72 Q412,64 416,60 Q420,66 418,74 Q414,72 410,72"
+            fill="none" stroke="url(#gGold)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="416" y1="58" x2="420" y2="50" stroke="url(#gGold)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="412" y1="56" x2="414" y2="48" stroke="url(#gGold)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="408" y1="58" x2="408" y2="50" stroke="url(#gGold)" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- neck -->
+      <path d="M404,100 Q398,88 394,78 Q392,70 392,62"
+            fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+      <!-- head -->
+      <path d="M412,46 Q418,34 416,20 Q412,8 394,4 Q378,8 374,20 Q372,32 378,44 Q382,52 396,54 Q408,54 412,46"
+            fill="#1C1208" fill-opacity="0.6" stroke="url(#gGold)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M412,26 L422,6 L404,20 Z" fill="url(#gGold)" stroke="url(#gGold)" stroke-width="1.2"/>
+      <path d="M380,22 L372,4 L382,18 Z" fill="url(#gGold)" stroke="url(#gGold)" stroke-width="1.2"/>
+      <path d="M411,24 L418,10 L405,20 Z" fill="#7A3010" fill-opacity="0.6"/>
+      <path d="M381,21 L374,8 L383,18 Z" fill="#7A3010" fill-opacity="0.6"/>
+      <!-- eyes -->
+      <ellipse cx="402" cy="30" rx="8" ry="7" fill="#C4952A" stroke="url(#gGold)" stroke-width="1.2"/>
+      <ellipse cx="386" cy="28" rx="8" ry="7" fill="#C4952A" stroke="url(#gGold)" stroke-width="1.2"/>
+      <ellipse cx="402" cy="30" rx="3" ry="6" fill="#0a0602"/>
+      <ellipse cx="386" cy="28" rx="3" ry="6" fill="#0a0602"/>
+      <circle cx="400" cy="28" r="1.5" fill="#FFE878" fill-opacity="0.8"/>
+      <circle cx="384" cy="26" r="1.5" fill="#FFE878" fill-opacity="0.8"/>
+      <!-- nose -->
+      <path d="M395,38 L393,35 L391,38 L393,41 Z" fill="url(#gGold)"/>
+      <!-- mouth snarl -->
+      <path d="M393,41 Q396,46 400,48 Q402,46 400,44" fill="none" stroke="url(#gGold)" stroke-width="1.3" stroke-linecap="round"/>
+      <path d="M393,41 Q390,46 386,48 Q384,46 386,44" fill="none" stroke="url(#gGold)" stroke-width="1.3" stroke-linecap="round"/>
+      <!-- whiskers -->
+      <line x1="428" y1="36" x2="406" y2="38" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.75"/>
+      <line x1="430" y1="42" x2="408" y2="42" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.65"/>
+      <line x1="428" y1="48" x2="408" y2="46" stroke="#C4952A" stroke-width="1" stroke-opacity="0.55"/>
+      <line x1="360" y1="34" x2="378" y2="36" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.75"/>
+      <line x1="358" y1="40" x2="376" y2="40" stroke="#C4952A" stroke-width="1.1" stroke-opacity="0.65"/>
 
       <!-- ═══ GOLD RIBBON BANNER ═══ -->
-      <!-- ribbon body with folds -->
-      <path d="M158,180 Q168,174 180,178 L340,178 Q352,174 362,180 L352,196 Q340,192 340,196 L180,196 Q168,200 158,196 Z" fill="url(#goldRibbon)" stroke="#8B6310" stroke-width="1.2"/>
-      <!-- ribbon left tail fold -->
-      <path d="M158,180 L148,172 L144,184 L158,180" fill="#8B6310"/>
-      <path d="M158,196 L148,202 L144,190 L158,196" fill="#8B6310"/>
-      <!-- ribbon right tail fold -->
-      <path d="M362,180 L372,172 L376,184 L362,180" fill="#8B6310"/>
-      <path d="M362,196 L372,202 L376,190 L362,196" fill="#8B6310"/>
-      <!-- ribbon text -->
-      <text x="260" y="191" font-family="Georgia, serif" font-size="13" font-weight="bold" fill="#3B2810" text-anchor="middle" letter-spacing="2">THE 9 LIVES CLUB</text>
+      <path d="M140,212 Q154,206 170,210 L390,210 Q406,206 420,212 L408,230 Q392,226 390,230 L170,230 Q154,234 140,230 Z"
+            fill="url(#gRibbon)" stroke="#7A5008" stroke-width="1.2"/>
+      <path d="M140,212 L126,202 L122,216 L140,212" fill="#7A5008"/>
+      <path d="M140,230 L126,238 L122,224 L140,230" fill="#7A5008"/>
+      <path d="M420,212 L434,202 L438,216 L420,212" fill="#7A5008"/>
+      <path d="M420,230 L434,238 L438,224 L420,230" fill="#7A5008"/>
+      <text x="280" y="225" font-family="Georgia,serif" font-size="14" font-weight="bold"
+            fill="#2A1608" text-anchor="middle" letter-spacing="2.5">THE 9 LIVES CLUB</text>
 
-      <!-- ═══ MOTTO RIBBON (smaller, below) ═══ -->
-      <path d="M200,198 Q210,194 220,198 L300,198 Q310,194 320,198 L316,210 Q306,206 300,210 L220,210 Q210,214 200,210 Z" fill="#8B6310" fill-opacity="0.7" stroke="#C4952A" stroke-width="0.8"/>
-      <text x="260" y="207" font-family="Georgia, serif" font-size="9" fill="#F5D060" text-anchor="middle" letter-spacing="1.5" font-style="italic">SEMPER FELIS</text>
+      <!-- ═══ MOTTO RIBBON ═══ -->
+      <path d="M210,232 Q220,228 232,232 L328,232 Q340,228 350,232 L346,244 Q334,240 328,244 L232,244 Q220,248 210,244 Z"
+            fill="#5A3A08" fill-opacity="0.85" stroke="#C4952A" stroke-width="0.8"/>
+      <text x="280" y="241" font-family="Georgia,serif" font-size="10" fill="#F5D060"
+            text-anchor="middle" letter-spacing="2" font-style="italic">SEMPER FELIS</text>
+
+      <!-- ═══ GOLD STAR DOTS flanking crest ═══ -->
+      <circle cx="100" cy="120" r="3" fill="#C4952A" fill-opacity="0.5"/>
+      <circle cx="82" cy="100" r="2" fill="#C4952A" fill-opacity="0.4"/>
+      <circle cx="460" cy="120" r="3" fill="#C4952A" fill-opacity="0.5"/>
+      <circle cx="478" cy="100" r="2" fill="#C4952A" fill-opacity="0.4"/>
     </svg>
   </div>
   <div class="tagline">a community corkboard for everyone owned by a <em>cat</em></div>
@@ -1186,7 +1305,7 @@
 <main class="board">
 
   <!-- CAT CARE -->
-  <section class="box box-care" aria-labelledby="care-h">
+  <section id="care" class="box box-care" aria-labelledby="care-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="care-h">🩺 Cat Care Corner</h2>
@@ -1206,6 +1325,9 @@
       <button class="btn" onclick="addCareNote()">Post tip</button>
     </details>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('care','Cat Care Corner')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('care',this)">
         💬 <span class="bc-count" id="bc-count-care">0</span> comments
@@ -1222,7 +1344,7 @@
   </section>
 
   <!-- FEATURED CAT -->
-  <section class="box box-featured" aria-labelledby="feat-h">
+  <section id="featured" class="box box-featured" aria-labelledby="feat-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="feat-h">⭐ Featured Cat</h2>
@@ -1263,6 +1385,9 @@
       </div>
     </details>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('featured','Featured Cat')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('featured',this)">
         💬 <span class="bc-count" id="bc-count-featured">0</span> comments
@@ -1279,7 +1404,7 @@
   </section>
 
   <!-- TRIVIA -->
-  <section class="box box-trivia" aria-labelledby="trivia-h">
+  <section id="trivia" class="box box-trivia" aria-labelledby="trivia-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="trivia-h">🧠 Cat Trivia</h2>
@@ -1304,6 +1429,9 @@
       <p style="font-size:0.74rem;color:var(--sage-dark);margin-top:8px;">An admin approves facts before they join the rotation. Queue holds 100 active facts — oldest is archived (not deleted) to make room.</p>
     </details>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('trivia','Cat Trivia')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('trivia',this)">
         💬 <span class="bc-count" id="bc-count-trivia">0</span> comments
@@ -1320,7 +1448,7 @@
   </section>
 
   <!-- VIDEO -->
-  <section class="box box-video" aria-labelledby="video-h">
+  <section id="video" class="box box-video" aria-labelledby="video-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="video-h">🎬 Cat Clip of the Day</h2>
@@ -1343,6 +1471,9 @@
       <button class="btn" onclick="setVideo()">Set video</button>
     </details>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('video','Cat Clip of the Day')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('video',this)">
         💬 <span class="bc-count" id="bc-count-video">0</span> comments
@@ -1359,7 +1490,7 @@
   </section>
 
   <!-- WRITE-UP (paired with featured cat) -->
-  <section class="box box-writeup" aria-labelledby="writeup-h">
+  <section id="writeup" class="box box-writeup" aria-labelledby="writeup-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="writeup-h">📝 Their Story</h2>
@@ -1369,6 +1500,9 @@
     <p class="writeup-byline" id="writeupBy"></p>
     <p class="writeup-body" id="writeupBody"></p>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('writeup','This week's featured cat')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('writeup',this)">
         💬 <span class="bc-count" id="bc-count-writeup">0</span> comments
@@ -1385,7 +1519,7 @@
   </section>
 
   <!-- TRUE CAT STORIES -->
-  <section class="box box-stories" aria-labelledby="stories-h">
+  <section id="stories" class="box box-stories" aria-labelledby="stories-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="stories-h">📖 True Cat Stories</h2>
@@ -1416,6 +1550,9 @@
       <button class="btn" onclick="submitStory()">Send for review</button>
     </details>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('stories','True Cat Stories')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('stories',this)">
         💬 <span class="bc-count" id="bc-count-stories">0</span> comments
@@ -1432,7 +1569,7 @@
   </section>
 
   <!-- DIRECTORY -->
-  <section class="box box-directory" aria-labelledby="dir-h">
+  <section id="directory" class="box box-directory" aria-labelledby="dir-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="dir-h">📋 Cat Directory</h2>
@@ -1468,6 +1605,9 @@
       <button class="btn" onclick="addDirectoryEntry()">Add listing</button>
     </details>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('directory','Cat Directory')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('directory',this)">
         💬 <span class="bc-count" id="bc-count-directory">0</span> comments
@@ -1484,7 +1624,7 @@
   </section>
 
   <!-- TOPIC OF THE DAY -->
-  <section class="box box-topic" aria-labelledby="topic-h">
+  <section id="topic" class="box box-topic" aria-labelledby="topic-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="topic-h">💬 Topic of the Day</h2>
@@ -1501,6 +1641,9 @@
       <button class="btn btn-sm" onclick="addComment()" style="align-self:flex-end;">Post</button>
     </div>
   
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('topic','Topic of the Day')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('topic',this)">
         💬 <span class="bc-count" id="bc-count-topic">0</span> comments
@@ -1517,7 +1660,7 @@
   </section>
 
   <!-- GREETING CARD GENERATOR -->
-  <section class="box box-greeting" aria-labelledby="greeting-h">
+  <section id="greeting" class="box box-greeting" aria-labelledby="greeting-h">
     <span class="pin" aria-hidden="true"></span>
     <div class="box-head">
       <h2 class="box-title" id="greeting-h">🎨 Cat Greeting Card Generator</h2>
@@ -1627,6 +1770,9 @@
         </div>
       </div>
     </div>
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('greeting','Cat Greeting Card')">↗ Share this section</button>
+    </div>
     <div class="box-comment-section">
       <button class="box-comment-toggle" onclick="toggleBoxComments('greeting',this)">
         💬 <span class="bc-count" id="bc-count-greeting">0</span> comments
@@ -1637,6 +1783,85 @@
           <input type="text" class="bc-name" id="bc-name-greeting" placeholder="Name">
           <textarea class="bc-text" id="bc-text-greeting" rows="1" placeholder="Add a comment…"></textarea>
           <button class="btn btn-sm" onclick="addBoxComment('greeting')">Post</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAT WELFARE DIRECTORY -->
+  <section id="welfare" class="box box-welfare" aria-labelledby="welfare-h">
+    <span class="pin" aria-hidden="true"></span>
+    <div class="box-head">
+      <h2 class="box-title" id="welfare-h">🌍 Cat Welfare Directory</h2>
+      <span class="box-eyebrow">Champions for cats everywhere</span>
+    </div>
+    <p style="font-size:0.86rem;color:var(--sage-dark);margin:0 0 14px;">
+      Vets, rescue groups, TNR programmes, foundations, advocacy movements — if you're doing good for cats, list yourself here. Anyone can add a listing. Admin may remove inappropriate entries.
+    </p>
+    <div class="welfare-type-tabs" id="welfareTabs">
+      <button class="dtab active" id="wtAll" onclick="filterWelfare('all')">All</button>
+      <button class="dtab" id="wtRescue" onclick="filterWelfare('rescue')">Rescue</button>
+      <button class="dtab" id="wtTNR" onclick="filterWelfare('tnr')">TNR</button>
+      <button class="dtab" id="wtShelter" onclick="filterWelfare('shelter')">Shelter</button>
+      <button class="dtab" id="wtAdvocacy" onclick="filterWelfare('advocacy')">Advocacy</button>
+      <button class="dtab" id="wtFoundation" onclick="filterWelfare('foundation')">Foundation</button>
+      <button class="dtab" id="wtMovement" onclick="filterWelfare('movement')">Movement</button>
+    </div>
+    <div class="welfare-grid" id="welfareGrid"></div>
+    <details>
+      <summary class="btn" style="display:inline-block;list-style:none;padding:9px 16px;">+ List your organisation</summary>
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="field">
+          <label for="wfName">Organisation / Group name</label>
+          <input type="text" id="wfName" placeholder="e.g. Pawssion Project">
+        </div>
+        <div class="field">
+          <label for="wfType">Type</label>
+          <select id="wfType" style="width:100%;padding:9px 11px;border-radius:9px;border:1.5px solid var(--line);background:var(--cream);font-family:var(--font-body);">
+            <option value="rescue">Cat Rescue</option>
+            <option value="tnr">TNR Programme</option>
+            <option value="shelter">Shelter</option>
+            <option value="advocacy">Advocacy</option>
+            <option value="foundation">Foundation</option>
+            <option value="movement">Movement / Campaign</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="wfWebsite">Website URL</label>
+          <input type="url" id="wfWebsite" placeholder="https://...">
+        </div>
+        <div class="field">
+          <label for="wfEmail">Email</label>
+          <input type="text" id="wfEmail" placeholder="contact@example.org">
+        </div>
+        <div class="field">
+          <label for="wfContact">Contact person (optional)</label>
+          <input type="text" id="wfContact" placeholder="e.g. Maria Santos">
+        </div>
+        <div class="field">
+          <label for="wfLocation">Location / Region</label>
+          <input type="text" id="wfLocation" placeholder="e.g. Manila, PH / Worldwide">
+        </div>
+        <div class="field" style="grid-column:span 2;">
+          <label for="wfDesc">Brief description (what you do)</label>
+          <textarea id="wfDesc" rows="2" placeholder="e.g. Community-led TNR and adoption programme serving Quezon City since 2018."></textarea>
+        </div>
+      </div>
+      <button class="btn" onclick="addWelfareEntry()" style="margin-top:4px;">Add listing</button>
+    </details>
+    <div class="box-share-row">
+      <button class="share-btn" onclick="shareSection('welfare','Cat Welfare Directory')">↗ Share this section</button>
+    </div>
+    <div class="box-comment-section">
+      <button class="box-comment-toggle" onclick="toggleBoxComments('welfare',this)">
+        💬 <span class="bc-count" id="bc-count-welfare">0</span> comments
+      </button>
+      <div class="box-comment-body" id="bc-body-welfare">
+        <div class="bthread" id="bc-thread-welfare"></div>
+        <div class="bcomment-form">
+          <input type="text" class="bc-name" id="bc-name-welfare" placeholder="Name">
+          <textarea class="bc-text" id="bc-text-welfare" rows="1" placeholder="Add a comment…"></textarea>
+          <button class="btn btn-sm" onclick="addBoxComment('welfare')">Post</button>
         </div>
       </div>
     </div>
@@ -1684,6 +1909,7 @@ function migrateDB(db){
   if(!db.galleryPastWinners) db.galleryPastWinners = [];
   if(!db.pendingGallery) db.pendingGallery = [];
   if(!db.boxComments) db.boxComments = {};
+  if(!db.welfareEntries) db.welfareEntries = [];
   return db;
 }
 function saveDB(){
@@ -2139,6 +2365,7 @@ function openAdminPrompt(){
     isAdmin = true;
     document.getElementById('adminToggleBtn').textContent = '🔓 Admin (on)';
     document.getElementById('adminToggleBtn').classList.add('is-on');
+    document.body.classList.add('admin-mode');
     document.getElementById('adminPanel').style.display = 'block';
     renderAdminQueue();
   } else {
@@ -2630,7 +2857,7 @@ function addBoxComment(sectionId){
   nameEl.value = ''; textEl.value = '';
 }
 function renderAllBoxCounts(){
-  const sections = ['care','trivia','video','writeup','stories','directory','topic','featured','greeting'];
+  const sections = ['care','trivia','video','writeup','stories','directory','topic','featured','greeting','welfare'];
   sections.forEach(sid => {
     const el = document.getElementById('bc-count-' + sid);
     if(el) el.textContent = getBoxComments(sid).length;
@@ -3019,6 +3246,115 @@ function shareCard(platform){
   }
 }
 
+/* ============ SHARE SECTIONS ============ */
+function shareSection(sectionId, label){
+  const sectionUrls = {
+    care: '#care', trivia: '#trivia', video: '#video', writeup: '#writeup',
+    stories: '#stories', directory: '#directory', topic: '#topic',
+    featured: '#featured', greeting: '#greeting', welfare: '#welfare'
+  };
+  const shareText = `Check out the "${label}" section on The 9 Lives Club — a community for cat people! 🐾`;
+
+  if(navigator.share){
+    navigator.share({
+      title: 'The 9 Lives Club — ' + label,
+      text: shareText,
+      url: window.location.href.split('#')[0] + (sectionUrls[sectionId] || '')
+    }).catch(()=>{});
+    return;
+  }
+  // Fallback: copy text to clipboard
+  const copyText = shareText + '\n' + window.location.href.split('#')[0];
+  navigator.clipboard.writeText(copyText).then(()=>{
+    showShareToast('Link & text copied to clipboard!');
+  }).catch(()=>{
+    // Last resort: prompt
+    prompt('Copy this link:', window.location.href.split('#')[0]);
+  });
+}
+function showShareToast(msg){
+  const t = document.getElementById('shareToast');
+  if(!t) return;
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 2800);
+}
+
+/* ============ CAT WELFARE DIRECTORY ============ */
+let welfareFilter = 'all';
+
+function seedWelfareIfEmpty(){
+  if(!DB.welfareEntries || DB.welfareEntries.length === 0){
+    DB.welfareEntries = [
+      { id:uid(), name:'CARA Welfare Philippines', type:'advocacy', website:'https://www.caraphil.org', email:'info@caraphil.org', contact:'', location:'Philippines', desc:'Advocates for responsible pet ownership and animal welfare legislation across the Philippines.' },
+      { id:uid(), name:'Pawssion Project', type:'rescue', website:'https://www.pawssionproject.org', email:'hello@pawssionproject.org', contact:'', location:'Metro Manila, PH', desc:'Rescue, rehab, and rehome stray cats and dogs across Metro Manila through community fostering.' },
+      { id:uid(), name:'International Cat Care', type:'foundation', website:'https://icatcare.org', email:'info@icatcare.org', contact:'', location:'Worldwide', desc:'Global charity improving the health and welfare of cats through education, science, and advocacy.' },
+      { id:uid(), name:'Alley Cat Allies', type:'tnr', website:'https://www.alleycat.org', email:'info@alleycat.org', contact:'', location:'USA / Global', desc:'Leading TNR advocacy organization. Provides resources, training, and policy support for community cat programmes worldwide.' },
+    ];
+    saveDB();
+  }
+}
+
+function renderWelfare(){
+  seedWelfareIfEmpty();
+  const entries = (DB.welfareEntries || []).filter(e => welfareFilter === 'all' || e.type === welfareFilter);
+  const grid = document.getElementById('welfareGrid');
+  if(!grid) return;
+  if(entries.length === 0){
+    grid.innerHTML = '<p class="empty-state">No listings in this category yet.</p>';
+    return;
+  }
+  grid.innerHTML = entries.map(e => `
+    <div class="welfare-card">
+      <button class="admin-remove" onclick="removeWelfareEntry('${e.id}')" title="Remove listing">✕ Remove</button>
+      <span class="wc-type ${e.type}">${e.type.charAt(0).toUpperCase()+e.type.slice(1)}</span>
+      <div class="wc-name">${escapeHTML(e.name)}</div>
+      ${e.location ? `<div style="font-size:0.72rem;color:var(--sage-dark);margin-bottom:5px;">📍 ${escapeHTML(e.location)}</div>` : ''}
+      <div class="wc-desc">${escapeHTML(e.desc)}</div>
+      <div class="wc-links">
+        ${e.website ? `<a class="wc-link" href="${escapeHTML(e.website)}" target="_blank" rel="noopener">🌐 Website</a>` : ''}
+        ${e.email ? `<a class="wc-link" href="mailto:${escapeHTML(e.email)}">✉ Email</a>` : ''}
+        ${e.contact ? `<span class="wc-link" style="cursor:default;">👤 ${escapeHTML(e.contact)}</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+function filterWelfare(type){
+  welfareFilter = type;
+  ['all','rescue','tnr','shelter','advocacy','foundation','movement'].forEach(t => {
+    const el = document.getElementById('wt' + t.charAt(0).toUpperCase() + t.slice(1));
+    if(el) el.classList.toggle('active', t === type);
+  });
+  renderWelfare();
+}
+function addWelfareEntry(){
+  const name = document.getElementById('wfName').value.trim();
+  if(!name){ alert('Please enter the organisation name.'); return; }
+  const entry = {
+    id: uid(),
+    name,
+    type: document.getElementById('wfType').value,
+    website: document.getElementById('wfWebsite').value.trim(),
+    email: document.getElementById('wfEmail').value.trim(),
+    contact: document.getElementById('wfContact').value.trim(),
+    location: document.getElementById('wfLocation').value.trim(),
+    desc: document.getElementById('wfDesc').value.trim(),
+  };
+  if(!DB.welfareEntries) DB.welfareEntries = [];
+  DB.welfareEntries.unshift(entry);
+  saveDB();
+  renderWelfare();
+  ['wfName','wfWebsite','wfEmail','wfContact','wfLocation','wfDesc'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+function removeWelfareEntry(id){
+  if(!isAdmin){ alert('Admin access required.'); return; }
+  if(!confirm('Remove this listing?')) return;
+  DB.welfareEntries = (DB.welfareEntries || []).filter(e => e.id !== id);
+  saveDB();
+  renderWelfare();
+}
+
 /* ============ INIT ============ */
 function renderAll(){
   renderGallery();
@@ -3031,6 +3367,7 @@ function renderAll(){
   renderTopic();
   updatePendingBadges();
   renderAllBoxCounts();
+  renderWelfare();
 }
 initVisitorCounter();
 renderAll();
